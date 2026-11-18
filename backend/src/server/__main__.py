@@ -5,19 +5,48 @@ from app.AppBuilder import AppBuilder, AppException
 from dotenv import load_dotenv
 
 
+class ServerEnvironment:
+    __is_loaded: bool = False
+
+
+    class EnvironmentError(Exception):
+        pass
+
+
+    @classmethod
+    def load(cls, dotenv_path: str = ".env"):
+        if not cls.__is_loaded:
+            load_dotenv(dotenv_path)
+            cls.__is_loaded = True
+
+
+    @classmethod
+    def get(cls, key: str, default: str | None = None) -> str:
+        if not cls.__is_loaded:
+            raise cls.EnvironmentError("Environment variables are not loaded. Call 'load' method first.")
+
+        value = os.getenv(key, default)
+        if value is None:
+            raise cls.EnvironmentError(f"Environment variable '{key}' is not set.")
+
+        return value
+
+
 def main():
-    load_dotenv()
+    ServerEnvironment.load()
 
     try:
-        app = AppBuilder(name=os.getenv("APP_NAME", "MyApp"))   \
-            .addPort(os.getenv("PORT", "5000"))                 \
-            .addHost(os.getenv("HOST", "localhost"))            \
-            .addRoute("/", lambda: "Hello World!")              \
+        app = AppBuilder(name=ServerEnvironment.get("APP_NAME"))   \
+            .addPort(ServerEnvironment.get("PORT"))                \
+            .addHost(ServerEnvironment.get("HOST"))                \
+            .addRoute("/", lambda: "Hello World!")                 \
             .build()
 
         app.run()
     except AppException as e:
         print(f"\nApp error: {e}", file=sys.stderr)
+    except ServerEnvironment.EnvironmentError as e:
+        print(f"\nEnvironment error: {e}", file=sys.stderr)
     except Exception as e:
         print(f"\n Unexpected error: {e}", file=sys.stderr)
     except KeyboardInterrupt:
