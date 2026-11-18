@@ -10,6 +10,7 @@ def main():
 
     app = AppBuilder(name=os.getenv("APP_NAME", "MyApp"))   \
         .addPort(int(os.getenv("PORT", "5000")))            \
+        .addHost(os.getenv("HOST", "localhost"))            \
         .addRoute("/", lambda: "Hello World!")              \
         .build()
 
