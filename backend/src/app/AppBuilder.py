@@ -1,5 +1,5 @@
 from flask import Flask
-from typing import Self, Callable
+from typing import Self, Callable, List
 
 
 class AppException(Exception):
@@ -49,7 +49,7 @@ class AppBuilder:
         self.__app = App(name)
 
 
-    def addRoute(self: Self, path: str, callback: Callable[[], str], methods=["GET"]) -> Self:
+    def addRoute(self: Self, path: str, callback: Callable[[], str], methods: List[str]=["GET"]) -> Self:
         self.__app.flask.add_url_rule(
             path,
             view_func=callback,
@@ -59,8 +59,11 @@ class AppBuilder:
         return self
 
 
-    def addPort(self: Self, port: int) -> Self:
-        self.__app.port = port
+    def addPort(self: Self, port: str) -> Self:
+        try:
+            self.__app.port = int(port)
+        except ValueError:
+            raise AppException(f"Invalid port value: {port}. Port must be an integer.")
         return self
 
 
