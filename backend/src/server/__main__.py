@@ -1,7 +1,8 @@
 import os
 import sys
 
-from app.AppBuilder import AppBuilder, AppException
+from app.app_builder import AppBuilder, AppException
+from router.router import Router
 from dotenv import load_dotenv
 
 
@@ -36,13 +37,17 @@ def main():
     ServerEnvironment.load()
 
     try:
-        app = AppBuilder(name=ServerEnvironment.get("APP_NAME"))   \
-            .addPort(ServerEnvironment.get("PORT"))                \
-            .addHost(ServerEnvironment.get("HOST"))                \
-            .addRoute("/", lambda: "Hello World!")                 \
-            .build()
+        app_builder = AppBuilder(name=ServerEnvironment.get("APP_NAME"))   \
+            .addPort(ServerEnvironment.get("PORT"))                        \
+            .addHost(ServerEnvironment.get("HOST"))                        \
+            .addRoute("/", lambda: "Hello World!")
 
-        app.run()
+        for route_name, route_func, route_type in Router():
+            route_name = route_name.replace("_", "/")
+            app_builder.addRoute(f"/api/{route_name}", route_func, [route_type])
+
+        app_builder.build().run()
+
     except AppException as e:
         print(f"\nApp error: {e}", file=sys.stderr)
     except ServerEnvironment.EnvironmentError as e:
