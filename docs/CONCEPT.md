@@ -15,7 +15,7 @@ Notre outil s'insère dans le parcours existant du Centre des possibles :
 
 1. **Gaming room** : le jeune passe des jeux et des questionnaires (intérêts, aptitudes cognitives, personnalité).
 2. **Rapport des possibles** : un rapport lui est remis à la fin de cette étape (voir description plus bas).
-3. **Notre assistant** : l'entretien commence avec le rapport des possibles chargé comme donnée d'entrée.
+3. **Notre assistant** : le rapport des possibles nous est transmis automatiquement (le jeune n'a pas à l'apporter) et sert de point de départ à l'entretien.
 
 ## Notre proposition
 
