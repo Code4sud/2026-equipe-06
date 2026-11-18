@@ -2,7 +2,7 @@ import os
 import sys
 
 from app.app_builder import AppBuilder, AppException
-from router.router import Router
+from router.router import Router, RouterException
 from dotenv import load_dotenv
 
 
@@ -52,6 +52,8 @@ def main():
         print(f"\nApp error: {e}", file=sys.stderr)
     except ServerEnvironment.EnvironmentError as e:
         print(f"\nEnvironment error: {e}", file=sys.stderr)
+    except RouterException as e:
+        print(f"\nRouter error: {e}", file=sys.stderr)
     except Exception as e:
         print(f"\n Unexpected error: {e}", file=sys.stderr)
     except KeyboardInterrupt:
