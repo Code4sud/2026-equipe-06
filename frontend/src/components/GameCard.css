@@ -1,0 +1,236 @@
+/* Timings shared with Drawing.tsx (keep in sync) */
+.game-card {
+  --deal-duration: 500ms;
+  --deal-stagger: 120ms;
+  --flip-duration: 650ms;
+  --flip-stagger: 150ms;
+  --tilt: calc((var(--card-index) - 2) * 1.5deg);
+
+  position: relative;
+  width: clamp(11rem, 17vw, 15.5rem);
+  aspect-ratio: 5 / 7;
+  padding: 0;
+  border: none;
+  background: none;
+  perspective: 1200px;
+  transform: rotate(var(--tilt));
+  transition:
+    transform 0.2s ease,
+    opacity 0.3s ease;
+  animation: deal-in var(--deal-duration) cubic-bezier(0.2, 0.8, 0.3, 1.1) both;
+  animation-delay: calc(var(--card-index) * var(--deal-stagger));
+}
+
+.game-card:disabled {
+  cursor: default;
+}
+
+/* Selected card (keyboard focus or mouse hover) and chosen card: rises above the others and straightens */
+.game-card.is-revealed:not(:disabled):focus,
+.game-card.is-revealed:not(:disabled):hover,
+.game-card.is-chosen {
+  outline: none;
+  transform: translateY(-28px) scale(1.06);
+}
+
+.game-card::-moz-focus-inner {
+  border: 0;
+}
+
+.game-card.is-revealed:not(:disabled):focus .game-card-front,
+.game-card.is-revealed:not(:disabled):hover .game-card-front,
+.game-card.is-chosen .game-card-front {
+  box-shadow: 0 14px 22px -14px rgb(30 22 51 / 0.4);
+}
+
+/*
+ * Revealed cards float gently, each at its own pace.
+ * Applied to the inner wrapper: the button's own animation is the deal-in.
+ * The selected / chosen card stops floating.
+ */
+.game-card.is-revealed .game-card-inner {
+  --float-duration: calc(7s + var(--card-index) * 0.7s);
+  --float-delay: calc(var(--card-index) * -1.9s);
+  --float-distance: 4px;
+  --float-angle: 1deg;
+  animation: float var(--float-duration) ease-in-out var(--float-delay) infinite;
+}
+
+.game-card.is-revealed:not(:disabled):focus .game-card-inner,
+.game-card.is-revealed:not(:disabled):hover .game-card-inner,
+.game-card.is-chosen .game-card-inner {
+  animation: none;
+}
+
+.game-card.is-dimmed {
+  opacity: 0.25;
+  transform: rotate(var(--tilt)) scale(0.94);
+}
+
+/* Cards arrive from below, face down */
+@keyframes deal-in {
+  from {
+    opacity: 0;
+    translate: 0 45vh;
+    rotate: -12deg;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    rotate: 0deg;
+  }
+}
+
+/* Flip */
+.game-card-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform var(--flip-duration) cubic-bezier(0.3, 0.7, 0.3, 1.15);
+  transition-delay: calc(var(--card-index) * var(--flip-stagger));
+}
+
+.game-card.is-revealed .game-card-inner {
+  transform: rotateY(180deg);
+}
+
+.game-card-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Back: tinted background with the brand shapes */
+.game-card-back {
+  background: var(--card-back);
+}
+
+.game-card-back > svg {
+  position: absolute;
+}
+
+.game-card-back-asterisk {
+  top: 7%;
+  left: 3%;
+  width: 34%;
+  rotate: 10deg;
+}
+
+.game-card-back-flower {
+  top: -4%;
+  right: -4%;
+  width: 30%;
+}
+
+.game-card-back-triangle {
+  top: 48%;
+  right: -12%;
+  width: 34%;
+}
+
+.game-card-back-star {
+  bottom: -14%;
+  left: -6%;
+  width: 60%;
+}
+
+/* Front: light background, thick colored border, title top left */
+.game-card-front {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: 12% 10% 8%;
+  text-align: left;
+  color: var(--card-color);
+  background: var(--card-face);
+  border: var(--border-card) solid var(--card-color);
+  transform: rotateY(180deg);
+}
+
+.game-card-title {
+  font-size: clamp(0.95rem, 1.35vw, 1.2rem);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.game-card-image {
+  width: 100%;
+  border-radius: calc(var(--radius-card) / 2);
+}
+
+.game-card-brand {
+  font-weight: 800;
+  font-size: clamp(0.9rem, 1.3vw, 1.15rem);
+  color: var(--card-color);
+}
+
+.game-card-back .game-card-brand {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+}
+
+.game-card-front .game-card-brand {
+  margin-top: auto;
+  align-self: center;
+}
+
+/* Colors per family */
+.game-card-yellow {
+  --card-color: var(--card-yellow);
+  --card-face: var(--card-yellow-face);
+  --card-back: var(--card-yellow-back);
+}
+
+.game-card-pink {
+  --card-color: var(--card-pink);
+  --card-face: var(--card-pink-face);
+  --card-back: var(--card-pink-back);
+}
+
+.game-card-purple {
+  --card-color: var(--card-purple);
+  --card-face: var(--card-purple-face);
+  --card-back: var(--card-purple-back);
+}
+
+.game-card-green {
+  --card-color: var(--card-green);
+  --card-face: var(--card-green-face);
+  --card-back: var(--card-green-back);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-card {
+    animation: none;
+    transition: none;
+  }
+
+  .game-card-inner,
+  .game-card.is-revealed .game-card-inner {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* Mirror: the final card, imposed by the backend. Distinct look. TEMPORARY until a mockup exists */
+.game-card-mirror {
+  --card-color: var(--color-text);
+  --card-face: #fff;
+  --card-back: var(--color-yellow);
+}
+
+/* Cards already drawn (back from the collection): no deal-in, no flip */
+.game-card.is-instant {
+  animation: none;
+}
+
+.game-card.is-instant .game-card-inner {
+  transition: none;
+}

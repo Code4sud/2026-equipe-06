@@ -1,0 +1,90 @@
+/* Shared controls: buttons, form fields and screen titles */
+/* The selected button (focused, or hovered with the mouse) gets the purple background */
+.btn {
+  padding: 0.9em 1.6em;
+  font-size: 1.15rem;
+  color: var(--color-text);
+  background: #fff;
+  border: 3px solid var(--color-purple);
+  border-radius: var(--radius-pill);
+  transition:
+    transform 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.btn:focus,
+.btn:hover:not(:disabled) {
+  background: var(--color-purple);
+  outline: none;
+  transform: translateY(-2px);
+}
+
+/* No browser focus ring: the purple background is the indicator */
+.btn::-moz-focus-inner,
+.btn-link::-moz-focus-inner {
+  border: 0;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.btn-link {
+  align-self: center;
+  padding: var(--space-1) var(--space-2);
+  color: var(--color-text);
+  background: none;
+  border: none;
+  border-radius: var(--radius-pill);
+  text-decoration: underline;
+}
+
+.btn-link:focus,
+.btn-link:hover {
+  background: var(--color-purple);
+  outline: none;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-weight: 700;
+}
+
+.field input {
+  padding: 0.8em 1.2em;
+  border: 3px solid var(--color-purple);
+  border-radius: var(--radius-pill);
+  background: #fff;
+  color: var(--color-text);
+}
+
+.field input:focus {
+  outline: 3px solid var(--color-purple);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+  }
+
+  .btn:focus,
+  .btn:hover:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* Screen title in a tilted yellow pill (same style as the logo) */
+.pill-title {
+  margin: 0;
+  padding: 0.15em 0.8em 0.25em;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-weight: 700;
+  color: var(--color-pink);
+  background: var(--color-yellow);
+  border-radius: var(--radius-pill);
+  transform: rotate(-1.5deg);
+}

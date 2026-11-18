@@ -1,11 +1,56 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import '@fontsource-variable/plus-jakarta-sans';
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+/* ========== "Pioche ta voix" theme (from the Figma mockup) ========== */
+:root {
+  /* Font */
+  --font-main: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
+
+  /* Background and text */
+  --color-bg: #faeac7;
+  --color-text: #1e1633;
+
+  /* Brand colors */
+  --color-yellow: #ffdd22;
+  --color-pink: #ff5ac8;
+  --color-purple: #bb6bff;
+  --color-green: #4dff1e;
+  --color-orange: #ff9900;
+
+  /* Card families: border/text, light background (front), background (back) */
+  --card-yellow: #ffc922;
+  --card-yellow-face: #fff6e5;
+  --card-yellow-back: #fdefc2;
+
+  --card-pink: #ff22cc;
+  --card-pink-face: #ffe8fa;
+  --card-pink-back: #ffc0f0;
+
+  --card-purple: #9922ff;
+  --card-purple-face: #f8e8ff;
+  --card-purple-back: #eac4ff;
+
+  --card-green: #00f56e;
+  --card-green-face: #e8ffe8;
+  --card-green-back: #bfffbf;
+
+  /* Shapes */
+  --radius-card: 24px;
+  --radius-pill: 999px;
+  --border-card: 6px;
+
+  /* Spacing */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+
+  /* Base */
+  font-family: var(--font-main);
+  line-height: 1.5;
+  font-weight: 500;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  color-scheme: light;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,56 +58,69 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
+h1,
+h2,
+h3 {
+  font-weight: 800;
   line-height: 1.1;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+input,
+textarea {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+/*
+ * Gentle floating: small drift and tilt around the element's anchor point.
+ * Uses the `translate` and `rotate` properties so it adds up with any existing `transform`.
+ * Tune per element with --float-duration, --float-delay, --float-distance, --float-angle.
+ */
+@keyframes float {
+  0%,
+  100% {
+    translate: 0 0;
+    rotate: 0deg;
   }
-  a:hover {
-    color: #747bff;
+  25% {
+    translate: calc(var(--float-distance, 6px) * 0.6) calc(var(--float-distance, 6px) * -0.8);
+    rotate: var(--float-angle, 2deg);
   }
-  button {
-    background-color: #f9f9f9;
+  50% {
+    translate: calc(var(--float-distance, 6px) * -0.4) calc(var(--float-distance, 6px) * -1);
+    rotate: calc(var(--float-angle, 2deg) * -0.6);
+  }
+  75% {
+    translate: calc(var(--float-distance, 6px) * -0.8) calc(var(--float-distance, 6px) * -0.4);
+    rotate: calc(var(--float-angle, 2deg) * 0.5);
+  }
+}
+
+.floating {
+  animation: float var(--float-duration, 10s) ease-in-out var(--float-delay, 0s) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating {
+    animation: none;
   }
 }
