@@ -1,4 +1,5 @@
 import os
+import sys
 
 from app.AppBuilder import AppBuilder, AppException
 from dotenv import load_dotenv
@@ -15,11 +16,11 @@ def main():
     try:
         app.run()
     except AppException as e:
-        print(f"\nApp error: {e}")
+        print(f"\nApp error: {e}", file=sys.stderr)
     except Exception as e:
-        print(f"\n Unexpected error: {e}")
+        print(f"\n Unexpected error: {e}", file=sys.stderr)
     except KeyboardInterrupt:
-        print("\nServer stopped by user.")
+        print("\nServer stopped by user.", file=sys.stderr)
 
 
 if __name__ == "__main__":
