@@ -8,13 +8,13 @@ from dotenv import load_dotenv
 def main():
     load_dotenv()
 
-    app = AppBuilder(name=os.getenv("APP_NAME", "MyApp"))   \
-        .addPort(int(os.getenv("PORT", "5000")))            \
-        .addHost(os.getenv("HOST", "localhost"))            \
-        .addRoute("/", lambda: "Hello World!")              \
-        .build()
-
     try:
+        app = AppBuilder(name=os.getenv("APP_NAME", "MyApp"))   \
+            .addPort(int(os.getenv("PORT", "5000")))            \
+            .addHost(os.getenv("HOST", "localhost"))            \
+            .addRoute("/", lambda: "Hello World!")              \
+            .build()
+
         app.run()
     except AppException as e:
         print(f"\nApp error: {e}", file=sys.stderr)
