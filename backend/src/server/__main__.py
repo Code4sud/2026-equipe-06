@@ -1,6 +1,5 @@
 import os
 
-
 from app.AppBuilder import AppBuilder, AppException
 from dotenv import load_dotenv
 
