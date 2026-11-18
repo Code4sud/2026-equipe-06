@@ -1,5 +1,8 @@
 from flask import Flask
-from typing import Self, Callable, List
+from typing import Self, Callable, List, Literal
+
+
+type METHOD_NAME = Literal["GET", "POST", "PUT", "DELETE", "PATCH"]
 
 
 class AppException(Exception):
@@ -21,6 +24,8 @@ class App:
 
     @property
     def port(self: Self) -> int:
+        if self.__port is None:
+            raise AppException("Port is not set.")
         return self.__port
 
 
@@ -31,6 +36,8 @@ class App:
 
     @property
     def host(self: Self) -> str:
+        if self.__host is None:
+            raise AppException("Host is not set.")
         return self.__host
 
 
@@ -49,7 +56,7 @@ class AppBuilder:
         self.__app = App(name)
 
 
-    def addRoute(self: Self, path: str, callback: Callable[[], str], methods: List[str]=["GET"]) -> Self:
+    def addRoute(self: Self, path: str, callback: Callable[[], str], methods: List[METHOD_NAME]=["GET"]) -> Self:
         self.__app.flask.add_url_rule(
             path,
             view_func=callback,
