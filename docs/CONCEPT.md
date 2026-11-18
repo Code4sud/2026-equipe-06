@@ -31,6 +31,12 @@ Un jeune de 15 à 20 ans qui, quand on lui demande ce qu'il sait faire et ce qu'
 - **Distinguer ce qu'on sait faire de ce qu'on aime.**
 - **Produire une synthèse** de l'ensemble de l'échange.
 
+### Montrer d'où vient chaque compétence
+
+- **Traçabilité** : chaque compétence identifiée est rattachée à la phrase du jeune dont elle provient. Exemple : *« Je gardais mon petit frère tous les mercredis »* → responsabilité, patience, organisation.
+- **Croisement rapport / récit** : on montre où le rapport des possibles et le récit du jeune se rejoignent (« le rapport dit Social, et tu m'as parlé de l'asso ») et où ils divergent. Le jeune tranche.
+- **Référentiel officiel** : les compétences sont aussi exprimées dans un référentiel reconnu (ex. ROME de France Travail), pour que la synthèse soit directement exploitable par un conseiller.
+
 ### Posture de l'assistant
 
 - Ne pas **enfermer** le jeune dans une case.
@@ -38,19 +44,28 @@ Un jeune de 15 à 20 ans qui, quand on lui demande ce qu'il sait faire et ce qu'
 - Pour autant, ne pas **valider n'importe quelle idée farfelue**.
 - Amener le jeune à **tirer ses conclusions lui-même**.
 - Ne pas faire une **confiance aveugle** à l'assistant : le jeune doit pouvoir **remettre en question** les réponses.
+- **Jamais de score ni de note** affichés : uniquement des pistes.
 
 ### Mettre le jeune à l'aise
 
 - **Voix** : TTS (synthèse vocale) et STT (reconnaissance vocale) pour une conversation naturelle.
 - **Capsule** : l'entretien se déroule dans une capsule qui isole le jeune du monde extérieur pour qu'il se sente à l'aise.
+- **Mode texte** en alternative à la voix, pour les jeunes plus à l'aise à l'écrit (timidité, malentendants) : un argument d'inclusion.
 
 ### Éthique et non-discrimination
 
 > **IMPORTANT : pas de discrimination.**
 
 - Aucune décision ni déduction en fonction de la **santé**, des **origines**, de la **famille** ou de la **religion**.
-- Le jeune **valide tout ce qui est retenu en mémoire**.
-- **Question ouverte – handicap** : pour une personne en situation de handicap, faut-il éviter de proposer un métier incompatible avec son handicap ? Comment le faire sans déduire quoi que ce soit sur sa santé ? (Piste : ne prendre en compte que ce que le jeune choisit de déclarer lui-même.)
+- Le jeune **valide tout ce qui est retenu en mémoire** : chaque carte affichée a trois boutons, **garder / modifier / rejeter**. Rien n'est enregistré sans son accord.
+- **Filtre des données sensibles avant l'enregistrement** : avec « je gardais mon petit frère », on retient la compétence, pas l'information familiale.
+- **Handicap** : aucun métier n'est filtré automatiquement. Le jeune peut, s'il le souhaite, déclarer lui-même une contrainte (« je préfère éviter le port de charges »). Rien n'est déduit, seul ce qu'il choisit de dire est pris en compte.
+
+### Souveraineté
+
+- Modèle hébergé en France ou en UE, voire open source en local.
+- Reconnaissance vocale (STT) en local.
+- Données hébergées en France.
 
 ### Persistance des sessions
 
