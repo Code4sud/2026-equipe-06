@@ -24,7 +24,7 @@ AUTH_CODES = "auth_codes"
 CODE_TTL = timedelta(minutes=10)
 RESEND_COOLDOWN = timedelta(seconds=60)
 MAX_ATTEMPTS = 5
-CODE_LENGTH = 8
+CODE_LENGTH = 6
 
 
 def route(path: str, type: METHOD_NAME = "GET") -> Callable[[Callable[..., Any]], Callable[..., Any]]:
