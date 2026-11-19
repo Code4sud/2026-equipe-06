@@ -1,0 +1,94 @@
+.home {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(3rem, 12vh, 9rem);
+  padding: var(--space-4) var(--space-2);
+}
+
+/* Decorative shapes in the corners */
+.home-decor > * {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* Each shape floats at its own pace so they never move in sync */
+.home-blob {
+  top: -12vh;
+  left: -6vw;
+  width: clamp(10rem, 24vw, 22rem);
+  --float-duration: 13s;
+  --float-delay: -2s;
+  --float-distance: 10px;
+  --float-angle: 3deg;
+}
+
+.home-triangle {
+  top: -14vh;
+  right: 0;
+  width: clamp(9rem, 22vw, 20rem);
+  transform: rotate(-8deg);
+  --float-duration: 11s;
+  --float-delay: -7s;
+  --float-distance: 8px;
+  --float-angle: -3deg;
+}
+
+.home-asterisk {
+  top: 48vh;
+  right: -5vw;
+  width: clamp(8rem, 18vw, 17rem);
+  transform: rotate(-22deg);
+  --float-duration: 15s;
+  --float-delay: -4s;
+  --float-distance: 10px;
+  --float-angle: 4deg;
+}
+
+.home-star {
+  bottom: -18vh;
+  left: -10vw;
+  width: clamp(12rem, 30vw, 28rem);
+  --float-duration: 12s;
+  --float-delay: -9s;
+  --float-distance: 9px;
+  --float-angle: -2.5deg;
+}
+
+/* The title is wide: smaller tilt so its edges barely move */
+.home-logo {
+  --float-duration: 9s;
+  --float-distance: 5px;
+  --float-angle: 0.8deg;
+}
+
+/* Logo and buttons above the shapes */
+.home-logo,
+.home-panel {
+  position: relative;
+  z-index: 1;
+}
+
+.home-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2);
+  width: min(100%, 30rem);
+}
+
+.home-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.home-error {
+  margin: 0;
+  font-weight: 700;
+  text-align: center;
+}

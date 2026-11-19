@@ -1,0 +1,387 @@
+/* Timings shared with Drawing.tsx (keep in sync) */
+.game-card {
+  --deal-duration: 500ms;
+  --deal-stagger: 120ms;
+  --flip-duration: 650ms;
+  --flip-stagger: 150ms;
+  --tilt: calc((var(--card-index) - 2) * 1.5deg);
+
+  position: relative;
+  width: clamp(11rem, 17vw, 15.5rem);
+  aspect-ratio: 5 / 7;
+  padding: 0;
+  border: none;
+  background: none;
+  perspective: 1200px;
+  transform: rotate(var(--tilt));
+  transition:
+    transform 0.2s ease,
+    opacity 0.3s ease;
+  animation: deal-in var(--deal-duration) cubic-bezier(0.2, 0.8, 0.3, 1.1) both;
+  animation-delay: calc(var(--card-index) * var(--deal-stagger));
+  scroll-margin: var(--space-4);
+}
+
+.game-card:disabled {
+  cursor: default;
+}
+
+/* Selected card (keyboard focus or mouse hover) and chosen card: rises above the others and straightens */
+.game-card.is-revealed:not(:disabled):focus,
+.game-card.is-revealed:not(:disabled):hover,
+.game-card.is-chosen {
+  outline: none;
+  transform: translateY(-28px) scale(1.06);
+}
+
+.game-card::-moz-focus-inner {
+  border: 0;
+}
+
+.game-card.is-revealed:not(:disabled):focus .game-card-front,
+.game-card.is-revealed:not(:disabled):hover .game-card-front,
+.game-card.is-chosen .game-card-front {
+  box-shadow: 0 14px 22px -14px rgb(30 22 51 / 0.4);
+}
+
+/*
+ * Revealed cards float gently, each at its own pace.
+ * Applied to the inner wrapper: the button's own animation is the deal-in.
+ * The selected / chosen card stops floating.
+ */
+.game-card.is-revealed .game-card-inner {
+  --float-duration: calc(7s + var(--card-index) * 0.7s);
+  --float-delay: calc(var(--card-index) * -1.9s);
+  --float-distance: 4px;
+  --float-angle: 1deg;
+  animation: float var(--float-duration) ease-in-out var(--float-delay) infinite;
+}
+
+.game-card.is-revealed:not(:disabled):focus .game-card-inner,
+.game-card.is-revealed:not(:disabled):hover .game-card-inner,
+.game-card.is-chosen .game-card-inner {
+  animation: none;
+}
+
+/* Cards not chosen are thrown off screen, to the side they were on */
+.game-card.is-discarded,
+.game-card.is-instant.is-discarded {
+  animation: discard 0.45s cubic-bezier(0.5, 0, 0.9, 0.6) both;
+  /* One after the other, left to right */
+  animation-delay: calc(var(--discard-order) * 120ms);
+}
+
+@keyframes discard {
+  to {
+    opacity: 0;
+    translate: calc(var(--discard-direction) * 75vw) 35vh;
+    rotate: calc(var(--discard-direction) * 40deg);
+  }
+}
+
+/* Cards arrive from below, face down */
+@keyframes deal-in {
+  from {
+    opacity: 0;
+    translate: 0 45vh;
+    rotate: -12deg;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    rotate: 0deg;
+  }
+}
+
+/*
+ * Light 3D tilt: the card leans toward the pointer (values set by GameCard.tsx).
+ * Between the button (perspective) and the inner wrapper (flip), so it adds up with both.
+ */
+.game-card-tilt {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition: transform 0.25s ease-out;
+}
+
+/* Keyboard selection (no pointer): a small fixed lean and highlight */
+.game-card.is-revealed:not(:disabled):focus {
+  --tilt-x: -3deg;
+  --tilt-y: 4deg;
+  --glare-x: 30%;
+  --glare-y: 18%;
+}
+
+/* Chosen or thrown away: back to flat */
+.game-card:disabled .game-card-tilt {
+  transform: none;
+}
+
+/* Flip */
+.game-card-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform var(--flip-duration) cubic-bezier(0.3, 0.7, 0.3, 1.15);
+  transition-delay: calc(var(--card-index) * var(--flip-stagger));
+}
+
+.game-card.is-revealed .game-card-inner {
+  transform: rotateY(180deg);
+}
+
+.game-card-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Volume on the back: a soft sheen always there (light top left, a hint of shade bottom right) */
+.game-card-back::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgb(255 255 255 / 0.18) 0%, transparent 42%, rgb(30 22 51 / 0.05) 100%);
+}
+
+/* Light reflection on the back, following the pointer (or top left with the keyboard).
+   The front paints its own reflection in its background, under the text */
+.game-card-back::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--glare-x, 30%) var(--glare-y, 18%),
+    rgb(255 255 255 / 0.4),
+    rgb(255 255 255 / 0.1) 35%,
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.game-card.is-revealed:not(:disabled):hover .game-card-back::after,
+.game-card.is-revealed:not(:disabled):focus .game-card-back::after {
+  opacity: 1;
+}
+
+/* Back: tinted background with the brand shapes */
+.game-card-back {
+  background: var(--card-back);
+}
+
+.game-card-back > svg {
+  position: absolute;
+}
+
+.game-card-back-asterisk {
+  top: 7%;
+  left: 3%;
+  width: 34%;
+  rotate: 10deg;
+}
+
+.game-card-back-flower {
+  top: -4%;
+  right: -4%;
+  width: 30%;
+}
+
+.game-card-back-triangle {
+  top: 48%;
+  right: -12%;
+  width: 34%;
+}
+
+.game-card-back-star {
+  bottom: -14%;
+  left: -6%;
+  width: 60%;
+}
+
+/* Front: light background, thick colored border, title top left (the shiny look is in cardShine.css) */
+.game-card-front {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: 12% 10% 8%;
+  text-align: left;
+  color: var(--card-color);
+  transform: rotateY(180deg);
+}
+
+.game-card.is-revealed:not(:disabled):hover .game-card-front,
+.game-card.is-revealed:not(:disabled):focus .game-card-front {
+  --glare-strength: 1;
+}
+
+.game-card-title {
+  font-size: clamp(0.95rem, 1.35vw, 1.2rem);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.game-card-image {
+  width: 100%;
+  border-radius: calc(var(--radius-card) / 2);
+}
+
+.game-card-brand {
+  font-weight: 800;
+  font-size: clamp(0.9rem, 1.3vw, 1.15rem);
+  color: var(--card-color);
+}
+
+.game-card-back .game-card-brand {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+}
+
+.game-card-front .game-card-brand {
+  margin-top: auto;
+  align-self: center;
+}
+
+/* Colors per family */
+.game-card-yellow {
+  --card-color: var(--card-yellow);
+  --card-face: var(--card-yellow-face);
+  --card-back: var(--card-yellow-back);
+}
+
+.game-card-pink {
+  --card-color: var(--card-pink);
+  --card-face: var(--card-pink-face);
+  --card-back: var(--card-pink-back);
+}
+
+.game-card-purple {
+  --card-color: var(--card-purple);
+  --card-face: var(--card-purple-face);
+  --card-back: var(--card-purple-back);
+}
+
+.game-card-green {
+  --card-color: var(--card-green);
+  --card-face: var(--card-green-face);
+  --card-back: var(--card-green-back);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-card {
+    animation: none;
+    transition: none;
+  }
+
+  .game-card-tilt {
+    transition: none;
+    transform: none;
+  }
+
+  .game-card-inner,
+  .game-card.is-revealed .game-card-inner {
+    transition: none;
+    animation: none;
+  }
+
+  .game-card.is-discarded,
+  .game-card.is-instant.is-discarded {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* Mirror: the final card, imposed by the backend. Distinct look. TEMPORARY until a mockup exists */
+.game-card-mirror {
+  --card-color: var(--color-text);
+  --card-face: #fff;
+  --card-back: var(--color-yellow);
+}
+
+/* Cards already drawn (back from the collection): no deal-in, no flip */
+.game-card.is-instant {
+  animation: none;
+}
+
+.game-card.is-instant .game-card-inner {
+  transition: none;
+}
+
+/*
+ * Joker: always the 5th card, added by the front, draws new cards.
+ * Different from the others: solid black border, centered layout with a redraw icon, brand shapes, multicolor back.
+ * TEMPORARY until a mockup exists
+ */
+.game-card-joker {
+  --card-color: var(--color-text);
+  --card-face: #fff;
+  --card-back: #fff3d6;
+}
+
+.game-card.is-joker .game-card-front {
+  align-items: center;
+  gap: var(--space-2);
+  text-align: center;
+  /* Solid black border: --card-color is the text color for the joker */
+}
+
+/* Brand shapes behind the content, light so the text stays readable */
+.joker-shape {
+  position: absolute;
+  z-index: 0;
+}
+
+.joker-flower {
+  top: -6%;
+  right: -8%;
+  width: 36%;
+}
+
+.joker-star {
+  bottom: -10%;
+  left: -10%;
+  width: 54%;
+}
+
+.joker-triangle {
+  top: 8%;
+  left: 4%;
+  width: 28%;
+  rotate: -12deg;
+}
+
+.joker-asterisk {
+  bottom: 14%;
+  right: 4%;
+  width: 24%;
+  rotate: 14deg;
+}
+
+.game-card.is-joker .game-card-front > :not(.joker-shape) {
+  position: relative;
+  z-index: 1;
+}
+
+.game-card-redraw {
+  width: 38%;
+  color: var(--color-purple);
+  /* Icon and title stay centered in the free space; "ptv" keeps its place at the bottom */
+  margin-top: auto;
+}
+
+.game-card.is-joker .game-card-title {
+  margin-bottom: auto;
+}
