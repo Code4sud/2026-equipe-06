@@ -45,7 +45,6 @@ def main():
             .addRoute("/", lambda: "Hello World!")
 
         for route_name, route_func, route_type in Router():
-            route_name = route_name.replace("_", "/")
             app_builder.addRoute(f"/api/{route_name}", route_func, [route_type])
 
         app_builder.build().run()
