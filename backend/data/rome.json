@@ -1,0 +1,4811 @@
+{
+  "reference": "ROME 4.0",
+  "source": "France Travail, arborescence simplifiée des compétences, octobre 2026 (Licence Ouverte)",
+  "source_url": "https://www.data.gouv.fr/datasets/repertoire-operationnel-des-metiers-et-des-emplois-rome",
+  "notes": [
+    "Complète docs/Referentiel_ROME.json : ajoute le domaine 6, les enjeux, objectifs et toutes les macro-compétences avec leur code, et corrige les totaux.",
+    "Chaque macro-compétence porte son profil RIASEC (majeur / mineur), comme le questionnaire d'intérêts du rapport des possibles.",
+    "Les libellés des savoir-être sont ceux de la version d'octobre 2026, différents de ceux du fichier d'origine (ex. « Avoir l'esprit d'équipe »).",
+    "Les 19 000 compétences détaillées ne sont pas incluses : se référer au fichier officiel si besoin."
+  ],
+  "counts": {
+    "domains": 6,
+    "issues": 32,
+    "objectives": 84,
+    "macro_skills": 506,
+    "know_how": 490,
+    "soft_skills": 16
+  },
+  "domains": [
+    {
+      "index": 1,
+      "name": "Management, Social, Soin",
+      "issues": [
+        {
+          "name": "Animation",
+          "objectives": [
+            {
+              "name": "Animer des activités",
+              "macro_skills": [
+                {
+                  "code": "1A101",
+                  "label": "Concevoir et animer des activités de détente ou de loisirs",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": "R"
+                },
+                {
+                  "code": "1A102",
+                  "label": "Assurer l'encadrement de l'enfant ou d'un groupe d'enfants",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": "E"
+                },
+                {
+                  "code": "1A103",
+                  "label": "Concevoir et animer des activités sportives",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": "R"
+                },
+                {
+                  "code": "1A104",
+                  "label": "Mettre en oeuvre et animer des actions socioculturelles",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1A105",
+                  "label": "Animer une cérémonie, un spectacle",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "A",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1A106",
+                  "label": "Animer un jeu",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1A107",
+                  "label": "Concevoir des animations",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Management",
+          "objectives": [
+            {
+              "name": "Animer un collectif",
+              "macro_skills": [
+                {
+                  "code": "1B101",
+                  "label": "Animer, coordonner une équipe",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1B102",
+                  "label": "Valoriser et partager les bonnes pratiques",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1B103",
+                  "label": "Animer un débat",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1B104",
+                  "label": "Déléguer, responsabiliser",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1B105",
+                  "label": "Organiser le travail d'une équipe",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1B106",
+                  "label": "Faciliter et créer les conditions de la coopération",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1B107",
+                  "label": "Encourager la créativité et l'innovation dans son équipe",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1B108",
+                  "label": "Prévenir et résoudre les conflits",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1B109",
+                  "label": "Animer un réseau, une communauté",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1B110",
+                  "label": "Superviser des responsables de projets ou d'activités",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Manager une équipe",
+              "macro_skills": [
+                {
+                  "code": "1B201",
+                  "label": "Reconnaître et valoriser les potentiels et les talents de son équipe",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1B202",
+                  "label": "Optimiser les effectifs, l'adéquation et l'allocation des ressources",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1B203",
+                  "label": "Relayer la stratégie auprès des collaborateurs",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1B204",
+                  "label": "Evaluer et développer les compétences de ses collaborateurs",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1B205",
+                  "label": "Favoriser et mesurer la performance d'une équipe",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1B206",
+                  "label": "Manager une équipe multiculturelle",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1B207",
+                  "label": "Coordonner l'intervention d'équipes pluridisciplinaires",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1B208",
+                  "label": "Mettre en œuvre les directives et la politique de l'entreprise",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "1B209",
+                  "label": "Préparer et réaliser des performances sportives",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Gestion des Ressources Humaines",
+          "objectives": [
+            {
+              "name": "Accompagner le changement",
+              "macro_skills": [
+                {
+                  "code": "1C101",
+                  "label": "Mettre en oeuvre les actions de transformation nécessaires aux changements",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": "S"
+                },
+                {
+                  "code": "1C102",
+                  "label": "Organiser des actions de communication interne",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1C103",
+                  "label": "Favoriser les organisations apprenantes et innovantes",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": "E"
+                }
+              ]
+            },
+            {
+              "name": "Gérer les emplois et les compétences",
+              "macro_skills": [
+                {
+                  "code": "1C201",
+                  "label": "Gérer les ressources humaines",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1C202",
+                  "label": "Recruter et intégrer une personne",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1C203",
+                  "label": "Sélectionner des artistes, des auteurs",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1C204",
+                  "label": "Procéder au licenciement d'une personne",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1C205",
+                  "label": "Concevoir et mettre en oeuvre un plan de développement des compétences",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1C206",
+                  "label": "Gérer la mobilité et les parcours professionnels",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1C207",
+                  "label": "Cartographier et classifier les emplois et les compétences",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1C208",
+                  "label": "Concevoir et piloter une politique de gestion des ressources humaines",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Améliorer la qualité de vie au travail",
+              "macro_skills": [
+                {
+                  "code": "1C301",
+                  "label": "Aménager un poste et les conditions de travail",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": "E"
+                },
+                {
+                  "code": "1C302",
+                  "label": "Réaliser un diagnostic organisationnel",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1C303",
+                  "label": "Veiller à maintenir un climat social favorable",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1C304",
+                  "label": "Animer le dialogue social",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Conseil, Transmission",
+          "objectives": [
+            {
+              "name": "Conseiller",
+              "macro_skills": [
+                {
+                  "code": "1D101",
+                  "label": "Conseiller, accompagner une personne",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1D102",
+                  "label": "Coacher une personne",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1D103",
+                  "label": "Conseiller une organisation, une structure",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": "S"
+                }
+              ]
+            },
+            {
+              "name": "Transmettre des bonnes pratiques et développer des compétences",
+              "macro_skills": [
+                {
+                  "code": "1D201",
+                  "label": "Contribuer au développement de compétences dans un cadre informel",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1D202",
+                  "label": "Evaluer des acquis d'apprentissage, de formation ou d'expérience",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1D203",
+                  "label": "Accompagner l'appropriation d'un outil par ses utilisateurs",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "S",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1D204",
+                  "label": "Transmettre une méthodologie, un procédé",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1D205",
+                  "label": "Transmettre une technique, un savoir-faire",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1D206",
+                  "label": "Enseigner, développer des compétences",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Accompagner l'insertion sociale et professionnelle",
+              "macro_skills": [
+                {
+                  "code": "1D301",
+                  "label": "Accompagner le développement de l'autonomie d'une personne",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1D302",
+                  "label": "Assurer une médiation",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1D303",
+                  "label": "Réaliser un diagnostic sanitaire et social d'une personne",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1D304",
+                  "label": "Accompagner la recherche d'emploi et le reclassement",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1D305",
+                  "label": "Accompagner l'élaboration et la mise en oeuvre d'un projet d'orientation professionnelle",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Concevoir l'ingénierie de formation",
+              "macro_skills": [
+                {
+                  "code": "1D401",
+                  "label": "Définir des besoins en développement des compétences",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1D402",
+                  "label": "Concevoir des supports de formation",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": "I"
+                },
+                {
+                  "code": "1D403",
+                  "label": "Concevoir et déployer des outils d'évaluation",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1D404",
+                  "label": "Concevoir l'ingénierie de formation et les séquences pédagogiques",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": "I"
+                },
+                {
+                  "code": "1D405",
+                  "label": "Organiser et piloter un programme de formation",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": "C"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Soin",
+          "objectives": [
+            {
+              "name": "Prendre soin des personnes",
+              "macro_skills": [
+                {
+                  "code": "1E101",
+                  "label": "Aider la personne",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1E102",
+                  "label": "Prodiguer des soins corporels et esthétiques",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "S",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1E103",
+                  "label": "Surveiller l'état de santé d'une personne",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": "I"
+                },
+                {
+                  "code": "1E104",
+                  "label": "Réaliser un diagnostic ou un bilan paramédical",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1E105",
+                  "label": "Réaliser des soins de médecine non conventionnelle",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1E106",
+                  "label": "Prodiguer des soins paramédicaux",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1E107",
+                  "label": "Accompagner le développement de l'enfant",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1E108",
+                  "label": "Informer, accompagner un patient",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Réaliser un accompagnement psychologique",
+              "macro_skills": [
+                {
+                  "code": "1E201",
+                  "label": "Prévenir les risques psychosociaux",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1E202",
+                  "label": "Réaliser un accompagnement psychologique",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "S",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1E203",
+                  "label": "Procéder à un examen psychologique",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Soigner des personnes",
+              "macro_skills": [
+                {
+                  "code": "1E301",
+                  "label": "Prodiguer les gestes de premiers secours en cas d'urgence",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1E302",
+                  "label": "Procéder à des examens médicaux",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "S"
+                },
+                {
+                  "code": "1E303",
+                  "label": "Préparer un patient pour une intervention médicale",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1E304",
+                  "label": "Participer à une intervention chirurgicale",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1E305",
+                  "label": "Réaliser et superviser des examens d'imagerie médicale",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1E306",
+                  "label": "Analyser des résultats d'examen médicaux",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1E307",
+                  "label": "Réaliser un diagnostic médical",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "S"
+                },
+                {
+                  "code": "1E308",
+                  "label": "Prodiguer des soins médicaux",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "S",
+                  "riasec_minor": "I"
+                },
+                {
+                  "code": "1E309",
+                  "label": "Assurer le suivi médical d'un patient",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1E310",
+                  "label": "Prescrire des soins ou des médicaments",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1E311",
+                  "label": "Concevoir des protocoles de soins",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1E312",
+                  "label": "Réaliser une intervention chirurgicale",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "R"
+                },
+                {
+                  "code": "1E313",
+                  "label": "Coordonner des soins médicaux",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1E314",
+                  "label": "Concevoir et réaliser des soins de rééducation",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "S"
+                }
+              ]
+            },
+            {
+              "name": "Prendre soin d'un animal",
+              "macro_skills": [
+                {
+                  "code": "1E401",
+                  "label": "Prodiguer des soins corporels et esthétiques aux animaux",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1E402",
+                  "label": "Favoriser une alimentation animale équilibrée",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1E403",
+                  "label": "Eduquer/dresser des animaux",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1E404",
+                  "label": "Procéder à des examens médicaux sur des animaux",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "S"
+                },
+                {
+                  "code": "1E405",
+                  "label": "Prodiguer des soins sur les animaux",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": "I"
+                },
+                {
+                  "code": "1E406",
+                  "label": "Réaliser une intervention chirurgicale sur un animal",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "1E407",
+                  "label": "Prendre soin d'un animal",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Communication, Création, Innovation, Nouvelles technologies",
+      "issues": [
+        {
+          "name": "Communication, Multimédia",
+          "objectives": [
+            {
+              "name": "Communiquer (niveau professionnel)",
+              "macro_skills": [
+                {
+                  "code": "2A201",
+                  "label": "Mener un entretien, une interview, une audition",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2A202",
+                  "label": "Rédiger un article, un contenu éditorial",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2A203",
+                  "label": "Réaliser une traduction, transposer un texte",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "2A204",
+                  "label": "Rédiger un cahier des charges, des spécifications techniques",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": "I"
+                }
+              ]
+            },
+            {
+              "name": "Réaliser des actions de communication et évènements",
+              "macro_skills": [
+                {
+                  "code": "2A301",
+                  "label": "Définir une stratégie de communication",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2A302",
+                  "label": "Mettre en oeuvre des actions de communication",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2A303",
+                  "label": "Gérer les relations publiques",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2A304",
+                  "label": "Créer, organiser ou coordonner un évènement",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Concevoir des supports vidéo ou graphiques",
+              "macro_skills": [
+                {
+                  "code": "2A401",
+                  "label": "Concevoir des supports de communication et d'image",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": "A"
+                },
+                {
+                  "code": "2A402",
+                  "label": "Concevoir et réaliser des éléments graphiques et visuels",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "A",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2A403",
+                  "label": "Réaliser un montage son ou vidéo",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "R",
+                  "riasec_minor": "A"
+                },
+                {
+                  "code": "2A404",
+                  "label": "Diffuser du son, de la video, de l'audiovisuel",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2A405",
+                  "label": "Concevoir et réaliser un jeu vidéo",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "I",
+                  "riasec_minor": "A"
+                },
+                {
+                  "code": "2A406",
+                  "label": "Produire une création numérique",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Création artistique",
+          "objectives": [
+            {
+              "name": "Composer, mettre en scène",
+              "macro_skills": [
+                {
+                  "code": "2B101",
+                  "label": "Ecrire ou modifier une oeuvre littéraire (roman, nouvelle, scénario...)",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "A",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2B102",
+                  "label": "Créer un son, une œuvre musicale",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "A",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2B103",
+                  "label": "Orchestrer une oeuvre musicale",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "A",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2B104",
+                  "label": "Mettre en scène un spectacle",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "A",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2B105",
+                  "label": "Réaliser un film, une émission, un programme",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "A",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2B106",
+                  "label": "Créer, écrire une chorégraphie",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Créer une oeuvre",
+              "macro_skills": [
+                {
+                  "code": "2B201",
+                  "label": "Concevoir un objet d'art ou d'artisanat",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "A",
+                  "riasec_minor": "R"
+                },
+                {
+                  "code": "2B202",
+                  "label": "Réaliser une oeuvre plastique (peinture, sculpture, etc.)",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "A",
+                  "riasec_minor": "R"
+                },
+                {
+                  "code": "2B203",
+                  "label": "Porter une appréciation esthétique ou artistique",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "A",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2B204",
+                  "label": "Définir un style ou une direction artistique dans les domaines de l'art, la mode ou le design",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "A",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Réaliser une performance, représentation artistique",
+              "macro_skills": [
+                {
+                  "code": "2B301",
+                  "label": "Poser pour une oeuvre, défiler",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2B302",
+                  "label": "Danser, interpréter une chorégraphie",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "A",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2B303",
+                  "label": "Interpréter une oeuvre, un spectacle ou un numéro",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "A",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2B304",
+                  "label": "Interpréter un rôle dans les domaines de l'art du spectacle ou de l'audiovisuel",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "A",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2B306",
+                  "label": "Filmer, photographier",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "A",
+                  "riasec_minor": "R"
+                },
+                {
+                  "code": "2B307",
+                  "label": "Mixer des morceaux de musique",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "A",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2B308",
+                  "label": "Maîtriser l'usage d'un instrument de musique",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "A",
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Recherche, Innovation",
+          "objectives": [
+            {
+              "name": "Analyser les usages, l'expérience utilisateur",
+              "macro_skills": [
+                {
+                  "code": "2C101",
+                  "label": "Administrer une enquête, un sondage",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "2C102",
+                  "label": "Concevoir un questionnaire, un support d'enquête",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "2C103",
+                  "label": "Réaliser une étude d'opportunité et de faisabilité technique et économique",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "R"
+                },
+                {
+                  "code": "2C104",
+                  "label": "Réaliser une étude d'ergonomie, analyser les usages",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Modéliser, prototyper, inventer",
+              "macro_skills": [
+                {
+                  "code": "2C201",
+                  "label": "Concevoir un ouvrage",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2C202",
+                  "label": "Concevoir un algorithme",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2C203",
+                  "label": "Concevoir et faire évoluer un modèle, un prototype",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "R"
+                },
+                {
+                  "code": "2C204",
+                  "label": "Concevoir une formule technique, un modèle théorique",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2C205",
+                  "label": "Créer, concevoir de nouveaux produits ou des améliorations produits",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "R"
+                },
+                {
+                  "code": "2C206",
+                  "label": "Créer, concevoir de nouveaux services ou des améliorations de services",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "S"
+                },
+                {
+                  "code": "2C207",
+                  "label": "Créer, élaborer et identifier des concepts innovants",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2C208",
+                  "label": "Concevoir des maquettes et pré-maquettes",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Expérimenter, piloter la recherche et l'innovation",
+              "macro_skills": [
+                {
+                  "code": "2C301",
+                  "label": "Collecter, tester, analyser des échantillons, des matériaux",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "R"
+                },
+                {
+                  "code": "2C302",
+                  "label": "Observer des faits, des évènements, des comportements",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2C303",
+                  "label": "Procéder à des tests, expérimentations",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2C304",
+                  "label": "Réaliser une veille technique ou technologique pour anticiper les évolutions",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2C305",
+                  "label": "Analyser, résoudre un problème courant ou complexe",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2C306",
+                  "label": "Elaborer une stratégie de résolution de problèmes",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2C307",
+                  "label": "Concevoir et animer une démarche d'innovation",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "I",
+                  "riasec_minor": "E"
+                },
+                {
+                  "code": "2C308",
+                  "label": "Conduire des travaux d'études et de recherche",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Data et Nouvelles technologies",
+          "objectives": [
+            {
+              "name": "Concevoir, développer, administrer un logiciel ou un SI",
+              "macro_skills": [
+                {
+                  "code": "2D101",
+                  "label": "Paramétrer un logiciel, un outil, un système numérique",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "2D102",
+                  "label": "Développer un logiciel, un système d'informations, une application",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "2D103",
+                  "label": "Déployer, intégrer un logiciel, un système d'informations, une application",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "2D104",
+                  "label": "Administrer un système d'informations",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "2D105",
+                  "label": "Concevoir un logiciel, un système d'informations, une application",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2D106",
+                  "label": "Concevoir l'architecture d'un système, d'un réseau",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Développer les nouvelles technologies",
+              "macro_skills": [
+                {
+                  "code": "2D201",
+                  "label": "Exploiter des solutions de Data Science ou d'Intelligence Artificielle",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2D202",
+                  "label": "Intégrer des produits Data dans les processus métiers",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2D203",
+                  "label": "Utiliser des logiciels spécifiques",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Analyser et structurer des données, informations",
+              "macro_skills": [
+                {
+                  "code": "2D301",
+                  "label": "Définir et faire évoluer des procédés de traitement de l'information",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "2D303",
+                  "label": "Contrôler la conformité des données",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2D304",
+                  "label": "Analyser, exploiter, structurer des données",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "2D305",
+                  "label": "Comprendre, interpréter des données et documents techniques",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "2D306",
+                  "label": "Gérer une base de données numériques",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "2D307",
+                  "label": "Créer une documentation technique",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "2D308",
+                  "label": "Créer un dessin technique, un plan, ou une carte",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "R"
+                },
+                {
+                  "code": "2D309",
+                  "label": "Réaliser une analyse ou modélisation statistique de données",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2D310",
+                  "label": "Mettre à jour un dossier, une base de données",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2D311",
+                  "label": "Renseigner, mettre à jour une documentation technique",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "2D312",
+                  "label": "Analyser et traiter l'information à des fins d'anticipation",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "2D313",
+                  "label": "Analyser une situation et produire un diagnostic",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Production, Construction, Qualité, Logistique",
+      "issues": [
+        {
+          "name": "Conception",
+          "objectives": [
+            {
+              "name": "Concevoir, spécifier",
+              "macro_skills": [
+                {
+                  "code": "3A101",
+                  "label": "Réaliser et vérifier des calculs de mathématiques généraux ou appliqués",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3A102",
+                  "label": "Réaliser l'aménagement technique d'un espace de travail",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3A103",
+                  "label": "Concevoir, améliorer un équipement, une machine, une installation",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "R"
+                },
+                {
+                  "code": "3A104",
+                  "label": "Concevoir, implanter et configurer des équipements électrotechniques",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "R"
+                },
+                {
+                  "code": "3A105",
+                  "label": "Concevoir des coulages et moulages des matières premières",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3A106",
+                  "label": "Concevoir, fabriquer un outil technique",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3A107",
+                  "label": "Concevoir un appareillage médical",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3A108",
+                  "label": "Elaborer un schéma directeur technique, définir des besoins en équipement",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "3A109",
+                  "label": "Elaborer des processus et des modes opératoires techniques",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3A110",
+                  "label": "Elaborer et planifier un programme de production, d'exploitation",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": "R"
+                }
+              ]
+            },
+            {
+              "name": "Percevoir, goûter, assembler",
+              "macro_skills": [
+                {
+                  "code": "3A201",
+                  "label": "Percevoir des couleurs",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Production, Fabrication",
+          "objectives": [
+            {
+              "name": "Mettre en oeuvre des procédés, modes opératoires",
+              "macro_skills": [
+                {
+                  "code": "3B101",
+                  "label": "Préparer du matériel en prévision d'un travail",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B102",
+                  "label": "Préparer un support, une matière",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B103",
+                  "label": "Réaliser des marquages",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B104",
+                  "label": "Former des matières premières (acier, verre, plastiques, etc.)",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B105",
+                  "label": "Mettre en oeuvre les processus et les modes opératoires techniques",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "3B106",
+                  "label": "Relever, contrôler, ajuster des mesures et dosages",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B107",
+                  "label": "Monter et régler une installation, une machine",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B108",
+                  "label": "Démonter un équipement, une installation",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B109",
+                  "label": "Assurer la cuisson, le séchage de pièces ou matériaux usinés",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B110",
+                  "label": "Conduire et contrôler un procédé de fermentation",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B111",
+                  "label": "Configurer et paramétrer une installation, une machine",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B112",
+                  "label": "Adapter, ajuster un article ou une production en fonction du besoin",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B113",
+                  "label": "Paramétrer, ajuster, et poser un appareillage médical",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Manipuler des produits, matières premières",
+              "macro_skills": [
+                {
+                  "code": "3B201",
+                  "label": "Maîtriser les caractéristiques d'un produit ou d'un matériau",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B202",
+                  "label": "Sélectionner les matières premières à mobiliser",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B203",
+                  "label": "Collecter des produits, des matériaux, des matières premières",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B204",
+                  "label": "Manipuler des produits dangereux ou fragiles",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B205",
+                  "label": "Approvisionner une machine en matière première ou en produit",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B206",
+                  "label": "Effectuer des mélanges de matières premières",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B207",
+                  "label": "Transformer une matière première",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B208",
+                  "label": "Transformer des matières premières d'origine animale",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B209",
+                  "label": "Transformer des matières premières d'origine végétale",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B212",
+                  "label": "Transformer et traiter des métaux",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B213",
+                  "label": "Appliquer un traitement, un produit",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B214",
+                  "label": "Peindre des surfaces et supports visuels",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B215",
+                  "label": "Réaliser des coulages et moulages des matières premières",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B216",
+                  "label": "Découper, tailler des matières premières",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B217",
+                  "label": "Tailler, découper des matériaux",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B218",
+                  "label": "Réaliser les travaux de montage, d'assemblage",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B219",
+                  "label": "Fabriquer, façonner des produits",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B220",
+                  "label": "Réaliser la finition d'un produit, d'un article, d'un ouvrage",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B221",
+                  "label": "Décorer, travailler l'aspect visuel d'un produit",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": "A"
+                },
+                {
+                  "code": "3B222",
+                  "label": "Façonner ou modifier un objet d'art ou d'artisanat",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "A",
+                  "riasec_minor": "R"
+                },
+                {
+                  "code": "3B223",
+                  "label": "Préparer des boissons",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B224",
+                  "label": "Exécuter une étape de fabrication",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Utiliser des machines, outils",
+              "macro_skills": [
+                {
+                  "code": "3B301",
+                  "label": "Démarrer ou arrêter une machine, une ligne",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B302",
+                  "label": "Utiliser un outil, une machine, un équipement, une installation",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B303",
+                  "label": "Utiliser et régler un outil ou machine d'impression, de tirage",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B304",
+                  "label": "Utiliser et régler un outil, une machine, un équipement de construction",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B305",
+                  "label": "Utiliser et régler des machines ou équipements de combinaison d'éléments liquides ou chimiques",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B306",
+                  "label": "Utiliser et régler des machines ou équipements de géologie, topographie",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B307",
+                  "label": "Utiliser et régler des machines ou équipements de menuiserie ou papeterie",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B308",
+                  "label": "Utiliser et régler des machines ou équipements mécaniques, de la métallurgie ou de la plasturgie",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B309",
+                  "label": "Utiliser et régler des machines ou équipements de verrerie ou céramique",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B310",
+                  "label": "Utiliser et régler des machines ou équipements électrotechniques ou robotiques",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B311",
+                  "label": "Utiliser et régler des machines ou équipements des éléments de l'industrie du bois",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B312",
+                  "label": "Utiliser et régler des appareils et équipements textiles",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B313",
+                  "label": "Utiliser et régler des machines ou équipements de son et lumière, cinématographiques, audiovisuels",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Cultiver, produire",
+              "macro_skills": [
+                {
+                  "code": "3B401",
+                  "label": "Cultiver et récolter des végétaux/minéraux",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B402",
+                  "label": "Entretenir un élevage animal",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Extraire, exploiter des ressources",
+              "macro_skills": [
+                {
+                  "code": "3B501",
+                  "label": "Extraire, exploiter un forage",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B502",
+                  "label": "Prospecter en vue d'opérations d'extraction et de forage",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Mettre en œuvre des techniques culinaires",
+              "macro_skills": [
+                {
+                  "code": "3B601",
+                  "label": "Identifier et composer des arômes",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "A"
+                },
+                {
+                  "code": "3B602",
+                  "label": "Gouter et assembler des aliments",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B603",
+                  "label": "Concevoir des recettes et menus",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": "I"
+                },
+                {
+                  "code": "3B604",
+                  "label": "Préparer des plats culinaires",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3B605",
+                  "label": "Réaliser des préparations de pâtisserie, boulangerie, viennoiserie, et chocolaterie",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Aménagement",
+          "objectives": [
+            {
+              "name": "Aménager un espace",
+              "macro_skills": [
+                {
+                  "code": "3C101",
+                  "label": "Identifier, repérer un lieu",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3C102",
+                  "label": "Aménager, agencer un espace",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": "A"
+                },
+                {
+                  "code": "3C103",
+                  "label": "Aménager, entretenir un espace vert",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3C104",
+                  "label": "Aménager, entretenir un espace naturel, une forêt",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3C105",
+                  "label": "Concevoir un projet architectural ou d'aménagement",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "R"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Construction",
+          "objectives": [
+            {
+              "name": "Gérer un chantier",
+              "macro_skills": [
+                {
+                  "code": "3D101",
+                  "label": "Construire un bâtiment, un ouvrage",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3D102",
+                  "label": "Préparer l'exécution du chantier",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3D103",
+                  "label": "Organiser et conduire des travaux, un chantier",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "E",
+                  "riasec_minor": "R"
+                },
+                {
+                  "code": "3D104",
+                  "label": "Réceptionner des travaux / un chantier",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3D105",
+                  "label": "Clôturer un chantier et libérer la zone de travail (engins, matériaux, déchets, ...)",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Construire",
+              "macro_skills": [
+                {
+                  "code": "3D201",
+                  "label": "Réaliser des travaux de terrassement, de fondations",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3D202",
+                  "label": "Raccorder, gérer un réseau technique",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3D203",
+                  "label": "Installer, mettre en oeuvre des réalisations de gros oeuvre",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3D204",
+                  "label": "Réaliser des ouvrages de maçonnerie",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3D205",
+                  "label": "Installer, mettre en oeuvre des réalisations de second oeuvre",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3D206",
+                  "label": "Réaliser des opérations de montage, d'assemblage et démontage",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3D207",
+                  "label": "Fixer, poser, installer des éléments, des ouvrages",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3D208",
+                  "label": "Réaliser des ouvrages d'isolation",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3D209",
+                  "label": "Réaliser des ouvrages de menuiserie",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3D210",
+                  "label": "Réaliser, poser des revêtements",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3D211",
+                  "label": "Réaliser des travaux de construction et de maintenance en mécanique",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3D212",
+                  "label": "Equiper techniquement des bâtiments, installations, et véhicules",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Maintenance, Réparation",
+          "objectives": [
+            {
+              "name": "Entretenir, corriger",
+              "macro_skills": [
+                {
+                  "code": "3E101",
+                  "label": "Réviser des documents ou procédures",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3E102",
+                  "label": "Entretenir, nettoyer un produit ou du matériel",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3E103",
+                  "label": "Entretenir un équipement, une machine, une installation",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3E104",
+                  "label": "Effectuer les opérations de réparation",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "A",
+                  "riasec_minor": "R"
+                }
+              ]
+            },
+            {
+              "name": "Assurer la maintenance technique",
+              "macro_skills": [
+                {
+                  "code": "3E201",
+                  "label": "Contrôler la conformité d'un équipement, d'une machine, d'une installation",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3E202",
+                  "label": "Réaliser un diagnostic technique",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "R"
+                },
+                {
+                  "code": "3E203",
+                  "label": "Réaliser des corrections ou réparations sur un ouvrage",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3E204",
+                  "label": "Réaliser une opération de maintenance",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3E205",
+                  "label": "Réparer un équipement, une machine, une installation",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3E206",
+                  "label": "Assurer la maintenance, gérer une structure",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "R"
+                },
+                {
+                  "code": "3E207",
+                  "label": "Entretenir un véhicule",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Gérer, entretenir un site, une infrastructure",
+              "macro_skills": [
+                {
+                  "code": "3E301",
+                  "label": "Entretenir, nettoyer un espace, un lieu, un local",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3E302",
+                  "label": "Surveiller un espace, un local, un lieu, une installation",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3E303",
+                  "label": "Aménager un espace physique de stockage",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3E304",
+                  "label": "Rénover, moderniser, réhabiliter des installations",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3E305",
+                  "label": "Gérer un parc de machines, d'équipements, de locaux",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "E",
+                  "riasec_minor": "R"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Prévention des risques",
+          "objectives": [
+            {
+              "name": "Contrôler la production",
+              "macro_skills": [
+                {
+                  "code": "3F101",
+                  "label": "Contrôler le fonctionnement d'un équipement, d'une machine, d'une installation",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3F102",
+                  "label": "Superviser des opérations, des actions",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3F103",
+                  "label": "Organiser ou surveiller des phases de fabrication",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Analyser, prévenir les risques",
+              "macro_skills": [
+                {
+                  "code": "3F201",
+                  "label": "Anticiper des dangers, problèmes ou besoins matériels et techniques",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3F202",
+                  "label": "Elaborer des actions ou des règles de prévention",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3F203",
+                  "label": "Evaluer, prévenir, et gérer les risques et la sécurité",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3F204",
+                  "label": "Définir et mettre en oeuvre des protocoles de sécurité",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3F205",
+                  "label": "Déterminer des mesures correctives",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3F206",
+                  "label": "Réaliser une analyse des risques liés à une prise en charge médicale",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3F208",
+                  "label": "Piloter la gestion des risques",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3F209",
+                  "label": "Gérer une situation de crise",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": "S"
+                },
+                {
+                  "code": "3F210",
+                  "label": "Evaluer une situation à risques",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Qualité",
+          "objectives": [
+            {
+              "name": "Piloter la qualité",
+              "macro_skills": [
+                {
+                  "code": "3G101",
+                  "label": "Elaborer des règles et procédures de Qualité, Hygiène, Sécurité, Santé et Environnement (QHSSE)",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3G102",
+                  "label": "Piloter une démarche qualité, un processus d'amélioration continue",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Analyser la qualité",
+              "macro_skills": [
+                {
+                  "code": "3G201",
+                  "label": "Réaliser un audit technique",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3G202",
+                  "label": "Analyser la qualité et la conformité des matières premières",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3G203",
+                  "label": "Analyser la qualité d'un produit",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3G204",
+                  "label": "Analyser la qualité d'un service",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "3G205",
+                  "label": "Analyser la qualité des process",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "3G206",
+                  "label": "Evaluer la qualité et la conformité d'une formation",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Contrôler la qualité",
+              "macro_skills": [
+                {
+                  "code": "3G301",
+                  "label": "Contrôler la qualité d'une oeuvre, d'un service",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3G302",
+                  "label": "Contrôler la qualité d'une matière première, d'une ressource",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3G303",
+                  "label": "Contrôler la qualité et la conformité d'un produit",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3G304",
+                  "label": "Contrôler la qualité et la conformité d'un livrable",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3G305",
+                  "label": "Contrôler la qualité et la conformité d'un bâtiment, d'une infrastructure",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3G306",
+                  "label": "Contrôler la qualité et la conformité des process",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3G307",
+                  "label": "Contrôler les règles de Qualité, Hygiène, Sécurité, Santé et Environnement (QHSSE)",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Gestion des stocks",
+          "objectives": [
+            {
+              "name": "Gérer les stocks et les approvisionnements",
+              "macro_skills": [
+                {
+                  "code": "3H101",
+                  "label": "Participer à un inventaire",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3H102",
+                  "label": "Gérer les stocks",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3H103",
+                  "label": "Organiser et contrôler un approvisionnement",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Manutentionner, conditionner des produits",
+              "macro_skills": [
+                {
+                  "code": "3H201",
+                  "label": "Trier, ranger des produits, des matières premières",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3H202",
+                  "label": "Réceptionner des produits, des matières premières, vérifier la conformité d'une livraison",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "3H203",
+                  "label": "Manipuler un engin de manutention ou de chantier",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3H204",
+                  "label": "Charger, décharger, manutentionner des produits",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3H205",
+                  "label": "Lever des produits ou du matériel de charge lourde",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3H206",
+                  "label": "Conditionner des produits",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Logistique",
+          "objectives": [
+            {
+              "name": "Gérer la logistique",
+              "macro_skills": [
+                {
+                  "code": "3I101",
+                  "label": "Mettre en oeuvre l'organisation matérielle et logistique d'un événement",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": "E"
+                },
+                {
+                  "code": "3I102",
+                  "label": "Organiser une opération logistique de transport",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": "E"
+                },
+                {
+                  "code": "3I103",
+                  "label": "Réguler, superviser le trafic d'un réseau de transport",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "E",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "3I104",
+                  "label": "Organiser le traitement des commandes",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": "E"
+                },
+                {
+                  "code": "3I105",
+                  "label": "Organiser une opération logistique industrielle",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": "E"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Transport",
+          "objectives": [
+            {
+              "name": "Assurer un transport",
+              "macro_skills": [
+                {
+                  "code": "3J101",
+                  "label": "Effectuer une livraison",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "3J102",
+                  "label": "Conduire un véhicule routier",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "3J103",
+                  "label": "Conduire un véhicule ferroviaire",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "3J104",
+                  "label": "Conduire, convoyer un véhicule marin ou fluvial",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "3J105",
+                  "label": "Piloter un aéronef",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "3J106",
+                  "label": "Transporter des marchandises",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "3J107",
+                  "label": "Transporter des passagers",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": "S"
+                },
+                {
+                  "code": "3J108",
+                  "label": "Organiser une livraison",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "E",
+                  "riasec_minor": "C"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "name": "Pilotage, Gestion, Cadre réglementaire",
+      "issues": [
+        {
+          "name": "Gestion administrative et comptable",
+          "objectives": [
+            {
+              "name": "Assurer la gestion administrative",
+              "macro_skills": [
+                {
+                  "code": "4A101",
+                  "label": "Effectuer le suivi des réservations",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4A105",
+                  "label": "Gérer un planning",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4A106",
+                  "label": "Rédiger un rapport, un compte rendu d'activité",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4A107",
+                  "label": "Concevoir des supports de suivi et de gestion",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4A110",
+                  "label": "Réaliser des opérations liées à la gestion des ressources humaines",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": "E"
+                },
+                {
+                  "code": "4A111",
+                  "label": "Accomplir des formalités administratives et réglementaires",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4A112",
+                  "label": "Administrer des achats et des ventes",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Assurer la gestion comptable",
+              "macro_skills": [
+                {
+                  "code": "4A201",
+                  "label": "Gérer une caisse",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": "S"
+                },
+                {
+                  "code": "4A202",
+                  "label": "Effectuer le suivi des commandes, la facturation",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4A203",
+                  "label": "Gérer la paie",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Pilotage et maîtrise des coûts",
+          "objectives": [
+            {
+              "name": "Maîtriser les coûts, acheter",
+              "macro_skills": [
+                {
+                  "code": "4B101",
+                  "label": "Réduire les coûts, les consommations, les rejets",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4B102",
+                  "label": "Estimer les coûts et les délais d'une activité ou d'une prestation",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4B103",
+                  "label": "Identifier et sélectionner des fournisseurs, sous-traitants, prestataires",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4B104",
+                  "label": "Lancer et gérer un appel d'offres",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4B105",
+                  "label": "Gérer la relation avec les fournisseurs, sous-traitants, prestataires",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": "S"
+                },
+                {
+                  "code": "4B106",
+                  "label": "Contrôler la réalisation et les coûts d'une prestation",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4B107",
+                  "label": "Elaborer une stratégie d'achat, optimiser la procédure d'achat",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4B108",
+                  "label": "Assurer la gestion administrative et financière d'une activité",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": "E"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Gestion et contrôle",
+          "objectives": [
+            {
+              "name": "Gérer, contrôler",
+              "macro_skills": [
+                {
+                  "code": "4C101",
+                  "label": "Elaborer, suivre et piloter un budget",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4C102",
+                  "label": "Réaliser des opérations comptables",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4C103",
+                  "label": "Réaliser une analyse comptable et financière",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4C104",
+                  "label": "Garantir la fiabilité des comptes et des documents comptables",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4C105",
+                  "label": "Mettre en oeuvre un contrôle de gestion, un audit interne",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": "E"
+                },
+                {
+                  "code": "4C106",
+                  "label": "Elaborer des procédures administratives ou comptables",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Gérer des actifs, un patrimoine",
+              "macro_skills": [
+                {
+                  "code": "4C201",
+                  "label": "Gérer la trésorerie, le recouvrement",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4C202",
+                  "label": "Gérer un patrimoine, un portefeuille d'actifs",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4C203",
+                  "label": "Réaliser des opérations de gestion immobilière",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4C204",
+                  "label": "Estimer la valeur d'un bien, d'un produit",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4C205",
+                  "label": "Evaluer et gérer un sinistre",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4C206",
+                  "label": "Monter et décisionner un dossier de financement",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4C207",
+                  "label": "Réaliser un audit financier",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4C208",
+                  "label": "Analyser et gérer les risques financiers",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4C209",
+                  "label": "Réaliser des opérations de marché financier",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4C210",
+                  "label": "Concevoir des montages financiers complexes",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4C211",
+                  "label": "Définir la stratégie financière d'une structure",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": "E"
+                },
+                {
+                  "code": "4C212",
+                  "label": "Expertiser, estimer un objet d'art",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Droit, contentieux et négociation",
+          "objectives": [
+            {
+              "name": "Élaborer et appliquer un cadre juridique ou règlementaire",
+              "macro_skills": [
+                {
+                  "code": "4D101",
+                  "label": "Appliquer un cadre juridique ou réglementaire",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4D102",
+                  "label": "Respecter les règles d'éthique et de déontologie",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": "S"
+                },
+                {
+                  "code": "4D103",
+                  "label": "Contrôler et faire appliquer le respect de dispositions légales et réglementaires",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4D104",
+                  "label": "Rédiger un acte juridique ou règlementaire",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4D105",
+                  "label": "Juger, déterminer des sanctions",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4D106",
+                  "label": "Veiller à la sécurité juridique d'une décision, d'un projet",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4D107",
+                  "label": "Effectuer une analyse juridique",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4D108",
+                  "label": "Assurer un conseil juridique",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": "S"
+                }
+              ]
+            },
+            {
+              "name": "Gérer des litiges, des contentieux",
+              "macro_skills": [
+                {
+                  "code": "4D201",
+                  "label": "Gérer des réclamations et litiges",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": "S"
+                },
+                {
+                  "code": "4D202",
+                  "label": "Gérer une procédure contentieuse",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4D203",
+                  "label": "Défendre les intérêts d'une personne physique ou morale",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "S",
+                  "riasec_minor": "C"
+                }
+              ]
+            },
+            {
+              "name": "Négocier, rédiger des contrats",
+              "macro_skills": [
+                {
+                  "code": "4D301",
+                  "label": "Suivre un contrat, vérifier le respect des clauses contractuelles",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4D302",
+                  "label": "Rédiger un contrat",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4D303",
+                  "label": "Négocier un contrat",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": "C"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Protection des personnes et de l'environnement",
+          "objectives": [
+            {
+              "name": "Protéger les personnes et les biens",
+              "macro_skills": [
+                {
+                  "code": "4E102",
+                  "label": "Contrôler l'accès et la circulation des personnes",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": "S"
+                },
+                {
+                  "code": "4E103",
+                  "label": "Protéger des personnes et des biens",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": "R"
+                },
+                {
+                  "code": "4E104",
+                  "label": "Mener une enquête judiciaire",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "4E105",
+                  "label": "Diriger ou réaliser des opérations militaires ou de sécurité publique",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4E106",
+                  "label": "Engager et superviser une procédure judiciaire",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4E107",
+                  "label": "Mener des opérations de maintien de l'ordre et de sécurité",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4E108",
+                  "label": "Mener des opérations de secours",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Protéger l'environnement",
+              "macro_skills": [
+                {
+                  "code": "4E201",
+                  "label": "Evacuer et trier des déchets, des produits",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4E202",
+                  "label": "Réduire l'empreinte environnementale de son activité",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "4E204",
+                  "label": "Elaborer et analyser des prévisions météorologiques",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "4E205",
+                  "label": "Réaliser un diagnostic énergétique",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "4E206",
+                  "label": "Réaliser un diagnostic environnemental",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "4E207",
+                  "label": "Définir et déployer une politique de développement durable",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": "S"
+                },
+                {
+                  "code": "4E208",
+                  "label": "Recycler et valoriser des déchets ou produits",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Action publique",
+          "objectives": [
+            {
+              "name": "Gérer les finances publiques",
+              "macro_skills": [
+                {
+                  "code": "4F101",
+                  "label": "Gérer les finances publiques, le recouvrement des impôts",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Développer les relations internationales",
+              "macro_skills": [
+                {
+                  "code": "4F201",
+                  "label": "Développer et gérer les relations internationales",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "S",
+                  "riasec_minor": "C"
+                }
+              ]
+            },
+            {
+              "name": "Concevoir, administrer, évaluer une politique publique",
+              "macro_skills": [
+                {
+                  "code": "4F301",
+                  "label": "Concevoir les modalités d'une action publique",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": "S"
+                },
+                {
+                  "code": "4F302",
+                  "label": "Evaluer une politique publique",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": "I"
+                },
+                {
+                  "code": "4F303",
+                  "label": "Piloter un dispositif d'action publique",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "4F304",
+                  "label": "Mettre en œuvre les politiques publiques",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "name": "Développement économique",
+      "issues": [
+        {
+          "name": "Relation client",
+          "objectives": [
+            {
+              "name": "Accueillir, renseigner",
+              "macro_skills": [
+                {
+                  "code": "5A101",
+                  "label": "Accueillir, orienter, renseigner un public",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "S",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5A102",
+                  "label": "Concevoir un projet d'accueil",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "S",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Gérer la relation client, recueillir et analyser les besoins client",
+              "macro_skills": [
+                {
+                  "code": "5A201",
+                  "label": "Identifier, traiter une demande client",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "E",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "5A202",
+                  "label": "Recueillir et analyser les besoins client",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5A203",
+                  "label": "Répondre aux attentes d'un client",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5A204",
+                  "label": "Apporter une assistance technique aux équipes",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "S",
+                  "riasec_minor": "R"
+                },
+                {
+                  "code": "5A205",
+                  "label": "Conseiller dans le cadre d'une relation commerciale",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Développement commercial",
+          "objectives": [
+            {
+              "name": "Vendre",
+              "macro_skills": [
+                {
+                  "code": "5B101",
+                  "label": "Vendre ou louer des produits ou des services",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5B102",
+                  "label": "Conclure une transaction",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5B103",
+                  "label": "Négocier des conditions commerciales",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Concevoir une offre de produits, services",
+              "macro_skills": [
+                {
+                  "code": "5B201",
+                  "label": "Prospecter de nouveaux clients, de nouveaux marchés",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5B202",
+                  "label": "Définir la tarification des produits ou des services",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5B203",
+                  "label": "Concevoir et promouvoir une offre commerciale",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Élaborer une offre commerciale",
+              "macro_skills": [
+                {
+                  "code": "5B301",
+                  "label": "Présenter et valoriser un produit ou un service",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5B302",
+                  "label": "Organiser, aménager un espace de vente",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5B303",
+                  "label": "Mettre en oeuvre des actions commerciales et promotionnelles",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5B304",
+                  "label": "Elaborer, adapter une proposition commerciale",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5B305",
+                  "label": "Répondre à un appel d'offres",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Améliorer le service, fidéliser les clients",
+              "macro_skills": [
+                {
+                  "code": "5B401",
+                  "label": "Assurer un service après-vente",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "S",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "5B402",
+                  "label": "Développer et fidéliser la relation client",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "E",
+                  "riasec_minor": "S"
+                },
+                {
+                  "code": "5B403",
+                  "label": "Améliorer la qualité de service",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Développer une stratégie commerciale et marketing",
+              "macro_skills": [
+                {
+                  "code": "5B501",
+                  "label": "Analyser et identifier des tendances, des préférences de consommation",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5B502",
+                  "label": "Réaliser une étude de marché, évaluer le potentiel d'un produit ou service",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5B503",
+                  "label": "Réaliser une veille de marché, une veille concurrentielle",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5B504",
+                  "label": "Elaborer une stratégie commerciale",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5B505",
+                  "label": "Mettre en oeuvre un plan marketing, une stratégie de marque et de communication",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5B506",
+                  "label": "Elaborer un plan marketing, une stratégie de marque et de communication",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Stratégie de développement",
+          "objectives": [
+            {
+              "name": "Piloter un projet, une activité",
+              "macro_skills": [
+                {
+                  "code": "5C101",
+                  "label": "Mettre en oeuvre une stratégie, un plan d'actions",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5C102",
+                  "label": "Piloter une activité",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5C103",
+                  "label": "Concevoir et gérer un projet",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "C",
+                  "riasec_minor": "E"
+                },
+                {
+                  "code": "5C104",
+                  "label": "Evaluer la mise en œuvre d'un projet, d'un plan d'action",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5C105",
+                  "label": "Piloter la gestion de la production, de l'exploitation",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": "R"
+                },
+                {
+                  "code": "5C106",
+                  "label": "Concevoir des outils de pilotage, indicateurs, tableaux de bord",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5C107",
+                  "label": "Mettre en œuvre une décision",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Conduire une stratégie de développement",
+              "macro_skills": [
+                {
+                  "code": "5C201",
+                  "label": "Développer un projet de création d'entreprise",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5C202",
+                  "label": "Rechercher des financements, des investisseurs",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "E",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "5C203",
+                  "label": "Elaborer un plan d'investissement, un business plan",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "E",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "5C204",
+                  "label": "Mettre en place des solutions d'amélioration de la performance",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5C205",
+                  "label": "Piloter la performance et la rentabilité d'une activité ou d'un projet",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5C206",
+                  "label": "Contrôler des indicateurs de performance, analyser et corriger des écarts",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": "I"
+                },
+                {
+                  "code": "5C207",
+                  "label": "Etablir un diagnostic stratégique",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5C208",
+                  "label": "Elaborer une stratégie de développement d'activité",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5C209",
+                  "label": "Définir une stratégie de Responsabilité Sociétale d'Entreprise",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": "S"
+                },
+                {
+                  "code": "5C210",
+                  "label": "Concevoir et mettre en oeuvre une stratégie digitale",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": "R"
+                },
+                {
+                  "code": "5C211",
+                  "label": "Définir la politique et les orientations générales d'une organisation",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5C212",
+                  "label": "Déterminer des objectifs de performance, suivre les réalisations et identifier les actions correctives",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Piloter des partenariats",
+              "macro_skills": [
+                {
+                  "code": "5C301",
+                  "label": "Organiser et développer un réseau de distribution",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "C",
+                  "riasec_minor": "S"
+                },
+                {
+                  "code": "5C302",
+                  "label": "Développer et piloter un réseau d'organisations partenaires",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": "S"
+                }
+              ]
+            },
+            {
+              "name": "Développer les territoires",
+              "macro_skills": [
+                {
+                  "code": "5C401",
+                  "label": "Concevoir et réaliser des actions de promotion du patrimoine",
+                  "category": "Savoir-faire",
+                  "level": "Technique",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5C402",
+                  "label": "Développer des projets touristiques",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Diriger une structure",
+              "macro_skills": [
+                {
+                  "code": "5C501",
+                  "label": "Superviser le contrôle interne d'une structure",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "5C502",
+                  "label": "Optimiser la performance de l'organisation",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "5C503",
+                  "label": "Diriger et gérer un ensemble, une structure, une organisation",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "name": "Coopération, Organisation et Développement de ses compétences",
+      "issues": [
+        {
+          "name": "Communication",
+          "objectives": [
+            {
+              "name": "Collaborer et favoriser la collaboration",
+              "macro_skills": [
+                {
+                  "code": "6A101",
+                  "label": "Développer et gérer des relations interpersonnelles",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6A103",
+                  "label": "Favoriser l'entente, la collaboration",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "S",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6A104",
+                  "label": "Travailler, interagir à distance",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6A105",
+                  "label": "Relayer de l'information",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6A106",
+                  "label": "Travailler en groupe, en réseau",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6A107",
+                  "label": "Utiliser les réseaux sociaux",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "C",
+                  "riasec_minor": "S"
+                },
+                {
+                  "code": "6A108",
+                  "label": "Participer à un projet pluridisciplinaire",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6A109",
+                  "label": "Préparer et animer une réunion, un groupe de travail, un atelier",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6A110",
+                  "label": "Rendre compte de son activité",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Communiquer à l'oral",
+              "macro_skills": [
+                {
+                  "code": "6A201",
+                  "label": "Communiquer à l'oral en milieu professionnel",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6A202",
+                  "label": "Comprendre et savoir exprimer ses émotions",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6A204",
+                  "label": "Parler une ou plusieurs langues étrangères",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6A205",
+                  "label": "Prendre la parole en public",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Communiquer à l'écrit",
+              "macro_skills": [
+                {
+                  "code": "6A301",
+                  "label": "Communiquer à l'écrit de façon appropriée",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6A302",
+                  "label": "Ecrire une ou plusieurs langues étrangères",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Argumenter",
+              "macro_skills": [
+                {
+                  "code": "6A401",
+                  "label": "Accepter de confronter ses opinions à celles des autres",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6A403",
+                  "label": "Convaincre, négocier",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6A405",
+                  "label": "Prendre une décision et l'expliquer",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6A406",
+                  "label": "Promouvoir une proposition, un projet",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6A407",
+                  "label": "Sensibiliser un public",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "S",
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Organisation",
+          "objectives": [
+            {
+              "name": "Respecter les règles",
+              "macro_skills": [
+                {
+                  "code": "6B104",
+                  "label": "Respecter la confidentialité des informations",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "C",
+                  "riasec_minor": "S"
+                },
+                {
+                  "code": "6B105",
+                  "label": "Respecter les règles de Qualité, Hygiène, Sécurité, Santé et Environnement (QHSSE)",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6B106",
+                  "label": "Respecter des règles, des consignes, normes et procédures opérationnelles",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6B107",
+                  "label": "Expliquer et faire respecter les règles et procédures",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6B108",
+                  "label": "Comprendre et respecter les règles de vie collective",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Agir face à l'imprévu",
+              "macro_skills": [
+                {
+                  "code": "6B201",
+                  "label": "Alerter, demander un appui ou un arbitrage",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6B202",
+                  "label": "Faire preuve d'agilité dans son action selon les contextes",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6B205",
+                  "label": "Gérer une situation conflictuelle",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6B206",
+                  "label": "Adapter et optimiser sa pratique au contexte et aux risques professionnels (gestes, postures, ergonomie)",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "R",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6B207",
+                  "label": "Gérer une situation d'urgence",
+                  "category": "Savoir-faire",
+                  "level": "Technique expert",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Traiter des informations",
+              "macro_skills": [
+                {
+                  "code": "6B301",
+                  "label": "Corriger et mettre en forme un document",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6B307",
+                  "label": "Structurer, synthétiser des informations",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6B309",
+                  "label": "Utiliser les outils numériques",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6B312",
+                  "label": "Gérer une base documentaire",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "6B313",
+                  "label": "Réaliser une veille documentaire",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "I",
+                  "riasec_minor": "C"
+                },
+                {
+                  "code": "6B315",
+                  "label": "Organiser le partage et la capitalisation de l'information",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6B317",
+                  "label": "Numériser des documents, médias ou supports techniques",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6B318",
+                  "label": "Collecter et analyser des données, des informations",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "C",
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Développement des compétences",
+          "objectives": [
+            {
+              "name": "Développer ses compétences",
+              "macro_skills": [
+                {
+                  "code": "6C101",
+                  "label": "Mémoriser des informations",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6C102",
+                  "label": "Actualiser régulièrement ses connaissances",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6C103",
+                  "label": "Evaluer le résultat de ses actions",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6C104",
+                  "label": "Identifier ses axes de progrès",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6C105",
+                  "label": "Réaliser un retour d'expériences",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": "I",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6C106",
+                  "label": "Mobiliser sa concentration tout au long d'un processus",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            },
+            {
+              "name": "Construire son projet professionnel",
+              "macro_skills": [
+                {
+                  "code": "6C201",
+                  "label": "Tirer les enseignements de son expérience et identifier ses compétences",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6C202",
+                  "label": "Construire et adapter son parcours professionnel",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6C203",
+                  "label": "Valoriser ses compétences, son parcours, son expertise",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6C204",
+                  "label": "Organiser et développer son réseau professionnel",
+                  "category": "Savoir-faire",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Savoir-être professionnels",
+          "objectives": [
+            {
+              "name": "Agir et interagir en contexte professionnel",
+              "macro_skills": [
+                {
+                  "code": "6D101",
+                  "label": "Etre à l'écoute, faire preuve d'empathie",
+                  "category": "Savoir-être professionnel",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6D102",
+                  "label": "Avoir l'esprit d'équipe",
+                  "category": "Savoir-être professionnel",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6D103",
+                  "label": "Etre force de proposition",
+                  "category": "Savoir-être professionnel",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6D104",
+                  "label": "Faire preuve de sens des responsabilités",
+                  "category": "Savoir-être professionnel",
+                  "level": "Transverse",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6D105",
+                  "label": "Inspirer, donner du sens",
+                  "category": "Savoir-être professionnel",
+                  "level": "Transverse",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6D106",
+                  "label": "Faire preuve de leadership",
+                  "category": "Savoir-être professionnel",
+                  "level": "Transverse",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6D107",
+                  "label": "Organiser son travail selon les priorités et les objectifs",
+                  "category": "Savoir-être professionnel",
+                  "level": "Transverse",
+                  "riasec_major": "E",
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6D108",
+                  "label": "Faire preuve d'autonomie",
+                  "category": "Savoir-être professionnel",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6D109",
+                  "label": "Faire preuve de persévérance",
+                  "category": "Savoir-être professionnel",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6D110",
+                  "label": "Faire preuve de rigueur et de précision",
+                  "category": "Savoir-être professionnel",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6D111",
+                  "label": "Faire preuve de réactivité",
+                  "category": "Savoir-être professionnel",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6D112",
+                  "label": "Faire preuve de contrôle de soi",
+                  "category": "Savoir-être professionnel",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6D113",
+                  "label": "Etre ouvert aux changements",
+                  "category": "Savoir-être professionnel",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6D114",
+                  "label": "Faire preuve de curiosité, d'ouverture d'esprit",
+                  "category": "Savoir-être professionnel",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                },
+                {
+                  "code": "6D115",
+                  "label": "Faire preuve de créativité, d'inventivité",
+                  "category": "Savoir-être professionnel",
+                  "level": "Transverse",
+                  "riasec_major": "A",
+                  "riasec_minor": "I"
+                },
+                {
+                  "code": "6D116",
+                  "label": "Avoir le sens du service",
+                  "category": "Savoir-être professionnel",
+                  "level": "Transverse",
+                  "riasec_major": null,
+                  "riasec_minor": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "soft_skills": [
+    {
+      "code": "6D101",
+      "label": "Etre à l'écoute, faire preuve d'empathie",
+      "definition": "Capacité à écouter activement, réceptionner des informations et messages, faire preuve d'ouverture d'esprit et de diplomatie."
+    },
+    {
+      "code": "6D102",
+      "label": "Avoir l'esprit d'équipe",
+      "definition": "Capacité à travailler et à se coordonner avec les autres au sein de l'entreprise pour réaliser les objectifs fixés."
+    },
+    {
+      "code": "6D103",
+      "label": "Etre force de proposition",
+      "definition": "Capacité à initier, imaginer des propositions nouvelles pour résoudre les problèmes identifiés ou améliorer une situation. Être proactif."
+    },
+    {
+      "code": "6D104",
+      "label": "Faire preuve de sens des responsabilités",
+      "definition": "Capacité à engager sa responsabilité pour atteindre un objectif clairement exprimé et à signaler les éventuels freins à lever pour atteindre l'objectif."
+    },
+    {
+      "code": "6D105",
+      "label": "Inspirer, donner du sens",
+      "definition": "Capacité à transmettre un message afin de susciter la réflexion et guider l'action."
+    },
+    {
+      "code": "6D106",
+      "label": "Faire preuve de leadership",
+      "definition": "Capacité à mobiliser une équipe/des interlocuteurs et à les entraîner dans la poursuite d'un objectif partagé."
+    },
+    {
+      "code": "6D107",
+      "label": "Organiser son travail selon les priorités et les objectifs",
+      "definition": "Capacité à planifier, prioriser, anticiper des actions, en tenant compte des moyens, des ressources, des objectifs et du calendrier pour les réaliser."
+    },
+    {
+      "code": "6D108",
+      "label": "Faire preuve d'autonomie",
+      "definition": "Capacité à prendre en charge son activité sans devoir être encadré de façon continue (le cas échéant, à solliciter les autres acteurs de l'entreprise)."
+    },
+    {
+      "code": "6D109",
+      "label": "Faire preuve de persévérance",
+      "definition": "Capacité à maintenir son effort jusqu'à l'achèvement complet d'une tâche quels que soient les imprévus, les obstacles de réalisation rencontrés."
+    },
+    {
+      "code": "6D110",
+      "label": "Faire preuve de rigueur et de précision",
+      "definition": "Capacité à réaliser des tâches en suivant avec exactitude les règles, les procédures, les instructions qui ont été fournies, sans réaliser d'erreur et à transmettre clairement des informations. Se montrer ponctuel et respectueux des règles de savoir-vivre usuelles."
+    },
+    {
+      "code": "6D111",
+      "label": "Faire preuve de réactivité",
+      "definition": "Capacité à réagir rapidement face à des évènements et à des imprévus, en hiérarchisant les actions, en fonction de leur degré d'urgence / d'importance."
+    },
+    {
+      "code": "6D112",
+      "label": "Faire preuve de contrôle de soi",
+      "definition": "Capacité à garder le contrôle de soi pour agir efficacement face à des situations irritantes, imprévues, stressantes."
+    },
+    {
+      "code": "6D113",
+      "label": "Etre ouvert aux changements",
+      "definition": "Capacité à s'adapter à des situations variées, à réagir à l'imprévu, gérer l'incertitude pour s'ajuster à des organisations, des collectifs de travail, des habitudes, des valeurs propres à l'entreprise."
+    },
+    {
+      "code": "6D114",
+      "label": "Faire preuve de curiosité, d'ouverture d'esprit",
+      "definition": "Capacité à aller chercher au-delà de ce qui est donné à voir, à s'ouvrir sur la nouveauté et à investiguer pour comprendre et agir de façon appropriée."
+    },
+    {
+      "code": "6D115",
+      "label": "Faire preuve de créativité, d'inventivité",
+      "definition": "Capacité à créer, imaginer quelque chose de nouveau (nouveau produit, nouvelle solution, ...)."
+    },
+    {
+      "code": "6D116",
+      "label": "Avoir le sens du service",
+      "definition": "Capacité à identifier (voire anticiper) les besoins des usagers, clients (internes et externes) et à apporter une réponse adaptée afin de les satisfaire."
+    }
+  ],
+  "transversal_skills": [
+    {
+      "family": "Compétences relationnelles",
+      "skills": [
+        "Collaborer et favoriser la collaboration",
+        "Communiquer à l'écrit en une ou plusieurs langues",
+        "Communiquer à l'oral en une ou plusieurs langues",
+        "Utiliser les moyens d'expression artistique et corporelle",
+        "Prendre en compte les usages de vie collective, sociaux et culturels"
+      ]
+    },
+    {
+      "family": "Compétences organisationnelles",
+      "skills": [
+        "Organiser et / ou piloter l'activité",
+        "Respecter les règles, procédures et assurer la qualité",
+        "Agir face à l'imprévu"
+      ]
+    },
+    {
+      "family": "Compétences du développement des compétences",
+      "skills": [
+        "Apprendre et se professionnaliser tout au long de la vie",
+        "Gérer des données",
+        "Traiter des informations",
+        "Utiliser les ressources numériques"
+      ]
+    }
+  ],
+  "knowledge_categories": [
+    "Domaines d'expertise",
+    "Normes et procédés",
+    "Produits, outils et matières",
+    "Certifications et habilitations",
+    "Techniques professionnelles"
+  ],
+  "work_context_categories": [
+    "Conditions de travail et risques professionnels",
+    "Horaires et durée de travail",
+    "Lieux et déplacements",
+    "Publics spécifiques",
+    "Rémunération et avantages",
+    "Types de structures"
+  ]
+}
