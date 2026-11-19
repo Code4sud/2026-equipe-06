@@ -11,6 +11,10 @@ from pydantic import BaseModel, ValidationError
 
 from controllers.mailer import MailError, send_auth_code
 from models.models import AuthCode, CodeRequest, PublicUser, User, VerifyRequest, utcnow
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 type METHOD_NAME = Literal["GET", "POST", "PUT", "DELETE", "PATCH"]
@@ -121,6 +125,9 @@ class Router:
         if auth_code.attempts >= MAX_ATTEMPTS:
             db.delete(AUTH_CODES, auth_code.id)
             return jsonify(error="Too many attempts, request a new code."), 429
+
+
+        logger.info("Code requested for %s %s, %s", payload.email, auth_code.code_hash, _hash_code(payload.email, payload.code))
 
         if not hmac.compare_digest(auth_code.code_hash, _hash_code(payload.email, payload.code)):
             db.update(AUTH_CODES, auth_code.id, {"attempts": auth_code.attempts + 1})
