@@ -12,4 +12,6 @@ services:
         sync: false
       - key: DB_NAME
         value: monhackathon
+      - key: MISTRAL_API_KEY
+        sync: false
 
