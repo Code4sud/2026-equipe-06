@@ -3,7 +3,7 @@ import logging
 import os
 import secrets
 from datetime import timedelta
-from typing import Any, Callable, Dict, Iterator, Literal, Tuple
+from typing import Any, Callable, Dict, Iterator, Literal, Tuple, cast
 
 from flask import Response, current_app, jsonify, request
 from pydantic import BaseModel, ValidationError
@@ -28,7 +28,7 @@ AUTH_CODES = "auth_codes"
 CODE_TTL = timedelta(minutes=10)
 RESEND_COOLDOWN = timedelta(seconds=60)
 MAX_ATTEMPTS = 5
-# Same length as the boxes of the front (CODE_LENGTH in Home.tsx) and the pattern of VerifyRequest
+
 CODE_LENGTH = 6
 
 
@@ -254,11 +254,11 @@ class Router:
 
 
     @classmethod
-    def __iter__(cls) -> Iterator[Tuple[str, Any, str]]:
+    def __iter__(cls) -> Iterator[Tuple[str, Any, METHOD_NAME]]:
         for name, member in inspect.getmembers(cls):
             if not isinstance(inspect.getattr_static(cls, name), staticmethod) or name.startswith("__"):
                 continue
             path, method_type = routes.get(name, (None, "GET"))
             if path is None:
                 raise RouterException(f"Route for method '{name}' is not defined.")
-            yield path, member, method_type
+            yield path, member, cast(METHOD_NAME, method_type)
