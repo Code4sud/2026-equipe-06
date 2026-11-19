@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { api } from '../api'
 import { CollectionCard } from '../components/CollectionCard'
 import type { CollectionEntry, Summary as SummaryData } from '../types'
@@ -14,13 +14,15 @@ type Consent = 'asking' | 'updating' | 'accepted' | 'declined'
 interface SummaryProps {
   sessionId: string
   onFinish: () => void
+  /** Quitter (see GameMenu) */
+  menu?: ReactNode
 }
 
 /**
  * The end of the game: the user first keeps or removes each entry of the collection,
  * then reads the agent's summary built only on what was kept.
  */
-export function Summary({ sessionId, onFinish }: SummaryProps) {
+export function Summary({ sessionId, onFinish, menu }: SummaryProps) {
   const [step, setStep] = useState<Step>('review')
   const [entries, setEntries] = useState<CollectionEntry[] | null>(null)
   const [keptIds, setKeptIds] = useState<string[]>([])
@@ -108,6 +110,7 @@ export function Summary({ sessionId, onFinish }: SummaryProps) {
   if (step === 'error') {
     return (
       <main className="summary summary-centered">
+        {menu}
         <p className="summary-message" role="alert">
           On n’arrive pas à préparer ton bilan pour l’instant.
         </p>
@@ -121,6 +124,7 @@ export function Summary({ sessionId, onFinish }: SummaryProps) {
   if (step === 'loading' || (step === 'review' && !entries)) {
     return (
       <main className="summary summary-centered" aria-busy="true">
+        {menu}
         <p className="summary-message summary-loading">Je prépare ton bilan…</p>
       </main>
     )
@@ -130,6 +134,7 @@ export function Summary({ sessionId, onFinish }: SummaryProps) {
     const removed = entries.length - keptIds.length
     return (
       <main className="summary" onKeyDown={moveFocusWithArrows}>
+        {menu}
         <h1 className="pill-title">Ta collection</h1>
         <p className="summary-intro">
           Voilà ce que j’ai gardé de ce que tu m’as raconté. Retire ce qui ne te ressemble pas : seules les cartes que tu
@@ -165,6 +170,7 @@ export function Summary({ sessionId, onFinish }: SummaryProps) {
 
   return (
     <main className="summary" onKeyDown={moveFocusWithArrows}>
+      {menu}
       <h1 className="pill-title">Ton bilan</h1>
 
       {summary.overview && <p className="summary-overview">{summary.overview}</p>}

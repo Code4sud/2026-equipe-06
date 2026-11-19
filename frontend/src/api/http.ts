@@ -3,6 +3,7 @@ import type {
   Card,
   CollectionEntry,
   EntryUpdate,
+  LeaveResponse,
   SendMessageResponse,
   Session,
   SessionDetails,
@@ -52,6 +53,14 @@ export const httpApi = {
       `/sessions/${sessionId}/turns/${turnId}/messages`,
       post({ text, selectedEntryIds }),
     ),
+
+  /** Passer: the conversation on this card stops (what was said is still analyzed) */
+  skipTurn: (sessionId: string, turnId: string) =>
+    request<LeaveResponse>(`/sessions/${sessionId}/turns/${turnId}/skip`, { method: 'POST' }),
+
+  /** Passer au bilan: ends the card in progress if any, then the game goes straight to the summary */
+  finishGame: (sessionId: string, turnId?: string) =>
+    request<LeaveResponse>(`/sessions/${sessionId}/finish`, post({ turnId })),
 
   getCollection: (sessionId: string) => request<CollectionEntry[]>(`/sessions/${sessionId}/collection`),
 

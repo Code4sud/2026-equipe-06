@@ -150,7 +150,8 @@ def _finish_turn(
     constraints = list(session.get("declared_constraints", []))
     created: list[Document] = []
 
-    if not distress:
+    # Nothing to analyze after a distress message, or when the card was skipped before any answer
+    if not distress and any(m.role == "user" for m in history):
         ctx = context_of(session, load_entries(db, session_id))
         try:
             result = analysis.analyze_turn(ctx, card, history)
@@ -210,6 +211,8 @@ def send_message(
         selected = [item for item in ctx.collection if item.id in wanted]
         db.update(SESSIONS, session_id, {"mirror_selected_ids": [item.id for item in selected]})
 
+    if turn.get("ended"):
+        raise GameError(409, "This card is over")
     reply = conversation.reply(ctx, card, history, text, selected=selected)
     user_text = text or (conversation.pick_message(selected) if selected is not None else "")
     history += [Message("user", user_text), Message("assistant", reply.reply)]
@@ -219,12 +222,51 @@ def send_message(
     if reply.safety != "none":
         result["safety"] = reply.safety
     if reply.turn_ended:
+        db.update(TURNS, turn_id, {"ended": True})
         if is_mirror:
             db.update(SESSIONS, session_id, {"state": "summary"})
         else:
             created = _finish_turn(db, session, card, history, distress=reply.safety == "distress")
             if created:
                 result["newEntries"] = [entry_json(e) for e in created]
+    return result
+
+
+# ---- Leaving a card, going to the summary --------------------------------------------------------
+
+
+def skip_turn(db: Database, session_id: str, turn_id: str) -> dict[str, Any]:
+    """Passer: the conversation on this card stops. What was said is still analyzed.
+
+    For the mirror (only when the young person quits during it), the game goes back to the draw:
+    the mirror card comes back next time.
+    """
+    session = load_session(db, session_id)
+    turn = load_turn(db, session_id, turn_id)
+    if turn.get("ended"):
+        return {}
+    db.update(TURNS, turn_id, {"ended": True})
+    card = get_card(turn["card_id"])
+    if card.format == "mirror":
+        db.update(SESSIONS, session_id, {"state": "drawing"})
+        return {}
+    created = _finish_turn(db, session, card, history_of(turn), distress=False)
+    return {"newEntries": [entry_json(e) for e in created]} if created else {}
+
+
+def finish_game(db: Database, session_id: str, turn_id: str | None) -> dict[str, Any]:
+    """Passer au bilan: ends the card in progress if there is one, then straight to the summary (no mirror)."""
+    result: dict[str, Any] = {}
+    if turn_id:
+        turn = load_turn(db, session_id, turn_id)
+        # The mirror is a conversation about the game, not a card: nothing to analyze
+        if get_card(turn["card_id"]).format != "mirror":
+            result = skip_turn(db, session_id, turn_id)
+        else:
+            db.update(TURNS, turn_id, {"ended": True})
+    else:
+        load_session(db, session_id)
+    db.update(SESSIONS, session_id, {"state": "summary"})
     return result
 
 

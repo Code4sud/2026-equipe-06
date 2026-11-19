@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { Flower, Star } from '../components/Shapes'
 import { moveFocusWithArrows } from '../utils/arrowNavigation'
 import './Tutorial.css'
@@ -5,6 +6,8 @@ import './Tutorial.css'
 interface TutorialProps {
   isNewUser: boolean
   onStart: () => void
+  /** Quitter (see GameMenu) */
+  menu?: ReactNode
 }
 
 const STEPS = [
@@ -14,9 +17,10 @@ const STEPS = [
   { color: 'green', title: 'Ta collection grandit', text: 'À la fin, tu repars avec tes cartes à toi.' },
 ] as const
 
-export function Tutorial({ isNewUser, onStart }: TutorialProps) {
+export function Tutorial({ isNewUser, onStart, menu }: TutorialProps) {
   return (
     <main className="tutorial" onKeyDown={moveFocusWithArrows}>
+      {menu}
       <div className="tutorial-decor" aria-hidden="true">
         <Flower className="tutorial-flower floating" color="var(--color-orange)" />
         <Star className="tutorial-star floating" color="var(--color-pink)" />

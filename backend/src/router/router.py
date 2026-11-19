@@ -98,6 +98,19 @@ class Router:
 
 
     @staticmethod
+    @route("sessions/<session_id>/turns/<turn_id>/skip", "POST")
+    def skip_turn(session_id: str, turn_id: str) -> Any:
+        return _respond(lambda: service.skip_turn(_db(), session_id, turn_id))
+
+
+    @staticmethod
+    @route("sessions/<session_id>/finish", "POST")
+    def finish_game(session_id: str) -> Any:
+        turn_id = _body().get("turnId")
+        return _respond(lambda: service.finish_game(_db(), session_id, str(turn_id) if turn_id else None))
+
+
+    @staticmethod
     @route("sessions/<session_id>/collection", "GET")
     def get_collection(session_id: str) -> Any:
         return _respond(lambda: service.get_collection(_db(), session_id))

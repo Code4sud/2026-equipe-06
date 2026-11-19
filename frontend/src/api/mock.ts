@@ -60,6 +60,7 @@ const ANSWERS_WORTH_KEEPING = [1, 3]
 interface MockTurn {
   card: Card
   userMessages: string[]
+  ended?: boolean
 }
 
 interface MockSession {
@@ -67,6 +68,8 @@ interface MockSession {
   turns: Map<string, MockTurn>
   collection: CollectionEntry[]
   mirrorSelection?: string[]
+  /** Passer au bilan: no more cards */
+  finished?: boolean
 }
 
 const sessionsByEmail = new Map<string, string>()
@@ -110,6 +113,7 @@ export const mockApi: Api = {
   async drawCards(sessionId) {
     await delay()
     const session = getSessionOrThrow(sessionId)
+    if (session.finished) return []
     if (session.turns.size >= TURNS_BEFORE_MIRROR) return [MIRROR_CARD]
 
     let available = DECK.filter((card) => !session.drawnCardIds.has(card.id))
@@ -172,6 +176,20 @@ export const mockApi: Api = {
       text: turnEnded ? 'Merci de m’avoir raconté ça. On pioche la suite ?' : FOLLOW_UPS[answerNumber - 1],
     }
     return newEntries.length > 0 ? { message, turnEnded, newEntries } : { message, turnEnded }
+  },
+
+  async skipTurn(sessionId, turnId) {
+    await delay(600)
+    getTurnOrThrow(sessionId, turnId).ended = true
+    return {}
+  },
+
+  async finishGame(sessionId, turnId) {
+    await delay(600)
+    const session = getSessionOrThrow(sessionId)
+    if (turnId) getTurnOrThrow(sessionId, turnId).ended = true
+    session.finished = true
+    return {}
   },
 
   async getCollection(sessionId) {

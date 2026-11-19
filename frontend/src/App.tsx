@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { api } from './api'
+import { GameMenu } from './components/GameMenu'
 import { CollectionPage } from './screens/CollectionPage'
 import { Drawing } from './screens/Drawing'
 import { Home } from './screens/Home'
@@ -41,13 +43,51 @@ function App() {
     })
   }
 
+  /** The card being played, if the user is in a conversation right now */
+  const turnInProgress = turn && (screen === 'in_turn' || screen === 'mirror') ? turn : null
+
+  function backHome() {
+    withViewTransition(() => {
+      setSession(null)
+      setTurn(null)
+      setDrawnCards(null)
+      setScreen('home')
+    })
+  }
+
+  /** Quitter: the card in progress stops (what was said is kept), then back to the home screen */
+  async function quit() {
+    if (session && turnInProgress) {
+      try {
+        await api.skipTurn(session.sessionId, turnInProgress.turnId)
+      } catch {
+        // Leaving must always work: at worst this card is not analyzed
+      }
+    }
+    backHome()
+  }
+
+  /** Passer au bilan: ends the card in progress, then straight to the summary (no mirror) */
+  async function finish() {
+    if (!session) return
+    await api.finishGame(session.sessionId, turnInProgress?.turnId)
+    withViewTransition(() => {
+      setTurn(null)
+      setDrawnCards(null)
+      setScreen('summary')
+    })
+  }
+
+  const menu = <GameMenu onQuit={quit} onFinish={finish} />
+  const quitOnlyMenu = <GameMenu onQuit={quit} />
+
   if (!session || screen === 'home') {
     return <Home onLogin={handleLogin} />
   }
 
   if (screen === 'tutorial') {
     // Resume where the session left off (drawing for a new user)
-    return <Tutorial isNewUser={session.isNew} onStart={() => goTo(session.state)} />
+    return <Tutorial isNewUser={session.isNew} onStart={() => goTo(session.state)} menu={quitOnlyMenu} />
   }
 
   if (screen === 'drawing') {
@@ -59,6 +99,7 @@ function App() {
         onCardsDrawn={setDrawnCards}
         onCardChosen={handleCardChosen}
         onOpenCollection={() => goTo('collection')}
+        menu={menu}
         onRedraw={() => {
           setDrawnCards(null)
           setDrawKey((key) => key + 1)
@@ -68,31 +109,38 @@ function App() {
   }
 
   if (screen === 'collection') {
-    return <CollectionPage sessionId={session.sessionId} onBack={() => goTo('drawing')} />
+    return <CollectionPage sessionId={session.sessionId} onBack={() => goTo('drawing')} menu={menu} />
   }
 
   // TODO: resuming a session in the middle of a turn (no ActiveTurn in memory yet)
   if (screen === 'in_turn' && turn) {
-    return <Turn key={turn.turnId} sessionId={session.sessionId} turn={turn} onTurnEnded={() => goTo('drawing')} />
+    return (
+      <Turn
+        key={turn.turnId}
+        sessionId={session.sessionId}
+        turn={turn}
+        onTurnEnded={() => goTo('drawing')}
+        menu={menu}
+      />
+    )
   }
 
   // Mirror: a turn on a screen of its own, with the card picking first; then the agent's summary
   if (screen === 'mirror' && turn) {
-    return <Turn key={turn.turnId} sessionId={session.sessionId} turn={turn} onTurnEnded={() => goTo('summary')} />
+    return (
+      <Turn
+        key={turn.turnId}
+        sessionId={session.sessionId}
+        turn={turn}
+        onTurnEnded={() => goTo('summary')}
+        menu={menu}
+      />
+    )
   }
 
   if (screen === 'summary') {
     return (
-      <Summary
-        sessionId={session.sessionId}
-        onFinish={() =>
-          withViewTransition(() => {
-            setSession(null)
-            setTurn(null)
-            setScreen('home')
-          })
-        }
-      />
+<Summary sessionId={session.sessionId} onFinish={backHome} menu={quitOnlyMenu} />
     )
   }
 

@@ -95,6 +95,11 @@ export interface Summary {
   sensitiveMentions: string[]
 }
 
+/** Passer (a card) or Passer au bilan: entries found in what was said before leaving the card */
+export interface LeaveResponse {
+  newEntries?: CollectionEntry[]
+}
+
 export interface SuggestionsResponse {
   suggestions: string[]
 }
