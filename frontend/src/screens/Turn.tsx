@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent } from 'react'
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from 'react'
 import { api } from '../api'
 import { AssistantOrb, type OrbState } from '../components/AssistantOrb'
 import { CollectionCard } from '../components/CollectionCard'
@@ -16,6 +16,8 @@ interface TurnProps {
   sessionId: string
   turn: ActiveTurn
   onTurnEnded: () => void
+  /** Passer au bilan and Quitter (see GameMenu) */
+  menu?: ReactNode
 }
 
 /**
@@ -39,7 +41,7 @@ function MicIcon() {
   )
 }
 
-export function Turn({ sessionId, turn, onTurnEnded }: TurnProps) {
+export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
   const speech = useSpeechRecognition()
   const cardTilt = useCardTilt()
   const [assistantText, setAssistantText] = useState(turn.firstMessage.text)
@@ -178,6 +180,20 @@ export function Turn({ sessionId, turn, onTurnEnded }: TurnProps) {
     if (answer && phase === 'answering') submit(answer)
   }
 
+  /** Passer: the conversation on this card stops, back to the draw */
+  async function skipCard() {
+    cancelListening()
+    setError(null)
+    setPhase('thinking')
+    try {
+      await api.skipTurn(sessionId, turn.turnId)
+      onTurnEnded()
+    } catch {
+      setError('On n’arrive pas à passer cette carte. Réessaie !')
+      setPhase('answering')
+    }
+  }
+
   function sendSelection() {
     if (phase === 'picking') submit('', selectedIds)
   }
@@ -238,6 +254,8 @@ export function Turn({ sessionId, turn, onTurnEnded }: TurnProps) {
         .join(' ')}
       onKeyDown={moveFocusWithArrows}
     >
+      {menu}
+
       {/* Mirror: a screen of its own, without the card on the left */}
       {!isMirror && (
         <aside
@@ -384,6 +402,12 @@ export function Turn({ sessionId, turn, onTurnEnded }: TurnProps) {
 
           {phase === 'answering' && mode === 'text' && !voiceSupported && (
             <p className="turn-hint">Le micro n’est pas disponible sur ce navigateur : écris ta réponse.</p>
+          )}
+
+          {phase === 'answering' && !isMirror && (
+            <button type="button" className="btn-link" onClick={() => void skipCard()}>
+              Passer cette carte
+            </button>
           )}
         </div>
       </section>

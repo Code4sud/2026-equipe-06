@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { api } from '../api'
 import { GameCard } from '../components/GameCard'
 import type { ActiveTurn, Card } from '../types'
@@ -25,6 +25,8 @@ interface DrawingProps {
   onOpenCollection: () => void
   /** Joker chosen: throw every card away and draw new ones */
   onRedraw: () => void
+  /** Passer au bilan and Quitter (see GameMenu) */
+  menu?: ReactNode
 }
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
@@ -44,6 +46,7 @@ export function Drawing({
   onCardChosen,
   onOpenCollection,
   onRedraw,
+  menu,
 }: DrawingProps) {
   // The backend imposes the mirror card alone when the game is over (no joker then)
   const isMirror = drawnCards?.some((card) => card.format === 'mirror') ?? false
@@ -132,6 +135,7 @@ export function Drawing({
 
   return (
     <main className={`drawing${chosenId || redrawing ? ' is-leaving' : ''}`} onKeyDown={moveFocusWithArrows}>
+      {menu}
       <h1 className="pill-title">{!revealed ? 'On pioche…' : isMirror ? 'Dernière carte !' : 'Choisis une carte'}</h1>
 
       {cards && (

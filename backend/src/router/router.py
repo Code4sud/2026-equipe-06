@@ -1,23 +1,20 @@
-from datetime import timedelta
-from typing import Literal, Tuple, Iterator, Dict, Callable, Any
-from pydantic import BaseModel, ValidationError
-from flask import current_app, jsonify, request
-from controllers.mailer import send_auth_code
-from models.models import AuthCode, CodeRequest, PublicUser, User, VerifyRequest, utcnow
-
-import inspect
-import logging
-
-from flask import current_app, jsonify, request
-
-from ai import AIConfigError, LLMError
-from game import service
-from game.store import GameError
 import hashlib
 import hmac
 import inspect
+import logging
 import os
 import secrets
+from datetime import timedelta
+from typing import Any, Callable, Dict, Iterator, Literal, Tuple
+
+from flask import current_app, jsonify, request
+from pydantic import BaseModel, ValidationError
+
+from ai import AIConfigError, LLMError
+from controllers.mailer import send_auth_code
+from game import service
+from game.store import GameError
+from models.models import AuthCode, CodeRequest, utcnow
 
 
 type METHOD_NAME = Literal["GET", "POST", "PUT", "DELETE", "PATCH"]
@@ -36,8 +33,9 @@ MAX_ATTEMPTS = 5
 CODE_LENGTH = 8
 
 
-def route(path: str, type: METHOD_NAME = "GET") -> Callable[[Callable[[], str]], Callable[[], str]]:
-    def wrapper(func: Callable[[], str]) -> Callable[[], str]:
+# Routes can take URL parameters (<session_id>…), hence Callable[..., Any]
+def route(path: str, type: METHOD_NAME = "GET") -> Callable[[Callable[..., Any]], Callable[..., Any]]:
+    def wrapper(func: Callable[..., Any]) -> Callable[..., Any]:
         routes[func.__name__] = (path, type)
         return func
     return wrapper
@@ -119,25 +117,25 @@ class Router:
 
 
     @staticmethod
-    @route("sessions/<int:session_id>", "GET")
+    @route("sessions/<session_id>", "GET")
     def get_session(session_id: str) -> Any:
         return _respond(lambda: service.get_session(_db(), session_id))
 
 
     @staticmethod
-    @route("sessions/<int:session_id>/draws", "POST")
+    @route("sessions/<session_id>/draws", "POST")
     def draw_cards(session_id: str) -> Any:
         return _respond(lambda: service.draw_cards(_db(), session_id))
 
 
     @staticmethod
-    @route("sessions/<int:session_id>/turns", "POST")
+    @route("sessions/<session_id>/turns", "POST")
     def start_turn(session_id: str) -> Any:
         return _respond(lambda: service.start_turn(_db(), session_id, str(_body().get("cardId", ""))))
 
 
     @staticmethod
-    @route("sessions/<int:session_id>/turns/<int:turn_id>/messages", "POST")
+    @route("sessions/<session_id>/turns/<turn_id>/messages", "POST")
     def send_message(session_id: str, turn_id: str) -> Any:
         body = _body()
         ids = body.get("selectedEntryIds")
@@ -149,43 +147,43 @@ class Router:
 
 
     @staticmethod
-    @route("sessions/<int:session_id>/collection", "GET")
+    @route("sessions/<session_id>/turns/<turn_id>/skip", "POST")
+    def skip_turn(session_id: str, turn_id: str) -> Any:
+        return _respond(lambda: service.skip_turn(_db(), session_id, turn_id))
+
+
+    @staticmethod
+    @route("sessions/<session_id>/finish", "POST")
+    def finish_game(session_id: str) -> Any:
+        turn_id = _body().get("turnId")
+        return _respond(lambda: service.finish_game(_db(), session_id, str(turn_id) if turn_id else None))
+
+
+    @staticmethod
+    @route("sessions/<session_id>/collection", "GET")
     def get_collection(session_id: str) -> Any:
         return _respond(lambda: service.get_collection(_db(), session_id))
 
 
     @staticmethod
-    @route("sessions/<int:session_id>/collection/<int:entry_id>", "PATCH")
+    @route("sessions/<session_id>/collection/<entry_id>", "PATCH")
     def update_entry(session_id: str, entry_id: str) -> Any:
         return _respond(lambda: service.update_entry(_db(), session_id, entry_id, str(_body().get("status", ""))))
 
 
     @staticmethod
-    @route("sessions/<int:session_id>/summary", "GET")
+    @route("sessions/<session_id>/summary", "GET")
     def get_summary(session_id: str) -> Any:
         return _respond(lambda: service.get_summary(_db(), session_id))
-        payload = _parse(CodeRequest)
-        if isinstance(payload, tuple):
-            return payload
 
-        db = current_app.extensions["db"]
-        now = utcnow()
 
-        previous = [AuthCode.from_document(d) for d in db.find(AUTH_CODES, {"email": payload.email})]
-        if any(now - c.created_at < RESEND_COOLDOWN for c in previous):
-            return jsonify(error="Please wait before requesting a new code."), 429
-        for old in previous:
-            db.delete(AUTH_CODES, old.id)
-
-        code = f"{secrets.randbelow(10 ** CODE_LENGTH):0{CODE_LENGTH}d}"
-        db.insert(AUTH_CODES, AuthCode(
-            email=payload.email,
-            code_hash=_hash_code(payload.email, code),
-            expires_at=now + CODE_TTL,
-        ).to_document())
-
-        send_auth_code(payload.email, code, int(CODE_TTL.total_seconds() // 60))
-        return "", 204
+    @staticmethod
+    @route("sessions/<session_id>/summary/suggestions", "POST")
+    def suggest_with_mentions(session_id: str) -> Any:
+        mentions = _body().get("mentions")
+        return _respond(
+            lambda: service.suggestions_with_mentions(_db(), session_id, mentions if isinstance(mentions, list) else [])
+        )
 
 
     @classmethod

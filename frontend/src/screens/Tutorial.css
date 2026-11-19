@@ -117,6 +117,11 @@
   font-weight: 700;
 }
 
+.tutorial-commands {
+  max-width: 36rem;
+  margin: 0;
+}
+
 .tutorial-start {
   min-width: 14rem;
   font-size: 1.4rem;

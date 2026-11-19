@@ -1,15 +1,15 @@
 import type { Card, CardFamily } from '../types'
 
-export type CardColor = 'yellow' | 'pink' | 'purple' | 'green'
+export type CardColor = 'yellow' | 'pink' | 'purple' | 'green' | 'blue' | 'orange'
 
-// TEMPORARY: 6 families but only 4 colors in the mockup. To be decided with the team.
+// One color per family. The mockup had 4; blue and orange were added for dreams and values
 const FAMILY_COLORS: Record<CardFamily, CardColor> = {
   passions: 'yellow',
   prides: 'pink',
   relationships: 'purple',
   challenges: 'green',
-  dreams: 'pink',
-  values: 'yellow',
+  dreams: 'blue',
+  values: 'orange',
 }
 
 /**

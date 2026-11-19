@@ -1,470 +1,544 @@
 {
-  "version": 1,
+  "version": 3,
+  "source": "docs/CARTES.md (cartes validées)",
   "notes": [
-    "Le front reçoit seulement id, family, format et title. Les champs level, intention et opener restent côté serveur, pour l'IA.",
+    "Généré à partir de docs/CARTES.md, qui fait référence : en cas d'écart, CARTES.md prévaut.",
+    "Le front reçoit seulement id, family, format et title. Les champs number, level, intention et opener restent côté serveur, pour l'IA.",
+    "title : le thème affiché sur la carte. Ce n'est pas une question.",
+    "opener : amorce de référence. L'IA l'adapte toujours au jeune et ne la répète jamais mot pour mot d'une carte à l'autre. Jamais de question fermée.",
+    "intention : où se cachent les talents sur cette carte. L'IA s'en sert pour orienter ses relances et ne la dit jamais.",
+    "level : sert au tirage (RULES_V2.md). general = léger, toujours possible, la première carte est toujours légère ; specific = moyen, seulement après une carte où le jeune s'est investi ; personal = profond, seulement si le jeune choisit la carte parmi plusieurs, jamais au hasard.",
+    "La profondeur de l'échange vient d'abord de la conversation : une carte légère peut mener loin si le jeune s'ouvre.",
+    "number : numéro de la carte dans CARTES.md et COMPETENCES.md.",
     "Le joker (repiocher) est ajouté par le front : il n'est pas dans ce fichier.",
-    "level : general = léger et rapide, specific = curieux et attentif aux détails, personal = lent et doux, on ne pousse jamais.",
-    "intention : où se cachent les talents sur cette carte. L'IA s'en sert pour orienter ses questions, sans jamais souffler la réponse.",
-    "opener : première phrase de référence, ton d'un ami avec qui on joue à un jeu de questions. L'IA l'adapte au jeune."
+    "La carte miroir (mirror) est ajoutée ici, côté serveur : elle n'est pas dans docs/CARTES.json."
   ],
   "families": {
-    "passions": { "label": "Passions", "description": "Ce qui t’attire et que tu fais avec plaisir." },
-    "prides": { "label": "Fiertés", "description": "Ce que tu as fait, appris ou réussi." },
-    "relationships": { "label": "Relations", "description": "Ta place avec les autres." },
-    "challenges": { "label": "Défis", "description": "Les imprévus et la façon dont tu t’y prends." },
-    "dreams": { "label": "Rêves", "description": "Tes envies et ce que tu aimerais essayer." },
-    "values": { "label": "Valeurs", "description": "Ce qui compte pour toi." }
+    "passions": {
+      "label": "Passions",
+      "description": "Ce qui t'attire, t'amuse ou te fait perdre la notion du temps."
+    },
+    "prides": {
+      "label": "Fiertés",
+      "description": "Les choses que tu as faites, apprises ou menées à bien."
+    },
+    "relationships": {
+      "label": "Relations",
+      "description": "Ta façon d'être avec les autres et de contribuer à un groupe."
+    },
+    "challenges": {
+      "label": "Défis",
+      "description": "Les imprévus, les problèmes et la manière dont tu t'y prends."
+    },
+    "dreams": {
+      "label": "Rêves",
+      "description": "Les envies, les idées à essayer et les pistes pour la suite."
+    },
+    "values": {
+      "label": "Valeurs",
+      "description": "Ce qui compte pour toi dans une activité, un projet ou une équipe."
+    }
   },
   "cards": [
     {
       "id": "passions-01",
+      "number": 1,
       "family": "passions",
       "format": "text",
       "level": "general",
-      "title": "Ton dernier week-end",
-      "intention": "Ce que le jeune fait de son temps libre : jeux, sport, bricolage, sorties, coups de main. Repérer les activités où il est acteur plutôt que spectateur.",
-      "opener": "On commence tranquille : ton dernier week-end, il s’est passé quoi ?"
+      "title": "La dernière fois que t'as pas vu le temps passer",
+      "intention": "Activité qui motive, concentration",
+      "opener": "Raconte-moi la dernière fois que t'as pas vu le temps passer."
     },
     {
       "id": "passions-02",
+      "number": 2,
       "family": "passions",
       "format": "text",
       "level": "general",
-      "title": "Le jeu auquel tu joues le plus",
-      "intention": "Rôle dans une équipe, stratégie, entraînement, progression, organisation de parties ou de tournois.",
-      "opener": "C’est quoi le jeu auquel tu joues le plus en ce moment ?"
+      "title": "Ton week-end idéal",
+      "intention": "Centres d'intérêt réels, envies",
+      "opener": "Décris-moi ton week-end idéal."
     },
     {
       "id": "passions-03",
+      "number": 3,
       "family": "passions",
       "format": "text",
       "level": "general",
-      "title": "Ce que tu regardes sur YouTube ou TikTok",
-      "intention": "Centres d’intérêt, sujets sur lesquels il se renseigne, tutos suivis, création de contenu. Repérer l’apprentissage autonome.",
-      "opener": "Tu regardes quoi comme vidéos en ce moment ?"
+      "title": "Le sujet dont tu pourrais parler des heures",
+      "intention": "Expertise cachée, passion",
+      "opener": "Parle-moi d'un sujet sur lequel tu pourrais parler pendant des heures."
     },
     {
       "id": "passions-04",
+      "number": 4,
       "family": "passions",
       "format": "text",
       "level": "general",
-      "title": "Le truc qui te fait oublier l’heure",
-      "intention": "Activité qui l’absorbe : concentration, persévérance, goût du détail, pratique régulière.",
-      "opener": "C’est quoi le truc où tu vois plus le temps passer ?"
+      "title": "Une vidéo, une série ou une musique qui t'a accroché",
+      "intention": "Curiosité, domaines d'intérêt",
+      "opener": "Parle-moi de la dernière vidéo, série ou musique qui t'a vraiment accroché."
     },
     {
       "id": "passions-05",
+      "number": 5,
       "family": "passions",
       "format": "text",
-      "level": "specific",
-      "title": "Un truc que tu as appris tout seul",
-      "intention": "Autodidaxie : comment il s’y est pris, quelles ressources, quelle méthode, quels obstacles dépassés.",
-      "opener": "Raconte-moi un truc que t’as appris tout seul, sans que personne te l’apprenne."
+      "level": "general",
+      "title": "Ce que t'aimerais faire plus souvent",
+      "intention": "Envies, motivation",
+      "opener": "Dis-moi un truc que t'aimerais faire plus souvent dans tes journées."
     },
     {
       "id": "passions-06",
+      "number": 6,
       "family": "passions",
       "format": "text",
       "level": "general",
-      "title": "Ta musique du moment",
-      "intention": "Pratique musicale ou simple écoute, création, mix, instrument, partage. Peut mener à jouer, composer, organiser.",
-      "opener": "Tu écoutes quoi en ce moment ?"
+      "title": "Un truc que tu fais juste pour le plaisir",
+      "intention": "Intérêts sans pression",
+      "opener": "Parle-moi d'un truc que tu fais juste pour le plaisir, sans te prendre la tête sur le résultat."
     },
     {
       "id": "passions-07",
+      "number": 7,
       "family": "passions",
-      "format": "choice",
+      "format": "text",
       "level": "general",
-      "title": "Créer, comprendre, bouger, aider ou bricoler",
-      "intention": "Préférences d’action. Le laisser choisir, puis reprendre ses mots et demander un exemple vécu.",
-      "opener": "Petit choix : créer, comprendre, bouger, aider ou bricoler, c’est lequel qui te ressemble le plus ?"
+      "title": "Un moment où ça t'a vraiment plu de faire quelque chose",
+      "intention": "Type d'activité préférée (manuel, créatif, social…)",
+      "opener": "Raconte-moi un moment où ça t'a vraiment plu de faire quelque chose."
     },
     {
       "id": "passions-08",
+      "number": 8,
       "family": "passions",
       "format": "text",
-      "level": "specific",
-      "title": "Un sujet dont tu parlerais pendant des heures",
-      "intention": "Expertise informelle, connaissances accumulées, capacité à expliquer ou à transmettre.",
-      "opener": "C’est quoi le sujet sur lequel tu serais intarissable ?"
+      "level": "general",
+      "title": "Une découverte faite par hasard",
+      "intention": "Ouverture, curiosité",
+      "opener": "Raconte-moi un truc que t'as découvert un peu par hasard et qui t'a plu."
     },
     {
       "id": "passions-09",
+      "number": 9,
       "family": "passions",
       "format": "text",
       "level": "general",
-      "title": "Ce que tu fabriques de tes mains",
-      "intention": "Savoir-faire manuels : bricolage, cuisine, dessin, couture, montage, réparation. Outils utilisés, étapes, résultat.",
-      "opener": "C’est quoi le dernier truc que t’as fait de tes mains ?"
+      "title": "Un truc qui te tente depuis longtemps",
+      "intention": "Envies, attirances",
+      "opener": "Parle-moi d'un truc qui te tente depuis longtemps."
     },
     {
       "id": "prides-01",
+      "number": 10,
       "family": "prides",
       "format": "text",
-      "level": "personal",
-      "title": "Une fois où t’étais content de toi",
-      "intention": "Réussite vécue comme importante. Le laisser raconter les étapes avec ses mots, sans suggérer ce qu’il a ressenti.",
-      "opener": "Raconte-moi une fois où t’étais content de ce que t’avais fait."
+      "level": "specific",
+      "title": "Un petit truc réussi récemment",
+      "intention": "Réussites concrètes",
+      "opener": "Raconte-moi un petit truc que t'as réussi récemment."
     },
     {
       "id": "prides-02",
+      "number": 11,
       "family": "prides",
       "format": "text",
-      "level": "specific",
-      "title": "Un truc que t’as réparé",
-      "intention": "Diagnostic, démontage, essais et erreurs, recherche de solutions : scooter, vélo, ordinateur, téléphone, objet du quotidien.",
-      "opener": "C’est quoi le dernier truc que t’as réparé, même tout bête ?"
+      "level": "personal",
+      "title": "Un truc dont t'es fier en secret",
+      "intention": "Fierté intérieure, exigence",
+      "opener": "Parle-moi d'un truc dont t'es fier, même si t'en parles à personne."
     },
     {
       "id": "prides-03",
+      "number": 12,
       "family": "prides",
       "format": "text",
       "level": "specific",
-      "title": "Ce qu’on te demande souvent de faire",
-      "intention": "Tâches de confiance : ce que les autres lui confient parce qu’ils savent qu’il le fait bien.",
-      "opener": "C’est quoi le truc qu’on te demande souvent de faire ?"
+      "title": "Quelqu'un qui a compté sur toi",
+      "intention": "Fiabilité, responsabilité",
+      "opener": "Raconte-moi la dernière fois que quelqu'un a compté sur toi."
     },
     {
       "id": "prides-04",
+      "number": 13,
       "family": "prides",
       "format": "text",
-      "level": "personal",
-      "title": "Un truc réussi sans que personne le voie",
-      "intention": "Fierté discrète. Faire émerger des réussites jamais valorisées par l’entourage ni par l’école.",
-      "opener": "Raconte-moi un truc que t’as réussi et dont personne a vraiment parlé."
+      "level": "specific",
+      "title": "Le dernier truc appris tout seul",
+      "intention": "Autonomie, apprendre seul",
+      "opener": "Raconte-moi le dernier truc que t'as appris tout seul."
     },
     {
       "id": "prides-05",
+      "number": 14,
       "family": "prides",
       "format": "text",
       "level": "specific",
-      "title": "Un truc que t’as organisé",
-      "intention": "Organisation d’une sortie, d’un tournoi, d’une soirée, d’un déplacement : planification, répartition des rôles, gestion des imprévus.",
-      "opener": "C’est quoi le dernier truc que t’as organisé, une sortie, un tournoi, n’importe quoi ?"
+      "title": "Un truc où t'as progressé",
+      "intention": "Progression, persévérance",
+      "opener": "Raconte-moi un truc où t'as progressé."
     },
     {
       "id": "prides-06",
+      "number": 15,
       "family": "prides",
       "format": "text",
-      "level": "personal",
-      "title": "Un truc dur que t’as fini quand même",
-      "intention": "Persévérance, méthode pour tenir, aides sollicitées, moment où il a failli abandonner.",
-      "opener": "Raconte-moi un truc compliqué que t’as fini quand même."
+      "level": "specific",
+      "title": "Ce qu'on te demande souvent",
+      "intention": "Compétence reconnue par les autres",
+      "opener": "Parle-moi du truc qu'on te demande souvent de faire."
     },
     {
       "id": "prides-07",
+      "number": 16,
       "family": "prides",
       "format": "text",
-      "level": "specific",
-      "title": "Ce que tu sais faire mieux qu’avant",
-      "intention": "Progression : ce qu’il a travaillé, comment il s’est entraîné, ce qui a changé.",
-      "opener": "C’est quoi un truc que t’arrives à faire plus facilement qu’avant ?"
+      "level": "personal",
+      "title": "Un truc que tu pensais pas pouvoir faire",
+      "intention": "Dépassement de soi",
+      "opener": "Raconte-moi une fois où t'as réussi un truc que tu pensais pas pouvoir faire."
     },
     {
       "id": "prides-08",
+      "number": 17,
       "family": "prides",
       "format": "text",
       "level": "specific",
-      "title": "Un truc que t’as montré à quelqu’un",
-      "intention": "Transmission, pédagogie, patience, façon d’expliquer.",
-      "opener": "Raconte-moi une fois où t’as montré à quelqu’un comment faire un truc."
+      "title": "Un truc que t'as aidé à organiser ou à réparer",
+      "intention": "Organisation, compétences manuelles",
+      "opener": "Raconte-moi le dernier truc que t'as aidé à organiser ou à réparer."
     },
     {
       "id": "prides-09",
+      "number": 18,
       "family": "prides",
       "format": "text",
       "level": "personal",
-      "title": "Ce que tu voudrais qu’on retienne de toi",
-      "intention": "Image de soi, qualités et valeurs auxquelles il tient. À aborder doucement, jamais en premier.",
-      "opener": "Question un peu plus posée, prends ton temps : si on devait retenir un truc de toi, ce serait quoi ?"
+      "title": "Un truc cool sur toi",
+      "intention": "Image de soi, ce qui compte pour lui",
+      "opener": "Imagine que tu rencontres quelqu'un. Dis-moi le truc cool que tu lui raconterais sur toi."
     },
     {
       "id": "relationships-01",
+      "number": 19,
       "family": "relationships",
       "format": "text",
-      "level": "specific",
-      "title": "La dernière fois qu’on t’a appelé à l’aide",
-      "intention": "Rôle d’appui pour les autres : ce qu’il a concrètement fait, comment il s’y est pris, qui l’a sollicité.",
-      "opener": "C’est quand, la dernière fois que quelqu’un t’a appelé pour un coup de main ?"
+      "level": "general",
+      "title": "Un bon moment passé avec d'autres personnes",
+      "intention": "Sociabilité, ce qu'il apporte à un groupe",
+      "opener": "Raconte-moi un bon moment que t'as passé avec d'autres personnes."
     },
     {
       "id": "relationships-02",
+      "number": 20,
       "family": "relationships",
       "format": "text",
       "level": "specific",
-      "title": "Le truc pour lequel on compte sur toi",
-      "intention": "Rôles de confiance et de soutien. Si la personne citée est de la famille, ne pas creuser le lien familial : revenir à ce qu’il fait.",
-      "opener": "C’est quoi le truc pour lequel on compte le plus sur toi ?"
+      "title": "La dernière fois que t'as donné un coup de main",
+      "intention": "Entraide, sens du service",
+      "opener": "Raconte-moi la dernière fois que t'as donné un coup de main à quelqu'un."
     },
     {
       "id": "relationships-03",
+      "number": 21,
       "family": "relationships",
-      "format": "scenario",
+      "format": "text",
       "level": "specific",
-      "title": "Naufragé sur une île avec cinq personnes",
-      "intention": "Place et rôle naturels dans un groupe : organiser, rassurer, trouver des solutions, écouter, animer. Reprendre ses choix et demander un exemple réel.",
-      "opener": "Imagine : t’es naufragé sur une île avec cinq personnes. Tu fais quoi en premier ?"
+      "title": "Quelqu'un qui t'a parlé d'un problème",
+      "intention": "Écoute, conseil, résolution de problèmes",
+      "opener": "Raconte-moi la dernière fois que quelqu'un t'a parlé d'un problème."
     },
     {
       "id": "relationships-04",
+      "number": 22,
       "family": "relationships",
       "format": "text",
-      "level": "general",
-      "title": "Ta bande de potes",
-      "intention": "Dynamique de groupe et place qu’il y prend. Le laisser décrire, ne jamais comparer.",
-      "opener": "Dans ta bande de potes, c’est qui qui fait quoi ?"
+      "level": "specific",
+      "title": "Un truc que t'as expliqué à quelqu'un",
+      "intention": "Pédagogie, transmission",
+      "opener": "Raconte-moi une fois où t'as expliqué un truc à quelqu'un."
     },
     {
       "id": "relationships-05",
+      "number": 23,
       "family": "relationships",
       "format": "text",
       "level": "specific",
-      "title": "Un truc fait à plusieurs",
-      "intention": "Travail en équipe : ce que lui a fait précisément, comment le groupe s’est réparti les tâches.",
-      "opener": "Raconte-moi un truc que t’as fait à plusieurs, un projet, un match, une soirée."
+      "title": "Ta place dans un groupe",
+      "intention": "Rôle dans un groupe, leadership",
+      "opener": "Raconte-moi la dernière fois que t'as fait un truc en groupe, et ce que tu faisais, toi."
     },
     {
       "id": "relationships-06",
+      "number": 24,
       "family": "relationships",
       "format": "text",
       "level": "specific",
-      "title": "Quand ça chauffe entre potes",
-      "intention": "Médiation, calme, écoute, capacité à trancher ou à apaiser.",
-      "opener": "Quand ça chauffe entre potes, tu fais quoi en général ?"
+      "title": "Bien s'entendre avec quelqu'un",
+      "intention": "Valeurs relationnelles",
+      "opener": "Dis-moi ce qui fait que tu t'entends bien avec quelqu'un."
     },
     {
       "id": "relationships-07",
+      "number": 25,
       "family": "relationships",
-      "format": "choice",
-      "level": "specific",
-      "title": "Réparer un objet ou expliquer un truc",
-      "intention": "Préférence technique ou relationnelle. Demander un exemple concret du côté qu’il choisit.",
-      "opener": "Petit choix : plutôt réparer un objet, ou expliquer un truc à quelqu’un ?"
+      "format": "text",
+      "level": "general",
+      "title": "Ce que t'aimes faire à ta façon",
+      "intention": "Autonomie, méthode personnelle",
+      "opener": "Parle-moi d'un truc que t'aimes faire à ta façon, sans personne pour te dire comment."
     },
     {
       "id": "relationships-08",
+      "number": 26,
       "family": "relationships",
       "format": "text",
-      "level": "general",
-      "title": "La dernière fois que t’as mis l’ambiance",
-      "intention": "Animation, énergie, créativité, aisance avec les autres. Ce qu’il a fait pour que ça marche.",
-      "opener": "C’est quand, la dernière fois que t’as mis l’ambiance quelque part ?"
+      "level": "specific",
+      "title": "Un truc réussi à plusieurs",
+      "intention": "Travail en équipe, rôle",
+      "opener": "Raconte-moi un truc que vous avez réussi à plusieurs, et ce que tu faisais, toi."
     },
     {
       "id": "challenges-01",
+      "number": 27,
       "family": "challenges",
       "format": "text",
       "level": "specific",
-      "title": "Un problème que t’as réussi à débloquer",
-      "intention": "Résolution de problème : comment il a cherché, essayé, demandé de l’aide, trouvé la cause.",
-      "opener": "Raconte-moi un problème que t’as réussi à débloquer, même petit."
+      "title": "Un truc qui a pas marché du premier coup",
+      "intention": "Persévérance, adaptation",
+      "opener": "Raconte-moi la dernière fois qu'un truc a pas marché du premier coup."
     },
     {
       "id": "challenges-02",
+      "number": 28,
       "family": "challenges",
       "format": "text",
       "level": "specific",
-      "title": "Quand ça marche pas du premier coup",
-      "intention": "Réaction face à l’échec d’une tentative : méthode, patience, changement d’approche.",
-      "opener": "Quand un truc marche pas du premier coup, tu fais quoi ?"
+      "title": "Un problème réglé, même tout petit",
+      "intention": "Résolution de problèmes",
+      "opener": "Raconte-moi un problème que t'as réussi à régler, même tout petit."
     },
     {
       "id": "challenges-03",
+      "number": 29,
       "family": "challenges",
       "format": "text",
       "level": "specific",
-      "title": "Un plan qui s’est pas passé comme prévu",
-      "intention": "Improvisation, adaptation, réactivité face à un imprévu.",
-      "opener": "C’est quoi la dernière fois que ça s’est pas passé comme prévu ?"
+      "title": "Quand tu savais pas comment faire",
+      "intention": "Débrouillardise, recherche d'info",
+      "opener": "Raconte-moi la dernière fois que tu savais pas comment faire un truc, et comment tu t'en es sorti."
     },
     {
       "id": "challenges-04",
+      "number": 30,
       "family": "challenges",
       "format": "text",
       "level": "specific",
-      "title": "Quand t’as trop de choses à faire",
-      "intention": "Organisation, priorités, gestion du temps, façon de tenir plusieurs choses en même temps.",
-      "opener": "Quand t’as plein de trucs à faire en même temps, tu t’y prends comment ?"
+      "title": "Quand rien s'est passé comme prévu",
+      "intention": "Improvisation, sang-froid",
+      "opener": "Raconte-moi une fois où rien s'est passé comme prévu."
     },
     {
       "id": "challenges-05",
+      "number": 31,
       "family": "challenges",
       "format": "text",
-      "level": "personal",
-      "title": "Une fois où tu t’es planté",
-      "intention": "Rapport à l’erreur, capacité à rebondir, ce qu’il en a retiré. Aucun jugement, ne jamais insister.",
-      "opener": "Prends ton temps. Il s’est passé quoi, la dernière fois que t’as raté un truc et que t’as retenté ?"
+      "level": "specific",
+      "title": "Quand un truc devient saoulant",
+      "intention": "Motivation, endurance",
+      "opener": "Dis-moi ce qui te fait continuer quand un truc devient saoulant à faire."
     },
     {
       "id": "challenges-06",
+      "number": 32,
       "family": "challenges",
-      "format": "scenario",
+      "format": "text",
       "level": "specific",
-      "title": "Panne au pire moment",
-      "intention": "Réactivité, débrouillardise, ordre des priorités face à un imprévu technique.",
-      "opener": "Imagine : ton téléphone ou ton PC lâche juste avant un truc important. Tu fais quoi ?"
+      "title": "Changer de façon de faire",
+      "intention": "Flexibilité, remise en question",
+      "opener": "Raconte-moi une fois où t'as dû changer ta façon de faire parce que ça marchait pas."
     },
     {
       "id": "challenges-07",
+      "number": 33,
       "family": "challenges",
       "format": "text",
       "level": "specific",
-      "title": "Un truc compliqué que t’as fini par comprendre",
-      "intention": "Capacité d’apprentissage, curiosité, méthode pour comprendre un sujet difficile.",
-      "opener": "C’est quoi un truc qui te paraissait impossible à comprendre au début ?"
+      "title": "Un défi pas gagné d'avance",
+      "intention": "Goût du défi, prise de risque",
+      "opener": "Parle-moi d'un défi qui te donne envie d'essayer, même si c'est pas gagné d'avance."
     },
     {
       "id": "challenges-08",
+      "number": 34,
       "family": "challenges",
-      "format": "choice",
-      "level": "general",
-      "title": "Demander, chercher ou essayer",
-      "intention": "Façon d’aborder l’inconnu : autonomie, esprit d’équipe, curiosité. Demander un exemple de la façon qu’il choisit.",
-      "opener": "Quand tu sais pas comment faire, tu demandes, tu cherches ou tu essaies direct ?"
+      "format": "text",
+      "level": "specific",
+      "title": "Plein de trucs à faire en même temps",
+      "intention": "Organisation, gestion des priorités",
+      "opener": "Raconte-moi la dernière fois que t'avais plein de trucs à faire en même temps."
     },
     {
       "id": "dreams-01",
+      "number": 35,
       "family": "dreams",
-      "format": "persona",
-      "level": "personal",
-      "title": "Une journée de ta vie dans dix ans",
-      "intention": "Envies, cadre de vie souhaité, activités qui reviennent. Ne pas valider ni casser un projet irréaliste : reprendre ce qui lui plaît dedans.",
-      "opener": "Imagine ta vie dans dix ans. Raconte-moi une journée, du réveil jusqu’au soir."
+      "format": "text",
+      "level": "general",
+      "title": "Un talent que t'aimerais avoir",
+      "intention": "Aspirations, attirances",
+      "opener": "Parle-moi d'un talent que t'aimerais avoir."
     },
     {
       "id": "dreams-02",
+      "number": 36,
       "family": "dreams",
       "format": "text",
       "level": "general",
-      "title": "Une journée libre sans limite",
-      "intention": "Ce qu’il ferait sans contrainte : révèle ses centres d’intérêt profonds.",
-      "opener": "Si t’avais une journée entière sans aucune contrainte, tu ferais quoi ?"
+      "title": "Un métier ou une activité à explorer",
+      "intention": "Pistes d'orientation venant de lui",
+      "opener": "Parle-moi d'un métier ou d'une activité que t'aimerais explorer."
     },
     {
       "id": "dreams-03",
+      "number": 37,
       "family": "dreams",
       "format": "text",
-      "level": "specific",
-      "title": "Un métier dont tu voudrais savoir plus",
-      "intention": "Curiosité pour un métier ou un milieu. Ne jamais proposer de métier : reprendre ce qui l’attire dedans.",
-      "opener": "C’est quoi un métier dont t’aimerais savoir comment ça se passe vraiment ?"
+      "level": "general",
+      "title": "Une journée sans aucune limite",
+      "intention": "Envies profondes",
+      "opener": "Imagine une journée entière pour faire ce que tu veux, sans aucune limite. Raconte-la-moi."
     },
     {
       "id": "dreams-04",
+      "number": 38,
       "family": "dreams",
       "format": "text",
-      "level": "personal",
-      "title": "Un truc que tu aimerais savoir faire",
-      "intention": "Envie d’apprendre : ce qui l’attire, ce qui le freine, ce qu’il a déjà tenté.",
-      "opener": "C’est quoi un truc que t’aimerais savoir faire ?"
+      "level": "specific",
+      "title": "Ce que t'aimerais mieux savoir faire",
+      "intention": "Objectifs, envie de progresser",
+      "opener": "Dis-moi ce que t'aimerais savoir mieux faire d'ici quelques mois."
     },
     {
       "id": "dreams-05",
+      "number": 39,
       "family": "dreams",
       "format": "text",
-      "level": "specific",
-      "title": "Un projet dont tu rêves",
-      "intention": "Projet personnel, même petit : ambition, étapes imaginées, ressources déjà réunies.",
-      "opener": "C’est quoi un projet, même tout petit, que t’aimerais réaliser un jour ?"
+      "level": "personal",
+      "title": "Une de tes journées dans quelques années",
+      "intention": "Projection, mode de vie souhaité",
+      "opener": "Imagine une de tes journées dans quelques années. Raconte-moi comment elle commence."
     },
     {
       "id": "dreams-06",
+      "number": 40,
       "family": "dreams",
-      "format": "scenario",
+      "format": "text",
       "level": "specific",
-      "title": "Ton endroit idéal",
-      "intention": "Type d’activité souhaitée, matériel, ambiance : atelier, studio, salle de sport, cuisine, bureau…",
-      "opener": "Imagine un endroit rien qu’à toi pour faire ce que tu veux. Il ressemble à quoi ?"
+      "title": "Un boulot où tu te sentirais bien",
+      "intention": "Environnement de travail idéal",
+      "opener": "Décris-moi un boulot où tu te sentirais bien."
     },
     {
       "id": "dreams-07",
+      "number": 41,
       "family": "dreams",
-      "format": "choice",
+      "format": "text",
       "level": "specific",
-      "title": "Plus tard : bouger, créer, aider ou réfléchir",
-      "intention": "Préférences pour un futur travail. Demander un exemple vécu qui va dans ce sens.",
-      "opener": "Plus tard, tu te vois plutôt bouger, créer, aider ou réfléchir ?"
+      "title": "Un projet à réaliser un jour",
+      "intention": "Projets, initiative",
+      "opener": "Parle-moi d'un projet, même petit, que t'aimerais réaliser un jour."
     },
     {
       "id": "dreams-08",
+      "number": 42,
       "family": "dreams",
       "format": "text",
-      "level": "personal",
-      "title": "Un truc à essayer cette année",
-      "intention": "Envie de nouveauté, prise d’initiative, ce qu’il se sent prêt à tenter.",
-      "opener": "C’est quoi un truc que t’aimerais essayer cette année ?"
+      "level": "general",
+      "title": "Un truc à essayer au moins une fois",
+      "intention": "Curiosité, envie d'expérimenter",
+      "opener": "Dis-moi un truc nouveau que t'aimerais avoir essayé au moins une fois."
     },
     {
       "id": "values-01",
+      "number": 43,
       "family": "values",
       "format": "text",
       "level": "specific",
-      "title": "Ce qui compte pour toi dans une activité",
-      "intention": "Ce qui le motive : se sentir utile, apprendre, créer, bouger. Reprendre ses mots.",
-      "opener": "Dans ce que tu fais, c’est quoi le plus important pour toi ?"
+      "title": "La dernière fois que tu t'es senti utile",
+      "intention": "Sens, utilité",
+      "opener": "Raconte-moi la dernière fois que tu t'es senti vraiment utile."
     },
     {
       "id": "values-02",
+      "number": 44,
       "family": "values",
-      "format": "choice",
-      "level": "specific",
-      "title": "Des consignes claires ou de la liberté",
-      "intention": "Rapport au cadre : besoin de repères ou d’autonomie. Demander un exemple de situation vécue.",
-      "opener": "Tu préfères savoir exactement ce qu’on attend de toi, ou avoir de la liberté pour t’organiser ?"
+      "format": "text",
+      "level": "personal",
+      "title": "Ce qui te donne envie de bien faire",
+      "intention": "Motivation, exigence",
+      "opener": "Dis-moi ce qui te donne envie de bien faire un truc."
     },
     {
       "id": "values-03",
+      "number": 45,
       "family": "values",
       "format": "text",
       "level": "specific",
-      "title": "Une équipe où tu te sens bien",
-      "intention": "Ce qu’il attend d’un collectif : écoute, entraide, humour, efficacité. Rôle qu’il y tient.",
-      "opener": "C’est quoi qui rend une équipe agréable pour toi ?"
+      "title": "Ce qui t'aide quand on te demande un truc",
+      "intention": "Besoin de cadre ou d'autonomie",
+      "opener": "Quand quelqu'un te demande de faire un truc, dis-moi ce qui t'aide à bien le faire."
     },
     {
       "id": "values-04",
+      "number": 46,
       "family": "values",
       "format": "text",
-      "level": "personal",
-      "title": "Ce qui te paraît pas juste",
-      "intention": "Valeurs d’équité et d’entraide. Ne jamais débattre ni commenter des opinions : revenir à ce qu’il fait ou ferait.",
-      "opener": "C’est quoi une situation qui te paraît vraiment pas juste ?"
+      "level": "specific",
+      "title": "Un groupe où tu te sentais bien",
+      "intention": "Travail en équipe, ambiance recherchée",
+      "opener": "Raconte-moi un groupe où tu te sentais bien, au sport, en cours ou ailleurs."
     },
     {
       "id": "values-05",
+      "number": 47,
       "family": "values",
-      "format": "choice",
+      "format": "text",
       "level": "specific",
-      "title": "Un résultat rapide ou petit à petit",
-      "intention": "Rythme de travail : gratification immédiate ou construction patiente. Demander un exemple de chaque.",
-      "opener": "Tu te sens mieux quand tu vois vite le résultat, ou quand tu construis un truc petit à petit ?"
+      "title": "Un effort qui a fini par payer",
+      "intention": "Persévérance, rapport à l'effort",
+      "opener": "Raconte-moi un effort qui a fini par payer."
     },
     {
       "id": "values-06",
-      "family": "values",
-      "format": "text",
-      "level": "specific",
-      "title": "Ce qui te donne envie de bien faire",
-      "intention": "Moteurs d’implication : reconnaissance, utilité, défi, plaisir de la belle ouvrage.",
-      "opener": "C’est quoi qui te donne envie de bien faire un truc ?"
-    },
-    {
-      "id": "values-07",
-      "family": "values",
-      "format": "text",
-      "level": "general",
-      "title": "Une journée qui valait le coup",
-      "intention": "Ce qui rend une journée réussie à ses yeux : activités, personnes, résultats.",
-      "opener": "C’est quoi une journée où tu te dis le soir que ça valait le coup ?"
-    },
-    {
-      "id": "values-08",
+      "number": 48,
       "family": "values",
       "format": "text",
       "level": "personal",
-      "title": "Un truc que tu refuserais de faire",
-      "intention": "Limites personnelles et principes. Accueillir sans juger, ne pas chercher à l’en dissuader.",
-      "opener": "C’est quoi un truc que tu refuserais de faire, même si on te payait ?"
+      "title": "Quelqu'un de bien",
+      "intention": "Valeurs, respect des autres",
+      "opener": "Décris-moi quelqu'un de bien, pour toi."
+    },
+    {
+      "id": "values-07",
+      "number": 49,
+      "family": "values",
+      "format": "text",
+      "level": "personal",
+      "title": "Un truc où tu t'es dit « ça, c'est moi »",
+      "intention": "Identité, valeurs",
+      "opener": "Raconte-moi la dernière fois que t'as fait un truc et que tu t'es dit « ça, c'est moi »."
+    },
+    {
+      "id": "values-08",
+      "number": 50,
+      "family": "values",
+      "format": "text",
+      "level": "specific",
+      "title": "Une journée qui valait le coup",
+      "intention": "Ce qui donne du sens",
+      "opener": "Raconte-moi une bonne journée, une de celles où tu te dis le soir que ça valait le coup."
     }
   ],
   "mirror": {

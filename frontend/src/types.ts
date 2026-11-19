@@ -71,12 +71,36 @@ export interface PersonalityCard {
   id: string
   title: string
   description: string
+  /** Exact sentence of the user that backs the card */
+  evidence: string
+}
+
+/** Where the report of the Centre des possibles and what the user told meet ('match') or differ ('gap') */
+export interface Crossing {
+  kind: 'match' | 'gap'
+  text: string
 }
 
 export interface Summary {
   overview: string
+  /** The entries the user kept */
   collection: CollectionEntry[]
   personalityCards: PersonalityCard[]
+  suggestions: string[]
+  crossings: Crossing[]
+  /**
+   * What the user said himself about his health, religion or origin, in his words.
+   * Never kept: the summary asks whether he wants it taken into account for the suggestions.
+   */
+  sensitiveMentions: string[]
+}
+
+/** Passer (a card) or Passer au bilan: entries found in what was said before leaving the card */
+export interface LeaveResponse {
+  newEntries?: CollectionEntry[]
+}
+
+export interface SuggestionsResponse {
   suggestions: string[]
 }
 

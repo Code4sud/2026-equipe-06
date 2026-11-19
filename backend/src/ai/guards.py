@@ -59,10 +59,63 @@ def is_sensitive(text: str) -> bool:
     return _SENSITIVE_RE.search(text) is not None
 
 
+# Wider net, only to spot what to ask about at the summary (the model then sorts it out):
+# words that are often innocent ("faire de la voile") but can be about religion or health
+_MAYBE_SENSITIVE_RE = re.compile(
+    r"\b(?:voile|voil[ée]e?|foulard|pri[eé]\w*|croyant\w*|pratiquant\w*|halal|casher|kasher|kippa|je[uû]ne\w*|"
+    r"fauteuil|sourde?s?|aveugle\w*|malvoyant\w*|malentendant\w*|diab[eè]t\w*|asthm\w*|allergi\w*|[ée]pilep\w*|"
+    r"traitement|m[ée]dicament\w*|h[oô]pital\w*|bless[ée]\w*|douleur\w*)\b",
+    re.IGNORECASE,
+)
+
+
+def might_be_sensitive(text: str) -> bool:
+    return is_sensitive(text) or _MAYBE_SENSITIVE_RE.search(text) is not None
+
+
 def strip_sensitive(text: str) -> str:
     """The text without the sentences that contain sensitive words. Keeps the rest instead of dropping all."""
     sentences = re.split(r"(?<=[.!?…])\s+", text.strip())
     return " ".join(s for s in sentences if s and not is_sensitive(s))
+
+
+# ---- Closed questions ---------------------------------------------------------------------------
+
+# A question with one of these words invites a story. Without any, it is answered with "ouais" or one word
+_OPEN_WORDS_RE = re.compile(
+    r"\b(?:comment|quoi|qu'est-ce|qu'est ce|pourquoi|raconte|racontes|quels?|quelles?|lesquel\w*|laquelle|où|"
+    r"combien|dis-moi|parle-moi|explique|d[ée]cris)\b"
+    # "qui" asks a question only at the start or after a preposition, not in "autre chose qui a changé"
+    r"|(?:^(?:et\s+)?|\b(?:c'est|avec|pour|à|de|par|chez)\s+)qui\b",
+    re.IGNORECASE,
+)
+# Suggesting the answer ("t'as dû…", "…, non ?") is closed even with an open word
+_SUGGESTING_RE = re.compile(r"(?:^|\s)(?:t'as dû|tu as dû|t'as d[uû]|j'imagine que)|,\s*(?:non|hein|pas vrai)\s*\?$", re.IGNORECASE)
+
+
+def last_question(text: str) -> str:
+    questions = re.findall(r"[^.!?…]*\?", text.replace("’", "'"))
+    return questions[-1].strip() if questions else ""
+
+
+def is_closed_question(text: str) -> bool:
+    """True when the question that ends the text can be answered by yes, no or one word."""
+    question = last_question(text)
+    if not question:
+        return False
+    return _SUGGESTING_RE.search(question) is not None or _OPEN_WORDS_RE.search(question) is None
+
+
+# Without a question, the message must still hand him the floor: an invitation, or his words left hanging
+_INVITATION_RE = re.compile(
+    r"\b(?:raconte|explique|dis-moi|parle-moi|d[ée]cris|vas-y|continue|je t'[ée]coute|montre-moi)\b", re.IGNORECASE
+)
+
+
+def hands_over(text: str) -> bool:
+    """True when the message gives the floor back: a question, an invitation, or a sentence left hanging (…)."""
+    text = text.replace("’", "'").strip()
+    return "?" in text or text.endswith(("…", "...")) or _INVITATION_RE.search(text) is not None
 
 
 # ---- Distress -----------------------------------------------------------------------------------
