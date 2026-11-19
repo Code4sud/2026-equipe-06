@@ -1,9 +1,6 @@
 from typing import Literal, Tuple, Iterator, Dict, Callable, Any
 from datetime import timedelta
-import hashlib
-import hmac
 import inspect
-import os
 import secrets
 
 from flask import current_app, jsonify, request
@@ -11,10 +8,6 @@ from pydantic import BaseModel, ValidationError
 
 from controllers.mailer import MailError, send_auth_code
 from models.models import AuthCode, CodeRequest, PublicUser, User, VerifyRequest, utcnow
-import logging
-
-
-logger = logging.getLogger(__name__)
 
 
 type METHOD_NAME = Literal["GET", "POST", "PUT", "DELETE", "PATCH"]
@@ -40,11 +33,6 @@ def route(path: str, type: METHOD_NAME = "GET") -> Callable[[Callable[..., Any]]
 
 class RouterException(Exception):
     pass
-
-
-def _hash_code(email: str, code: str) -> str:
-    secret = os.environ["AUTH_CODE_SECRET"].encode()
-    return hmac.new(secret, f"{email}:{code}".encode(), hashlib.sha256).hexdigest()
 
 
 def _parse[M: BaseModel](model: type[M]) -> M | tuple[Any, int]:
@@ -84,7 +72,7 @@ class Router:
         code = f"{secrets.randbelow(10 ** CODE_LENGTH):0{CODE_LENGTH}d}"
         code_id = db.insert(AUTH_CODES, AuthCode(
             email=payload.email,
-            code_hash=_hash_code(payload.email, code),
+            code_hash=code,
             expires_at=now + CODE_TTL,
         ).to_document())
 
@@ -126,10 +114,7 @@ class Router:
             db.delete(AUTH_CODES, auth_code.id)
             return jsonify(error="Too many attempts, request a new code."), 429
 
-
-        logger.info("Code requested for %s %s, %s", payload.email, auth_code.code_hash, _hash_code(payload.email, payload.code))
-
-        if not hmac.compare_digest(auth_code.code_hash, _hash_code(payload.email, payload.code)):
+        if not auth_code.code_hash == payload.code:
             db.update(AUTH_CODES, auth_code.id, {"attempts": auth_code.attempts + 1})
             return jsonify(error="Invalid code."), 401
 
