@@ -1,4 +1,10 @@
+from datetime import timedelta
 from typing import Literal, Tuple, Iterator, Dict, Callable, Any
+from pydantic import BaseModel, ValidationError
+from flask import current_app, jsonify, request
+from controllers.mailer import send_auth_code
+from models.models import AuthCode, CodeRequest, PublicUser, User, VerifyRequest, utcnow
+
 import inspect
 import logging
 
@@ -7,6 +13,11 @@ from flask import current_app, jsonify, request
 from ai import AIConfigError, LLMError
 from game import service
 from game.store import GameError
+import hashlib
+import hmac
+import inspect
+import os
+import secrets
 
 
 type METHOD_NAME = Literal["GET", "POST", "PUT", "DELETE", "PATCH"]
@@ -16,10 +27,17 @@ routes: Dict[str, Tuple[str, METHOD_NAME]] = {}
 
 log = logging.getLogger(__name__)
 
+USERS = "users"
+AUTH_CODES = "auth_codes"
 
-# Routes can take URL parameters (<session_id>…), hence Callable[..., Any]
-def route(path: str, type: METHOD_NAME = "GET") -> Callable[[Callable[..., Any]], Callable[..., Any]]:
-    def wrapper(func: Callable[..., Any]) -> Callable[..., Any]:
+CODE_TTL = timedelta(minutes=10)
+RESEND_COOLDOWN = timedelta(seconds=60)
+MAX_ATTEMPTS = 5
+CODE_LENGTH = 8
+
+
+def route(path: str, type: METHOD_NAME = "GET") -> Callable[[Callable[[], str]], Callable[[], str]]:
+    def wrapper(func: Callable[[], str]) -> Callable[[], str]:
         routes[func.__name__] = (path, type)
         return func
     return wrapper
@@ -52,12 +70,45 @@ def _respond(action: Callable[[], Any]) -> Any:
         return jsonify(error=str(e)), 500
 
 
+def _hash_code(email: str, code: str) -> str:
+    secret = os.environ["AUTH_CODE_SECRET"].encode()
+    return hmac.new(secret, f"{email}:{code}".encode(), hashlib.sha256).hexdigest()
+
+
+def _parse[M: BaseModel](model: type[M]) -> M | tuple[Any, int]:
+    try:
+        return model.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as e:
+        return jsonify(error=e.errors(include_url=False, include_context=False, include_input=False)), 400
+
+
+
 class Router:
 
     @staticmethod
     @route("auth/code", "POST")
     def auth_code() -> Any:
-        # No e-mail is sent yet and any code is accepted: the front only needs a 204
+        payload = _parse(CodeRequest)
+        if isinstance(payload, tuple):
+            return payload
+
+        db = current_app.extensions["db"]
+        now = utcnow()
+
+        previous = [AuthCode.from_document(d) for d in db.find(AUTH_CODES, {"email": payload.email})]
+        if any(now - c.created_at < RESEND_COOLDOWN for c in previous):
+            return jsonify(error="Please wait before requesting a new code."), 429
+        for old in previous:
+            db.delete(AUTH_CODES, old.id)
+
+        code = f"{secrets.randbelow(10 ** CODE_LENGTH):0{CODE_LENGTH}d}"
+        db.insert(AUTH_CODES, AuthCode(
+            email=payload.email,
+            code_hash=_hash_code(payload.email, code),
+            expires_at=now + CODE_TTL,
+        ).to_document())
+
+        send_auth_code(payload.email, code, int(CODE_TTL.total_seconds() // 60))
         return "", 204
 
 
@@ -68,25 +119,25 @@ class Router:
 
 
     @staticmethod
-    @route("sessions/<session_id>", "GET")
+    @route("sessions/<int:session_id>", "GET")
     def get_session(session_id: str) -> Any:
         return _respond(lambda: service.get_session(_db(), session_id))
 
 
     @staticmethod
-    @route("sessions/<session_id>/draws", "POST")
+    @route("sessions/<int:session_id>/draws", "POST")
     def draw_cards(session_id: str) -> Any:
         return _respond(lambda: service.draw_cards(_db(), session_id))
 
 
     @staticmethod
-    @route("sessions/<session_id>/turns", "POST")
+    @route("sessions/<int:session_id>/turns", "POST")
     def start_turn(session_id: str) -> Any:
         return _respond(lambda: service.start_turn(_db(), session_id, str(_body().get("cardId", ""))))
 
 
     @staticmethod
-    @route("sessions/<session_id>/turns/<turn_id>/messages", "POST")
+    @route("sessions/<int:session_id>/turns/<int:turn_id>/messages", "POST")
     def send_message(session_id: str, turn_id: str) -> Any:
         body = _body()
         ids = body.get("selectedEntryIds")
@@ -98,21 +149,43 @@ class Router:
 
 
     @staticmethod
-    @route("sessions/<session_id>/collection", "GET")
+    @route("sessions/<int:session_id>/collection", "GET")
     def get_collection(session_id: str) -> Any:
         return _respond(lambda: service.get_collection(_db(), session_id))
 
 
     @staticmethod
-    @route("sessions/<session_id>/collection/<entry_id>", "PATCH")
+    @route("sessions/<int:session_id>/collection/<int:entry_id>", "PATCH")
     def update_entry(session_id: str, entry_id: str) -> Any:
         return _respond(lambda: service.update_entry(_db(), session_id, entry_id, str(_body().get("status", ""))))
 
 
     @staticmethod
-    @route("sessions/<session_id>/summary", "GET")
+    @route("sessions/<int:session_id>/summary", "GET")
     def get_summary(session_id: str) -> Any:
         return _respond(lambda: service.get_summary(_db(), session_id))
+        payload = _parse(CodeRequest)
+        if isinstance(payload, tuple):
+            return payload
+
+        db = current_app.extensions["db"]
+        now = utcnow()
+
+        previous = [AuthCode.from_document(d) for d in db.find(AUTH_CODES, {"email": payload.email})]
+        if any(now - c.created_at < RESEND_COOLDOWN for c in previous):
+            return jsonify(error="Please wait before requesting a new code."), 429
+        for old in previous:
+            db.delete(AUTH_CODES, old.id)
+
+        code = f"{secrets.randbelow(10 ** CODE_LENGTH):0{CODE_LENGTH}d}"
+        db.insert(AUTH_CODES, AuthCode(
+            email=payload.email,
+            code_hash=_hash_code(payload.email, code),
+            expires_at=now + CODE_TTL,
+        ).to_document())
+
+        send_auth_code(payload.email, code, int(CODE_TTL.total_seconds() // 60))
+        return "", 204
 
 
     @classmethod
