@@ -13,7 +13,8 @@ from ai import analysis, conversation, drawing, rules
 from ai.data import get_card, mirror_card
 from ai.llm import LLMError
 from ai.models import Card, Message
-from ai.summary import summarize
+from ai import guards
+from ai.summary import find_sensitive_mentions, suggest_with_mentions, summarize
 from db.protocol import Database, Document
 
 from .store import (
@@ -243,18 +244,33 @@ def update_entry(db: Database, session_id: str, entry_id: str, status: str) -> d
     return entry_json({**entry, "status": status})
 
 
-def get_summary(db: Database, session_id: str) -> dict[str, Any]:
+def _summary_material(db: Database, session_id: str) -> tuple[Document, list[Document], list[Message]]:
+    """The session, the entries not rejected and the mirror conversation."""
     session = load_session(db, session_id)
     entries = [e for e in load_entries(db, session_id) if e.get("status") != "rejected"]
-    items = kept_items(entries)
+    mirror_turn = db.get(TURNS, session["mirror_turn_id"]) if session.get("mirror_turn_id") else None
+    mirror_messages = history_of(mirror_turn) if mirror_turn else []
+    return session, entries, mirror_messages
+
+
+def _everything_said(db: Database, session_id: str) -> list[str]:
+    """Every message of the young person in this game, mirror included."""
+    turns = db.find(TURNS, {"session_id": session_id}, limit=500)
+    return [text for turn in turns for text in guards.user_texts(history_of(turn))]
+
+
+def get_summary(db: Database, session_id: str) -> dict[str, Any]:
+    # Called once the young person has kept or rejected his entries: only the kept ones count
+    session, entries, mirror_messages = _summary_material(db, session_id)
     selected_ids = set(session.get("mirror_selected_ids", []))
     selected = [item_of(e) for e in entries if e["id"] in selected_ids]
 
-    mirror_turn = db.get(TURNS, session["mirror_turn_id"]) if session.get("mirror_turn_id") else None
-    mirror_messages = history_of(mirror_turn) if mirror_turn else []
-
-    # Until the validation screen exists, everything not rejected counts as kept
-    result = summarize(context_of(session, entries), items, selected, mirror_messages)
+    result = summarize(context_of(session, entries), kept_items(entries), selected, mirror_messages)
+    try:
+        mentions = find_sensitive_mentions(_everything_said(db, session_id))
+    except LLMError:
+        log.exception("Looking for sensitive mentions failed: the question is not asked")
+        mentions = []
     return {
         "overview": result.overview,
         "collection": [entry_json(e) for e in entries],
@@ -264,4 +280,18 @@ def get_summary(db: Database, session_id: str) -> dict[str, Any]:
         ],
         "suggestions": result.suggestions,
         "crossings": [{"kind": c.kind, "text": c.text} for c in result.crossings],
+        # Asked at the summary: "do you want us to take this into account?" Nothing is stored
+        "sensitiveMentions": mentions,
     }
+
+
+def suggestions_with_mentions(db: Database, session_id: str, mentions: list[Any]) -> dict[str, Any]:
+    """The suggestions again, with what the young person agreed to share. Nothing is stored."""
+    said = _everything_said(db, session_id)
+    # Only his own words: anything that is not in what he said is ignored
+    wanted = [m for m in (str(x).strip() for x in mentions) if m and guards.is_exact_quote(m, said)]
+    if not wanted:
+        raise GameError(400, "mentions must be sentences the young person said")
+    session, entries, mirror_messages = _summary_material(db, session_id)
+    suggestions = suggest_with_mentions(context_of(session, entries), kept_items(entries), mirror_messages, wanted)
+    return {"suggestions": suggestions}

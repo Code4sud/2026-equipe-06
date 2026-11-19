@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { CollectionPage } from './screens/CollectionPage'
 import { Drawing } from './screens/Drawing'
 import { Home } from './screens/Home'
+import { Summary } from './screens/Summary'
 import { Turn } from './screens/Turn'
 import { Tutorial } from './screens/Tutorial'
 import type { ActiveTurn, Card, Session, SessionState } from './types'
@@ -80,7 +81,22 @@ function App() {
     return <Turn key={turn.turnId} sessionId={session.sessionId} turn={turn} onTurnEnded={() => goTo('summary')} />
   }
 
-  // TODO: summary screen
+  if (screen === 'summary') {
+    return (
+      <Summary
+        sessionId={session.sessionId}
+        onFinish={() =>
+          withViewTransition(() => {
+            setSession(null)
+            setTurn(null)
+            setScreen('home')
+          })
+        }
+      />
+    )
+  }
+
+  // TODO: resuming a session in the middle of a turn
   return (
     <main style={{ padding: 'var(--space-4)' }}>
       <p>Écran « {screen} » à venir.</p>

@@ -59,6 +59,20 @@ def is_sensitive(text: str) -> bool:
     return _SENSITIVE_RE.search(text) is not None
 
 
+# Wider net, only to spot what to ask about at the summary (the model then sorts it out):
+# words that are often innocent ("faire de la voile") but can be about religion or health
+_MAYBE_SENSITIVE_RE = re.compile(
+    r"\b(?:voile|voil[ée]e?|foulard|pri[eé]\w*|croyant\w*|pratiquant\w*|halal|casher|kasher|kippa|je[uû]ne\w*|"
+    r"fauteuil|sourde?s?|aveugle\w*|malvoyant\w*|malentendant\w*|diab[eè]t\w*|asthm\w*|allergi\w*|[ée]pilep\w*|"
+    r"traitement|m[ée]dicament\w*|h[oô]pital\w*|bless[ée]\w*|douleur\w*)\b",
+    re.IGNORECASE,
+)
+
+
+def might_be_sensitive(text: str) -> bool:
+    return is_sensitive(text) or _MAYBE_SENSITIVE_RE.search(text) is not None
+
+
 def strip_sensitive(text: str) -> str:
     """The text without the sentences that contain sensitive words. Keeps the rest instead of dropping all."""
     sentences = re.split(r"(?<=[.!?…])\s+", text.strip())

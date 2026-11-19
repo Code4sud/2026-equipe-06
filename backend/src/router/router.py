@@ -115,6 +115,15 @@ class Router:
         return _respond(lambda: service.get_summary(_db(), session_id))
 
 
+    @staticmethod
+    @route("sessions/<session_id>/summary/suggestions", "POST")
+    def suggest_with_mentions(session_id: str) -> Any:
+        mentions = _body().get("mentions")
+        return _respond(
+            lambda: service.suggestions_with_mentions(_db(), session_id, mentions if isinstance(mentions, list) else [])
+        )
+
+
     @classmethod
     def __iter__(cls) -> Iterator[Tuple[str, Any, str]]:
         for name, member in inspect.getmembers(cls):

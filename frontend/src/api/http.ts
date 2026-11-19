@@ -8,6 +8,7 @@ import type {
   SessionDetails,
   StartTurnResponse,
   Summary,
+  SuggestionsResponse,
 } from '../types'
 
 export class ApiError extends Error {
@@ -61,6 +62,10 @@ export const httpApi = {
     }),
 
   getSummary: (sessionId: string) => request<Summary>(`/sessions/${sessionId}/summary`),
+
+  /** The suggestions again, taking into account the mentions the user agreed to share. Nothing is stored */
+  suggestWithMentions: (sessionId: string, mentions: string[]) =>
+    request<SuggestionsResponse>(`/sessions/${sessionId}/summary/suggestions`, post({ mentions })),
 }
 
 export type Api = typeof httpApi
