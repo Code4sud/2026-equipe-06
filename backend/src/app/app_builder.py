@@ -1,8 +1,13 @@
 from flask import Flask
-from typing import Self, Callable, List, Literal
+from typing import Self, Callable, List, Literal, TypeVar
+import atexit
 
+from db import protocol
 
 type METHOD_NAME = Literal["GET", "POST", "PUT", "DELETE", "PATCH"]
+
+
+T = TypeVar("T", bound=protocol.Database)
 
 
 class AppException(Exception):
@@ -14,6 +19,7 @@ class App:
         self.__flask: Flask = Flask(name)
         self.__host: str | None = None
         self.__port: int | None = None
+        self.__db: protocol.Database | None = None
 
 
     def run(self: Self):
@@ -51,6 +57,18 @@ class App:
         return self.__flask
 
 
+    @property
+    def db(self: Self) -> protocol.Database:
+        if self.__db is None:
+            raise AppException("Database is not set.")
+        return self.__db
+
+
+    @db.setter
+    def db(self: Self, db: protocol.Database):
+        self.__db = db
+
+
 class AppBuilder:
     def __init__(self: Self, name: str):
         self.__app = App(name)
@@ -76,6 +94,16 @@ class AppBuilder:
 
     def addHost(self: Self, host: str) -> Self:
         self.__app.host = host
+        return self
+
+
+
+    def addDatabase(self: Self, db_uri: str, db_name: str, db: Callable[[str, str], T]) -> Self:
+        self.__app.db = db(db_uri, db_name)
+        self.__app.db.connect()
+        atexit.register(self.__app.db.close)
+        self.__app.flask.extensions["db"] = self.__app.db
+
         return self
 
 

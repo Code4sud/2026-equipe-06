@@ -3,6 +3,7 @@ import sys
 
 from app.app_builder import AppBuilder, AppException
 from router.router import Router, RouterException
+from db.mongo import MongoDatabase
 from dotenv import load_dotenv
 
 
@@ -37,9 +38,10 @@ def main():
     ServerEnvironment.load()
 
     try:
-        app_builder = AppBuilder(name=ServerEnvironment.get("APP_NAME"))   \
-            .addPort(ServerEnvironment.get("PORT"))                        \
-            .addHost(ServerEnvironment.get("HOST"))                        \
+        app_builder = AppBuilder(name=ServerEnvironment.get("APP_NAME"))                                    \
+            .addPort(ServerEnvironment.get("PORT"))                                                         \
+            .addHost(ServerEnvironment.get("HOST"))                                                         \
+            .addDatabase(ServerEnvironment.get("DB_URI"), ServerEnvironment.get("DB_NAME"), MongoDatabase)  \
             .addRoute("/", lambda: "Hello World!")
 
         for route_name, route_func, route_type in Router():

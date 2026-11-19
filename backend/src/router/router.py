@@ -30,7 +30,7 @@ class Router:
     @classmethod
     def __iter__(cls) -> Iterator[Tuple[str, Any, str]]:
         for name, member in inspect.getmembers(cls):
-            if not isinstance(inspect.getattr_static(cls, name), staticmethod) and not name.startswith("__"):
+            if not isinstance(inspect.getattr_static(cls, name), staticmethod) or name.startswith("__"):
                 continue
             path, method_type = routes.get(name, (None, "GET"))
             if path is None:
