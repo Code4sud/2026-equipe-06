@@ -10,6 +10,7 @@ import type {
   StartTurnResponse,
   Summary,
   SuggestionsResponse,
+  Tone,
 } from '../types'
 
 export class ApiError extends Error {
@@ -61,6 +62,16 @@ export const httpApi = {
   /** Passer au bilan: ends the card in progress if any, then the game goes straight to the summary */
   finishGame: (sessionId: string, turnId?: string) =>
     request<LeaveResponse>(`/sessions/${sessionId}/finish`, post({ turnId })),
+
+  /** The assistant's words read aloud (mp3), or null when the voice is not available */
+  speak: async (sessionId: string, text: string, tone: Tone = 'neutral'): Promise<Blob | null> => {
+    const res = await fetch(`${API_BASE}/api/sessions/${sessionId}/speech`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, tone }),
+    })
+    return res.ok ? res.blob() : null
+  },
 
   getCollection: (sessionId: string) => request<CollectionEntry[]>(`/sessions/${sessionId}/collection`),
 

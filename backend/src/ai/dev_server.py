@@ -70,6 +70,8 @@ class MemoryDatabase:
 
 
 def create_app() -> Flask:
+    # Local only: logging in needs no e-mail code (the front skips that step in development too)
+    os.environ.setdefault("AUTH_SKIP_CODE", "1")
     app = Flask(__name__)
     app.extensions["db"] = MemoryDatabase()
     for path, view, method in Router():
