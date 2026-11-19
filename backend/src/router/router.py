@@ -10,7 +10,7 @@ from flask import current_app, jsonify, request
 from pydantic import BaseModel, ValidationError
 
 from controllers.mailer import MailError, send_auth_code
-from models import AuthCode, CodeRequest, PublicUser, User, VerifyRequest, utcnow
+from models.models import AuthCode, CodeRequest, PublicUser, User, VerifyRequest, utcnow
 
 
 type METHOD_NAME = Literal["GET", "POST", "PUT", "DELETE", "PATCH"]
