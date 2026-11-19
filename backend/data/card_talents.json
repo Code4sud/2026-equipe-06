@@ -1,0 +1,175 @@
+{
+  "notes": [
+    "Généré à partir des tables de docs/COMPETENCES.md (colonne « Cartes qui peuvent le révéler »).",
+    "Pour l'IA seulement : où chercher sur chaque carte. Jamais dit au jeune, jamais soufflé."
+  ],
+  "talents": {
+    "passions-01": [],
+    "passions-02": [],
+    "passions-03": [
+      "Curiosité",
+      "Recherche d'informations"
+    ],
+    "passions-04": [
+      "Curiosité",
+      "Expression artistique"
+    ],
+    "passions-05": [],
+    "passions-06": [
+      "Créativité",
+      "Expression artistique"
+    ],
+    "passions-07": [
+      "Créativité",
+      "Expression artistique"
+    ],
+    "passions-08": [
+      "Adaptabilité",
+      "Curiosité"
+    ],
+    "passions-09": [
+      "Esprit d'initiative"
+    ],
+    "prides-01": [],
+    "prides-02": [
+      "Rigueur"
+    ],
+    "prides-03": [
+      "Écoute",
+      "Sens du service",
+      "Fiabilité"
+    ],
+    "prides-04": [
+      "Autonomie",
+      "Apprentissage rapide",
+      "Aisance numérique"
+    ],
+    "prides-05": [
+      "Persévérance",
+      "Apprentissage rapide"
+    ],
+    "prides-06": [
+      "Sens du service",
+      "Fiabilité"
+    ],
+    "prides-07": [
+      "Persévérance"
+    ],
+    "prides-08": [
+      "Rigueur",
+      "Organisation",
+      "Esprit d'initiative",
+      "Coordination",
+      "Tri des informations"
+    ],
+    "prides-09": [
+      "Influence positive",
+      "Aisance à l'oral"
+    ],
+    "relationships-01": [
+      "Esprit d'équipe"
+    ],
+    "relationships-02": [
+      "Sens du service"
+    ],
+    "relationships-03": [
+      "Réactivité",
+      "Écoute"
+    ],
+    "relationships-04": [
+      "Influence positive",
+      "Aisance à l'oral",
+      "Aisance à l'écrit"
+    ],
+    "relationships-05": [
+      "Esprit d'équipe",
+      "Leadership",
+      "Coopération"
+    ],
+    "relationships-06": [
+      "Écoute"
+    ],
+    "relationships-07": [
+      "Autonomie"
+    ],
+    "relationships-08": [
+      "Esprit d'équipe",
+      "Influence positive",
+      "Leadership",
+      "Coopération"
+    ],
+    "challenges-01": [
+      "Sang-froid",
+      "Persévérance"
+    ],
+    "challenges-02": [
+      "Gestion des imprévus"
+    ],
+    "challenges-03": [
+      "Autonomie",
+      "Tri des informations",
+      "Recherche d'informations",
+      "Aisance numérique"
+    ],
+    "challenges-04": [
+      "Réactivité",
+      "Adaptabilité",
+      "Sang-froid",
+      "Gestion des imprévus"
+    ],
+    "challenges-05": [
+      "Persévérance"
+    ],
+    "challenges-06": [
+      "Adaptabilité"
+    ],
+    "challenges-07": [
+      "Sang-froid"
+    ],
+    "challenges-08": [
+      "Organisation",
+      "Coordination"
+    ],
+    "dreams-01": [
+      "Curiosité"
+    ],
+    "dreams-02": [],
+    "dreams-03": [
+      "Créativité"
+    ],
+    "dreams-04": [
+      "Apprentissage rapide"
+    ],
+    "dreams-05": [],
+    "dreams-06": [],
+    "dreams-07": [
+      "Esprit d'initiative",
+      "Créativité",
+      "Aisance à l'écrit"
+    ],
+    "dreams-08": [
+      "Curiosité"
+    ],
+    "values-01": [
+      "Sens du service"
+    ],
+    "values-02": [
+      "Rigueur",
+      "Respect des consignes"
+    ],
+    "values-03": [
+      "Autonomie",
+      "Respect des consignes"
+    ],
+    "values-04": [
+      "Esprit d'équipe",
+      "Leadership"
+    ],
+    "values-05": [
+      "Persévérance"
+    ],
+    "values-06": [],
+    "values-07": [],
+    "values-08": []
+  }
+}

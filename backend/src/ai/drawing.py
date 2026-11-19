@@ -2,7 +2,8 @@
 
 The deck is fixed; what changes is which cards are allowed (docs/RULES.md and docs/TON.md):
 - the first card is always light;
-- after a closed turn, only light cards, to get back on solid ground;
+- medium (specific) cards only after a turn where the young person got involved (an open turn);
+- after a neutral or closed turn, only light cards, to get back on solid ground;
 - personal cards only come after an open turn, and never alone: always next to lighter ones;
 - after an open turn, some cards "dig" the same subject, the others change the air.
 """
@@ -49,7 +50,7 @@ def _relevance(card: Card, topic_words: set[str]) -> int:
 def _allowed(card: Card, state: DrawState) -> bool:
     if card.id in state.played_ids or card.level is None:
         return False
-    if state.turns_played == 0 or state.last_engagement == "closed":
+    if state.turns_played == 0 or state.last_engagement != "open":
         return card.level == "general"
     if card.level == "personal":
         return state.last_engagement == "open" and state.turns_played >= _PERSONAL_AFTER_TURNS

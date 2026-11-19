@@ -26,7 +26,14 @@ def _to_card(raw: dict[str, Any]) -> Card:
         level=cast(Level, level) if level in _LEVELS else None,
         intention=raw.get("intention", ""),
         opener=raw.get("opener", ""),
+        talents=tuple(_card_talents().get(raw["id"], [])),
     )
+
+
+@lru_cache(maxsize=1)
+def _card_talents() -> dict[str, list[str]]:
+    """Card id -> talents it can bring out, generated from docs/COMPETENCES.md."""
+    return dict(_read_json("card_talents.json")["talents"])
 
 
 @lru_cache(maxsize=1)

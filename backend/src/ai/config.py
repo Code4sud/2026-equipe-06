@@ -29,7 +29,8 @@ def _load_env_local() -> None:
 @dataclass(frozen=True)
 class AIConfig:
     api_key: str
-    # Talking to the young person: fast and cheap, called on every message
+    # Talking to the young person, on every message. Medium rather than small: small asked too many
+    # closed questions and did not see where to dig (19/11 tests). AI_CHAT_MODEL to change it
     chat_model: str
     # End-of-turn analysis and final summary: called rarely, quality matters more.
     # Not mistral-large-latest: it is now a reasoning model that spends its tokens thinking
@@ -54,7 +55,7 @@ def get_config() -> AIConfig:
     default_data_dir = Path(__file__).resolve().parents[2] / "data"
     return AIConfig(
         api_key=api_key,
-        chat_model=os.environ.get("AI_CHAT_MODEL", "mistral-small-latest"),
+        chat_model=os.environ.get("AI_CHAT_MODEL", "mistral-medium-latest"),
         analysis_model=os.environ.get("AI_ANALYSIS_MODEL", "mistral-medium-latest"),
         summary_model=os.environ.get("AI_SUMMARY_MODEL", "mistral-medium-latest"),
         stt_model=os.environ.get("AI_STT_MODEL", "voxtral-mini-latest"),

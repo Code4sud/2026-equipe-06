@@ -1,11 +1,17 @@
 {
-  "version": 2,
+  "version": 3,
+  "source": "docs/CARTES.md (cartes validées)",
   "notes": [
-    "Le front reçoit seulement id, family, format et title. Les champs level, intention et opener restent côté serveur, pour l'IA.",
+    "Généré à partir de docs/CARTES.md, qui fait référence : en cas d'écart, CARTES.md prévaut.",
+    "Le front reçoit seulement id, family, format et title. Les champs number, level, intention et opener restent côté serveur, pour l'IA.",
+    "title : le thème affiché sur la carte. Ce n'est pas une question.",
+    "opener : amorce de référence. L'IA l'adapte toujours au jeune et ne la répète jamais mot pour mot d'une carte à l'autre. Jamais de question fermée.",
+    "intention : où se cachent les talents sur cette carte. L'IA s'en sert pour orienter ses relances et ne la dit jamais.",
+    "level : sert au tirage (RULES_V2.md). general = léger, toujours possible, la première carte est toujours légère ; specific = moyen, seulement après une carte où le jeune s'est investi ; personal = profond, seulement si le jeune choisit la carte parmi plusieurs, jamais au hasard.",
+    "La profondeur de l'échange vient d'abord de la conversation : une carte légère peut mener loin si le jeune s'ouvre.",
+    "number : numéro de la carte dans CARTES.md et COMPETENCES.md.",
     "Le joker (repiocher) est ajouté par le front : il n'est pas dans ce fichier.",
-    "level : general = léger et rapide, specific = curieux et attentif aux détails, personal = lent et doux, on ne pousse jamais.",
-    "intention : la colonne « Peut révéler » de docs/CARTES.md. L'IA s'en sert pour orienter ses questions, sans jamais souffler la réponse.",
-    "opener : l'amorce de référence de docs/CARTES.md. title : le titre affiché. level : choisi ici en attendant la progression de l'équipe Thèmes."
+    "La carte miroir (mirror) est ajoutée ici, côté serveur : elle n'est pas dans docs/CARTES.json."
   ],
   "families": {
     "passions": {
@@ -36,6 +42,7 @@
   "cards": [
     {
       "id": "passions-01",
+      "number": 1,
       "family": "passions",
       "format": "text",
       "level": "general",
@@ -45,6 +52,7 @@
     },
     {
       "id": "passions-02",
+      "number": 2,
       "family": "passions",
       "format": "text",
       "level": "general",
@@ -54,6 +62,7 @@
     },
     {
       "id": "passions-03",
+      "number": 3,
       "family": "passions",
       "format": "text",
       "level": "general",
@@ -63,6 +72,7 @@
     },
     {
       "id": "passions-04",
+      "number": 4,
       "family": "passions",
       "format": "text",
       "level": "general",
@@ -72,6 +82,7 @@
     },
     {
       "id": "passions-05",
+      "number": 5,
       "family": "passions",
       "format": "text",
       "level": "general",
@@ -81,6 +92,7 @@
     },
     {
       "id": "passions-06",
+      "number": 6,
       "family": "passions",
       "format": "text",
       "level": "general",
@@ -90,33 +102,37 @@
     },
     {
       "id": "passions-07",
+      "number": 7,
       "family": "passions",
       "format": "text",
-      "level": "specific",
+      "level": "general",
       "title": "Un moment où ça t'a vraiment plu de faire quelque chose",
       "intention": "Type d'activité préférée (manuel, créatif, social…)",
       "opener": "Raconte-moi un moment où ça t'a vraiment plu de faire quelque chose."
     },
     {
       "id": "passions-08",
+      "number": 8,
       "family": "passions",
       "format": "text",
-      "level": "specific",
+      "level": "general",
       "title": "Une découverte faite par hasard",
       "intention": "Ouverture, curiosité",
       "opener": "Raconte-moi un truc que t'as découvert un peu par hasard et qui t'a plu."
     },
     {
       "id": "passions-09",
+      "number": 9,
       "family": "passions",
       "format": "text",
-      "level": "specific",
+      "level": "general",
       "title": "Un truc qui te tente depuis longtemps",
       "intention": "Envies, attirances",
       "opener": "Parle-moi d'un truc qui te tente depuis longtemps."
     },
     {
       "id": "prides-01",
+      "number": 10,
       "family": "prides",
       "format": "text",
       "level": "specific",
@@ -126,6 +142,7 @@
     },
     {
       "id": "prides-02",
+      "number": 11,
       "family": "prides",
       "format": "text",
       "level": "personal",
@@ -135,6 +152,7 @@
     },
     {
       "id": "prides-03",
+      "number": 12,
       "family": "prides",
       "format": "text",
       "level": "specific",
@@ -144,6 +162,7 @@
     },
     {
       "id": "prides-04",
+      "number": 13,
       "family": "prides",
       "format": "text",
       "level": "specific",
@@ -153,6 +172,7 @@
     },
     {
       "id": "prides-05",
+      "number": 14,
       "family": "prides",
       "format": "text",
       "level": "specific",
@@ -162,6 +182,7 @@
     },
     {
       "id": "prides-06",
+      "number": 15,
       "family": "prides",
       "format": "text",
       "level": "specific",
@@ -171,6 +192,7 @@
     },
     {
       "id": "prides-07",
+      "number": 16,
       "family": "prides",
       "format": "text",
       "level": "personal",
@@ -180,6 +202,7 @@
     },
     {
       "id": "prides-08",
+      "number": 17,
       "family": "prides",
       "format": "text",
       "level": "specific",
@@ -189,6 +212,7 @@
     },
     {
       "id": "prides-09",
+      "number": 18,
       "family": "prides",
       "format": "text",
       "level": "personal",
@@ -198,6 +222,7 @@
     },
     {
       "id": "relationships-01",
+      "number": 19,
       "family": "relationships",
       "format": "text",
       "level": "general",
@@ -207,6 +232,7 @@
     },
     {
       "id": "relationships-02",
+      "number": 20,
       "family": "relationships",
       "format": "text",
       "level": "specific",
@@ -216,6 +242,7 @@
     },
     {
       "id": "relationships-03",
+      "number": 21,
       "family": "relationships",
       "format": "text",
       "level": "specific",
@@ -225,6 +252,7 @@
     },
     {
       "id": "relationships-04",
+      "number": 22,
       "family": "relationships",
       "format": "text",
       "level": "specific",
@@ -234,6 +262,7 @@
     },
     {
       "id": "relationships-05",
+      "number": 23,
       "family": "relationships",
       "format": "text",
       "level": "specific",
@@ -243,24 +272,27 @@
     },
     {
       "id": "relationships-06",
+      "number": 24,
       "family": "relationships",
       "format": "text",
-      "level": "personal",
+      "level": "specific",
       "title": "Bien s'entendre avec quelqu'un",
       "intention": "Valeurs relationnelles",
       "opener": "Dis-moi ce qui fait que tu t'entends bien avec quelqu'un."
     },
     {
       "id": "relationships-07",
+      "number": 25,
       "family": "relationships",
       "format": "text",
-      "level": "specific",
+      "level": "general",
       "title": "Ce que t'aimes faire à ta façon",
       "intention": "Autonomie, méthode personnelle",
       "opener": "Parle-moi d'un truc que t'aimes faire à ta façon, sans personne pour te dire comment."
     },
     {
       "id": "relationships-08",
+      "number": 26,
       "family": "relationships",
       "format": "text",
       "level": "specific",
@@ -270,6 +302,7 @@
     },
     {
       "id": "challenges-01",
+      "number": 27,
       "family": "challenges",
       "format": "text",
       "level": "specific",
@@ -279,15 +312,17 @@
     },
     {
       "id": "challenges-02",
+      "number": 28,
       "family": "challenges",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Un problème réglé, même tout petit",
       "intention": "Résolution de problèmes",
       "opener": "Raconte-moi un problème que t'as réussi à régler, même tout petit."
     },
     {
       "id": "challenges-03",
+      "number": 29,
       "family": "challenges",
       "format": "text",
       "level": "specific",
@@ -297,6 +332,7 @@
     },
     {
       "id": "challenges-04",
+      "number": 30,
       "family": "challenges",
       "format": "text",
       "level": "specific",
@@ -306,6 +342,7 @@
     },
     {
       "id": "challenges-05",
+      "number": 31,
       "family": "challenges",
       "format": "text",
       "level": "specific",
@@ -315,6 +352,7 @@
     },
     {
       "id": "challenges-06",
+      "number": 32,
       "family": "challenges",
       "format": "text",
       "level": "specific",
@@ -324,6 +362,7 @@
     },
     {
       "id": "challenges-07",
+      "number": 33,
       "family": "challenges",
       "format": "text",
       "level": "specific",
@@ -333,6 +372,7 @@
     },
     {
       "id": "challenges-08",
+      "number": 34,
       "family": "challenges",
       "format": "text",
       "level": "specific",
@@ -342,6 +382,7 @@
     },
     {
       "id": "dreams-01",
+      "number": 35,
       "family": "dreams",
       "format": "text",
       "level": "general",
@@ -351,15 +392,17 @@
     },
     {
       "id": "dreams-02",
+      "number": 36,
       "family": "dreams",
       "format": "text",
-      "level": "specific",
+      "level": "general",
       "title": "Un métier ou une activité à explorer",
       "intention": "Pistes d'orientation venant de lui",
       "opener": "Parle-moi d'un métier ou d'une activité que t'aimerais explorer."
     },
     {
       "id": "dreams-03",
+      "number": 37,
       "family": "dreams",
       "format": "text",
       "level": "general",
@@ -369,6 +412,7 @@
     },
     {
       "id": "dreams-04",
+      "number": 38,
       "family": "dreams",
       "format": "text",
       "level": "specific",
@@ -378,6 +422,7 @@
     },
     {
       "id": "dreams-05",
+      "number": 39,
       "family": "dreams",
       "format": "text",
       "level": "personal",
@@ -387,6 +432,7 @@
     },
     {
       "id": "dreams-06",
+      "number": 40,
       "family": "dreams",
       "format": "text",
       "level": "specific",
@@ -396,6 +442,7 @@
     },
     {
       "id": "dreams-07",
+      "number": 41,
       "family": "dreams",
       "format": "text",
       "level": "specific",
@@ -405,6 +452,7 @@
     },
     {
       "id": "dreams-08",
+      "number": 42,
       "family": "dreams",
       "format": "text",
       "level": "general",
@@ -414,24 +462,27 @@
     },
     {
       "id": "values-01",
+      "number": 43,
       "family": "values",
       "format": "text",
-      "level": "personal",
+      "level": "specific",
       "title": "La dernière fois que tu t'es senti utile",
       "intention": "Sens, utilité",
       "opener": "Raconte-moi la dernière fois que tu t'es senti vraiment utile."
     },
     {
       "id": "values-02",
+      "number": 44,
       "family": "values",
       "format": "text",
-      "level": "specific",
+      "level": "personal",
       "title": "Ce qui te donne envie de bien faire",
       "intention": "Motivation, exigence",
       "opener": "Dis-moi ce qui te donne envie de bien faire un truc."
     },
     {
       "id": "values-03",
+      "number": 45,
       "family": "values",
       "format": "text",
       "level": "specific",
@@ -441,6 +492,7 @@
     },
     {
       "id": "values-04",
+      "number": 46,
       "family": "values",
       "format": "text",
       "level": "specific",
@@ -450,6 +502,7 @@
     },
     {
       "id": "values-05",
+      "number": 47,
       "family": "values",
       "format": "text",
       "level": "specific",
@@ -459,6 +512,7 @@
     },
     {
       "id": "values-06",
+      "number": 48,
       "family": "values",
       "format": "text",
       "level": "personal",
@@ -468,6 +522,7 @@
     },
     {
       "id": "values-07",
+      "number": 49,
       "family": "values",
       "format": "text",
       "level": "personal",
@@ -477,9 +532,10 @@
     },
     {
       "id": "values-08",
+      "number": 50,
       "family": "values",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Une journée qui valait le coup",
       "intention": "Ce qui donne du sens",
       "opener": "Raconte-moi une bonne journée, une de celles où tu te dis le soir que ça valait le coup."

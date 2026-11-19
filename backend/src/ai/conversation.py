@@ -6,6 +6,7 @@ Saving anything (messages, entries, summaries) is the job of the caller.
 
 import logging
 import re
+from typing import Any
 
 from . import guards, rules
 from .config import get_config
@@ -91,10 +92,28 @@ def _as_chat(messages: list[Message]) -> list[dict[str, str]]:
     return [{"role": m.role, "content": m.text} for m in messages]
 
 
+_NO_PICK = "Je n'ai pas choisi de carte."
+
+
+def _mirror_pick_note(selected: list[CollectionItem] | None, history: list[Message]) -> str:
+    """What he picked at the start of the mirror, said plainly so the model never invents a pick."""
+    if selected is not None:
+        pick = pick_message(selected)
+    else:
+        # Later messages: the pick is the first thing he "said" in the mirror
+        pick = next((m.text for m in history if m.role == "user"), _NO_PICK)
+    if pick == _NO_PICK:
+        return (
+            "Il n'a choisi **aucune** carte. Ne parle jamais de cartes qu'il aurait choisies ou gardées : "
+            "pars de ce qu'il a raconté pendant la partie."
+        )
+    return f"Ce qu'il a choisi : {pick.removeprefix('J\'ai choisi ces cartes de ma collection : ')}"
+
+
 def pick_message(selected: list[CollectionItem]) -> str:
     """The message standing for the pick of cards in the mirror (the first message of the mirror)."""
     if not selected:
-        return "Je n'ai pas choisi de carte."
+        return _NO_PICK
     return "J'ai choisi ces cartes de ma collection : " + " ; ".join(item.fact for item in selected) + "."
 
 
@@ -135,6 +154,7 @@ def reply(
             turn_summaries=blocks["turn_summaries"],
             collection=blocks["collection"],
             constraints=blocks["constraints"],
+            mirror_pick=_mirror_pick_note(selected, history),
             exchanges=str(exchanges),
             situation_notes=_mirror_notes(exchanges),
         )
@@ -144,6 +164,7 @@ def reply(
             card_title=card.title,
             level_note=level_note(card.level),
             intention=card.intention,
+            talents=", ".join(card.talents) or "Pas de piste particulière : écoute ce qu'il fait.",
             exchanges=str(exchanges),
             min_exchanges=str(rules.MIN_EXCHANGES),
             max_exchanges=str(rules.MAX_EXCHANGES),
@@ -157,17 +178,37 @@ def reply(
             **blocks,
         )
 
-    data = complete_json(
-        model=get_config().chat_model,
-        system=system,
-        messages=_as_chat(messages),
-        temperature=0.7,
-        max_tokens=250,
-    )
+    def ask(extra_note: str = "") -> tuple[dict[str, Any], str]:
+        data = complete_json(
+            model=get_config().chat_model,
+            system=f"{system}\n\n{extra_note}" if extra_note else system,
+            messages=_as_chat(messages),
+            temperature=0.7,
+            max_tokens=350,
+        )
+        text = guards.clean_for_speech(str(data.get("reply", "")))
+        if not text:
+            raise LLMError("The model returned an empty reply.")
+        return data, text
 
-    text = guards.clean_for_speech(str(data.get("reply", "")))
-    if not text:
-        raise LLMError("The model returned an empty reply.")
+    data, text = ask()
+    # Safety net for closed questions (docs/CARTES.md, RULES_V2.md): one rewrite, then it goes as it is.
+    # Not on a transition or a heavy subject, where a yes/no question is the right one
+    keeps_going = not data.get("card_exhausted") and not must_close and str(data.get("safety", "none")) == "none"
+    if not is_mirror and keeps_going and not guards.hands_over(text):
+        log.info("Dead-end reply rewritten: %r", text)
+        data, text = ask(
+            f"Attention : ta réponse précédente (« {text} ») ne lui redonnait pas la parole. Réécris-la pour qu'il "
+            "ait envie de continuer : une question ouverte, une invitation (« Raconte-moi ça. ») ou ses mots en "
+            "suspens (« Tout le week-end sur ce moteur… »)."
+        )
+    elif not is_mirror and keeps_going and guards.is_closed_question(text):
+        log.info("Closed question rewritten: %r", guards.last_question(text))
+        data, text = ask(
+            f"Attention : ta réponse précédente finissait par « {guards.last_question(text)} », une question fermée "
+            "(il peut répondre par oui, non ou un mot). Réécris ta réponse avec une question ouverte qui le fait "
+            "raconter : comment, qu'est-ce que, c'est quoi, raconte-moi."
+        )
 
     safety = str(data.get("safety", "none"))
     if safety == "distress":

@@ -33,6 +33,15 @@
   --card-green-face: #e8ffe8;
   --card-green-back: #bfffbf;
 
+  /* Added so each of the 6 families has its own color (dreams, values) */
+  --card-blue: #2299ff;
+  --card-blue-face: #e8f4ff;
+  --card-blue-back: #bfe0ff;
+
+  --card-orange: #ff8800;
+  --card-orange-face: #fff1e3;
+  --card-orange-back: #ffd9b0;
+
   /* Shapes */
   --radius-card: 24px;
   --radius-pill: 999px;

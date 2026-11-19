@@ -79,6 +79,45 @@ def strip_sensitive(text: str) -> str:
     return " ".join(s for s in sentences if s and not is_sensitive(s))
 
 
+# ---- Closed questions ---------------------------------------------------------------------------
+
+# A question with one of these words invites a story. Without any, it is answered with "ouais" or one word
+_OPEN_WORDS_RE = re.compile(
+    r"\b(?:comment|quoi|qu'est-ce|qu'est ce|pourquoi|raconte|racontes|quels?|quelles?|lesquel\w*|laquelle|où|"
+    r"combien|dis-moi|parle-moi|explique|d[ée]cris)\b"
+    # "qui" asks a question only at the start or after a preposition, not in "autre chose qui a changé"
+    r"|(?:^(?:et\s+)?|\b(?:c'est|avec|pour|à|de|par|chez)\s+)qui\b",
+    re.IGNORECASE,
+)
+# Suggesting the answer ("t'as dû…", "…, non ?") is closed even with an open word
+_SUGGESTING_RE = re.compile(r"(?:^|\s)(?:t'as dû|tu as dû|t'as d[uû]|j'imagine que)|,\s*(?:non|hein|pas vrai)\s*\?$", re.IGNORECASE)
+
+
+def last_question(text: str) -> str:
+    questions = re.findall(r"[^.!?…]*\?", text.replace("’", "'"))
+    return questions[-1].strip() if questions else ""
+
+
+def is_closed_question(text: str) -> bool:
+    """True when the question that ends the text can be answered by yes, no or one word."""
+    question = last_question(text)
+    if not question:
+        return False
+    return _SUGGESTING_RE.search(question) is not None or _OPEN_WORDS_RE.search(question) is None
+
+
+# Without a question, the message must still hand him the floor: an invitation, or his words left hanging
+_INVITATION_RE = re.compile(
+    r"\b(?:raconte|explique|dis-moi|parle-moi|d[ée]cris|vas-y|continue|je t'[ée]coute|montre-moi)\b", re.IGNORECASE
+)
+
+
+def hands_over(text: str) -> bool:
+    """True when the message gives the floor back: a question, an invitation, or a sentence left hanging (…)."""
+    text = text.replace("’", "'").strip()
+    return "?" in text or text.endswith(("…", "...")) or _INVITATION_RE.search(text) is not None
+
+
 # ---- Distress -----------------------------------------------------------------------------------
 
 _DISTRESS_RE = re.compile(
