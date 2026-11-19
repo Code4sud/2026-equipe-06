@@ -75,15 +75,29 @@ def entry_json(entry: Document) -> dict[str, Any]:
 
 
 def create_session(db: Database, email: str) -> dict[str, Any]:
-    """Creates the game of this e-mail, or finds it again (any code is accepted for now)."""
+    """Creates the game of this e-mail, or finds it again (the code is checked by the route)."""
     email = email.strip().lower()
     if not email:
         raise GameError(400, "email is required")
     existing = find_session_by_email(db, email)
     if existing:
-        return {"sessionId": existing["id"], "isNew": False, "state": existing.get("state", "drawing")}
+        # Coming back starts a new game, like a new player: only the collection is kept
+        _restart_game(db, existing["id"], email)
+        return {"sessionId": existing["id"], "isNew": False, "state": "drawing"}
     session_id = db.insert(SESSIONS, new_session(email))
     return {"sessionId": session_id, "isNew": True, "state": "drawing"}
+
+
+def _restart_game(db: Database, session_id: str, email: str) -> None:
+    """Back to the start of a game: draw, memory of the turns, mirror and timer start again.
+
+    The entries of the collection are separate documents: they stay. A card left in the middle is
+    closed without being analyzed.
+    """
+    for turn in db.find(TURNS, {"session_id": session_id}, limit=500):
+        if not turn.get("ended"):
+            db.update(TURNS, turn["id"], {"ended": True})
+    db.update(SESSIONS, session_id, new_session(email))
 
 
 def get_session(db: Database, session_id: str) -> dict[str, Any]:

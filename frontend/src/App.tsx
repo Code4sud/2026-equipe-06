@@ -87,7 +87,9 @@ function App() {
 
   if (screen === 'tutorial') {
     // Resume where the session left off (drawing for a new user)
-    return <Tutorial isNewUser={session.isNew} onStart={() => goTo(session.state)} menu={quitOnlyMenu} />
+    // A card cannot be resumed in the middle: the backend closes it, and the game goes back to the draw
+    const resumeAt = session.state === 'in_turn' || session.state === 'mirror' ? 'drawing' : session.state
+    return <Tutorial isNewUser={session.isNew} onStart={() => goTo(resumeAt)} menu={quitOnlyMenu} />
   }
 
   if (screen === 'drawing') {
