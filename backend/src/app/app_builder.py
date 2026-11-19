@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from typing import Self, Callable, List, Literal, TypeVar
 import atexit
 
@@ -80,6 +81,12 @@ class AppBuilder:
             view_func=callback,
             methods=methods
         )
+
+        return self
+
+
+    def addCORS(self: Self, origins: List[str] | str = "*") -> Self:
+        CORS(self.__app.flask, origins=origins)
 
         return self
 
