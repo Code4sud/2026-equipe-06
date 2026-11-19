@@ -15,13 +15,13 @@ services:
       - key: MISTRAL_API_KEY
         sync: false
       - key: AUTH_CODE_SECRET
-        generateValue: true
-      - key: SMTP_HOST
         sync: false
-      - key: SMTP_PORT
+      - key: BREVO_API_KEY
         sync: false
-      - key: SMTP_USER
+      - key: MAIL_FROM
         sync: false
-      - key: SMTP_PASSWORD
+      - key: MAIL_FROM_NAME
         sync: false
+
+
 
