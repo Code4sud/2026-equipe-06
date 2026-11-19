@@ -1,4 +1,4 @@
-// Real calls to the Flask backend (proxied on /api by Vite in dev).
+// Real calls to the Flask backend (proxied on /api by Vite in dev, VITE_API_URL once deployed).
 import type {
   Card,
   CollectionEntry,
@@ -19,8 +19,11 @@ export class ApiError extends Error {
   }
 }
 
+// Deployed: the backend lives on another domain (VITE_API_URL). Locally: empty, Vite proxies /api
+const API_BASE = (import.meta.env.VITE_API_URL ?? '').replace(/\/+$/, '')
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const res = await fetch(`/api${path}`, {
+  const res = await fetch(`${API_BASE}/api${path}`, {
     ...options,
     headers: { 'Content-Type': 'application/json', ...options.headers },
   })
