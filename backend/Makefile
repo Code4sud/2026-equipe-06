@@ -4,10 +4,10 @@ dev:
 	PYTHONPATH=src uv run python -m server
 
 up:
-	docker-compose up --build
+	docker compose up --build
 
 down:
-	docker-compose down
+	docker compose down
 
 logs:
-	docker-compose logs -f api
+	docker compose logs -f api
