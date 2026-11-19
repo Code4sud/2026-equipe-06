@@ -14,11 +14,12 @@
   font: inherit;
   text-align: left;
   color: var(--card-color);
-  background: var(--card-face);
-  border: var(--border-card) solid var(--card-color);
+  /* Background and border: see cardShine.css (class card-shine) */
   border-radius: var(--radius-card);
-  transform: rotate(var(--tilt, 0deg));
-  transition: transform 0.2s ease;
+  transform: perspective(900px) rotate(var(--tilt, 0deg)) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition:
+    transform 0.2s ease,
+    --glare-strength 0.25s ease;
   /* Keeps some room around the card when scrolled into view */
   scroll-margin: var(--space-4);
 }
@@ -39,18 +40,29 @@ button.collection-card::-moz-focus-inner {
   border: 0;
 }
 
-/* Selected (focus or hover): rises and straightens, like a card in the drawing */
+/* Selected (focus or hover): rises and straightens, like a card in the drawing, with the shine */
 .collection-card:focus,
 .collection-card:hover {
   outline: none;
-  transform: translateY(-16px) scale(1.04);
+  transform: perspective(900px) translateY(-16px) scale(1.04) rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg));
   box-shadow: 0 14px 22px -14px rgb(30 22 51 / 0.4);
+  --glare-strength: 1;
 }
 
-/* Only shown (cards kept during the mirror exchange): no lift */
+/* Keyboard selection (no pointer): a small fixed lean and highlight */
+.collection-card:focus {
+  --tilt-x: -3deg;
+  --tilt-y: 4deg;
+  --glare-x: 30%;
+  --glare-y: 18%;
+}
+
+/* Only shown (cards kept during the mirror exchange): no lift, no reflection */
 .collection-card.is-static:hover {
-  transform: rotate(var(--tilt, 0deg));
+  transform: perspective(900px) rotate(var(--tilt, 0deg));
   box-shadow: none;
+  --glare-strength: 0;
 }
 
 /* Picked in the mirror */
@@ -103,5 +115,10 @@ button.collection-card::-moz-focus-inner {
 @media (prefers-reduced-motion: reduce) {
   .collection-card {
     transition: none;
+  }
+
+  .collection-card:focus,
+  .collection-card:hover {
+    transform: translateY(-16px) scale(1.04);
   }
 }

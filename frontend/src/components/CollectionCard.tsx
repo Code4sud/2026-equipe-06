@@ -1,6 +1,8 @@
 import type { CSSProperties } from 'react'
+import { useCardTilt } from '../hooks/useCardTilt'
 import type { CollectionEntry } from '../types'
 import { cardColorClass } from '../utils/cardColors'
+import '../styles/cardShine.css'
 import './GameCard.css'
 import './CollectionCard.css'
 
@@ -23,9 +25,12 @@ export function CollectionCard({
   transitionName,
   focusable = true,
 }: CollectionCardProps) {
+  // Tilt and reflection follow the pointer, except on cards that are only shown
+  const tilt = useCardTilt(focusable)
   const style: CSSProperties | undefined = transitionName ? { viewTransitionName: transitionName } : undefined
   const className = [
     'collection-card',
+    'card-shine',
     cardColorClass(entry.card),
     selected && 'is-selected',
     !focusable && 'is-static',
@@ -54,6 +59,9 @@ export function CollectionCard({
         style={style}
         aria-pressed={selected}
         onClick={() => onToggle(entry)}
+        ref={tilt.ref}
+        onPointerMove={tilt.onPointerMove}
+        onPointerLeave={tilt.onPointerLeave}
       >
         {content}
       </button>
@@ -61,7 +69,14 @@ export function CollectionCard({
   }
 
   return (
-    <div className={className} style={style} tabIndex={focusable ? 0 : undefined}>
+    <div
+      className={className}
+      style={style}
+      tabIndex={focusable ? 0 : undefined}
+      ref={tilt.ref}
+      onPointerMove={tilt.onPointerMove}
+      onPointerLeave={tilt.onPointerLeave}
+    >
       {content}
     </div>
   )

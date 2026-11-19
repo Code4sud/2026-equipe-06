@@ -2,11 +2,13 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties, type FormEven
 import { api } from '../api'
 import { AssistantOrb, type OrbState } from '../components/AssistantOrb'
 import { CollectionCard } from '../components/CollectionCard'
+import { useCardTilt } from '../hooks/useCardTilt'
 import { useSpeechRecognition } from '../hooks/useSpeechRecognition'
 import type { ActiveTurn, CollectionEntry } from '../types'
 import { cardColorClass } from '../utils/cardColors'
 import { focusSmoothly, moveFocusWithArrows } from '../utils/arrowNavigation'
 import { prefersReducedMotion, withViewTransition } from '../utils/viewTransition'
+import '../styles/cardShine.css'
 import '../components/GameCard.css'
 import './Turn.css'
 
@@ -39,6 +41,7 @@ function MicIcon() {
 
 export function Turn({ sessionId, turn, onTurnEnded }: TurnProps) {
   const speech = useSpeechRecognition()
+  const cardTilt = useCardTilt()
   const [assistantText, setAssistantText] = useState(turn.firstMessage.text)
   const [phase, setPhase] = useState<Phase>('speaking')
   const [turnEnded, setTurnEnded] = useState(false)
@@ -237,7 +240,14 @@ export function Turn({ sessionId, turn, onTurnEnded }: TurnProps) {
     >
       {/* Mirror: a screen of its own, without the card on the left */}
       {!isMirror && (
-        <aside className="turn-card floating" style={{ viewTransitionName: 'chosen-card' }} aria-label="Carte choisie">
+        <aside
+          className="turn-card card-shine floating"
+          style={{ viewTransitionName: 'chosen-card' }}
+          aria-label="Carte choisie"
+          ref={cardTilt.ref}
+          onPointerMove={cardTilt.onPointerMove}
+          onPointerLeave={cardTilt.onPointerLeave}
+        >
           <span className="turn-card-title">{turn.card.title}</span>
           <span className="turn-card-brand">ptv</span>
         </aside>

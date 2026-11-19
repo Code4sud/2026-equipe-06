@@ -210,52 +210,15 @@
   width: 60%;
 }
 
-/* How strong the reflection is: 0 at rest, 1 when selected. Registered so it can be animated */
-@property --glare-strength {
-  syntax: '<number>';
-  inherits: false;
-  initial-value: 0;
-}
-
-/*
- * Front: light background, thick colored border, title top left.
- * The border is transparent and painted by the background, in layers (top to bottom):
- *   1. soft reflection following the pointer, over everything but under the text
- *   2. static sheen for volume
- *   3. face color (inside the border only)
- *   4. shine on the border: strong reflection + a static highlight (only visible on the border,
- *      because the face color above it hides the rest)
- *   5. border color
- */
+/* Front: light background, thick colored border, title top left (the shiny look is in cardShine.css) */
 .game-card-front {
-  --glare-pos: var(--glare-x, 30%) var(--glare-y, 18%);
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
   padding: 12% 10% 8%;
   text-align: left;
   color: var(--card-color);
-  border: var(--border-card) solid transparent;
-  background:
-    radial-gradient(
-      circle at var(--glare-pos),
-      rgb(255 255 255 / calc(0.4 * var(--glare-strength))),
-      rgb(255 255 255 / calc(0.1 * var(--glare-strength))) 35%,
-      transparent 60%
-    ),
-    linear-gradient(135deg, rgb(255 255 255 / 0.18) 0%, transparent 42%, rgb(30 22 51 / 0.05) 100%),
-    linear-gradient(var(--card-face), var(--card-face)) padding-box,
-    radial-gradient(
-      circle at var(--glare-pos),
-      rgb(255 255 255 / calc(0.95 * var(--glare-strength))),
-      transparent 45%
-    ),
-    linear-gradient(135deg, rgb(255 255 255 / 0.5) 0%, transparent 50%),
-    linear-gradient(var(--card-color), var(--card-color));
-  background-origin: border-box;
-  background-clip: border-box, border-box, padding-box, border-box, border-box, border-box;
   transform: rotateY(180deg);
-  transition: --glare-strength 0.25s ease;
 }
 
 .game-card.is-revealed:not(:disabled):hover .game-card-front,

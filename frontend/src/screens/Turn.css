@@ -18,12 +18,24 @@
   /* Fixed values: a % padding would be relative to the grid column */
   padding: clamp(1.7rem, 2.6vw, 2.4rem) clamp(1.4rem, 2.2vw, 2rem) clamp(1.1rem, 1.8vw, 1.6rem);
   color: var(--card-color);
-  background: var(--card-face);
-  border: var(--border-card) solid var(--card-color);
+  /* Background and border: see cardShine.css (class card-shine) */
   border-radius: var(--radius-card);
-  transform: rotate(-3deg);
+  --card-rotation: -3deg;
+  transform: perspective(900px) rotate(var(--card-rotation)) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
   --float-distance: 5px;
   --float-angle: 1.5deg;
+}
+
+/* A little reflection at rest, more under the pointer (higher specificity than card-shine's transition) */
+.turn-card.card-shine {
+  --glare-strength: 0.35;
+  transition:
+    transform 0.25s ease-out,
+    --glare-strength 0.25s ease;
+}
+
+.turn-card.card-shine:hover {
+  --glare-strength: 1;
 }
 
 .turn-card-title {
@@ -208,7 +220,7 @@
 
   .turn-card {
     width: 9rem;
-    transform: rotate(-2deg);
+    --card-rotation: -2deg;
   }
 
   .turn-card-title {

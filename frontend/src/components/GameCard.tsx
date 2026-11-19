@@ -1,12 +1,10 @@
-import { useRef, type CSSProperties, type PointerEvent } from 'react'
+import type { CSSProperties } from 'react'
+import { useCardTilt } from '../hooks/useCardTilt'
 import type { Card } from '../types'
 import { cardColorClass } from '../utils/cardColors'
-import { prefersReducedMotion } from '../utils/viewTransition'
 import { Asterisk, Flower, Star, Triangle } from './Shapes'
+import '../styles/cardShine.css'
 import './GameCard.css'
-
-/** Maximum tilt in degrees, kept very light */
-const MAX_TILT_DEG = 7
 
 interface GameCardProps {
   card: Card
@@ -59,28 +57,8 @@ export function GameCard({
     // Morphs into the big card of the turn screen (View Transitions API)
     style.viewTransitionName = 'chosen-card'
   }
-  const tiltRef = useRef<HTMLSpanElement>(null)
-
-  // The card leans toward the pointer and the light reflection follows it.
-  // Written straight on the element (no re-render on every move).
-  function handlePointerMove(event: PointerEvent<HTMLButtonElement>) {
-    const tilt = tiltRef.current
-    if (!tilt || !revealed || disabled || prefersReducedMotion()) return
-    const rect = event.currentTarget.getBoundingClientRect()
-    const x = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width))
-    const y = Math.min(1, Math.max(0, (event.clientY - rect.top) / rect.height))
-    tilt.style.setProperty('--tilt-x', `${-(y - 0.5) * 2 * MAX_TILT_DEG}deg`)
-    tilt.style.setProperty('--tilt-y', `${(x - 0.5) * 2 * MAX_TILT_DEG}deg`)
-    tilt.style.setProperty('--glare-x', `${x * 100}%`)
-    tilt.style.setProperty('--glare-y', `${y * 100}%`)
-  }
-
-  function handlePointerLeave() {
-    // Back to the values from the CSS (flat card, or the keyboard selection pose)
-    const tilt = tiltRef.current
-    if (!tilt) return
-    for (const name of ['--tilt-x', '--tilt-y', '--glare-x', '--glare-y']) tilt.style.removeProperty(name)
-  }
+  // The card leans toward the pointer and the light reflection follows it
+  const tilt = useCardTilt(revealed && !disabled)
 
   const isJoker = card.format === 'joker'
   // The joker's back is multicolor, the other cards' backs use their own color
@@ -105,11 +83,11 @@ export function GameCard({
       style={style}
       disabled={disabled}
       onClick={() => onSelect(card)}
-      onPointerMove={handlePointerMove}
-      onPointerLeave={handlePointerLeave}
+      onPointerMove={tilt.onPointerMove}
+      onPointerLeave={tilt.onPointerLeave}
       aria-label={revealed ? card.title : 'Carte retournée'}
     >
-      <span className="game-card-tilt" ref={tiltRef}>
+      <span className="game-card-tilt" ref={tilt.ref}>
         <span className="game-card-inner">
           <span className="game-card-face game-card-back" aria-hidden="true">
             <Asterisk className="game-card-back-asterisk" color={shapeColors[0]} outline />
@@ -119,7 +97,7 @@ export function GameCard({
             <span className="game-card-brand">ptv</span>
           </span>
 
-          <span className="game-card-face game-card-front">
+          <span className="game-card-face game-card-front card-shine">
             {isJoker && (
               <>
                 {/* Brand shapes in the background, like everywhere else */}
