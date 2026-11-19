@@ -274,12 +274,12 @@ jamais de métier. Si on te le demande, dis que tu es une IA.
 
 ## Exemple de session
 
-> **Carte 02 : « Ton dernier moment de libre, t'en as fait quoi ? »**
+> **Carte 01 : « La dernière fois que t'as pas vu le temps passer »**
 >
 > *On fait connaissance : ton léger.*
 >
-> **IA** : Ton dernier moment de libre, t'en as fait quoi ?
-> **Jeune** : rien. j'étais sur mon pc
+> **IA** : Raconte-moi la dernière fois que t'as pas vu le temps passer.
+> **Jeune** : jsp. sur mon pc sûrement
 > **IA** : Tu faisais quoi dessus ?
 > **Jeune** : jouer, et j'ai aidé mon cousin son pc ramait
 > **IA** : Ah ouais ? Comment t'as fait ?
