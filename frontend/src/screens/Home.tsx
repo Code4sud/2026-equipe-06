@@ -10,7 +10,7 @@ import './Home.css'
 type Step = 'choice' | 'email' | 'code'
 
 // Same length as the code sent by the backend (CODE_LENGTH in router.py)
-const CODE_LENGTH = 8
+const CODE_LENGTH = 6
 
 // Local development (Vite dev server): no code to ask for, straight in after the e-mail
 const SKIP_CODE = import.meta.env.DEV

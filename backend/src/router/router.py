@@ -1,5 +1,3 @@
-import hashlib
-import hmac
 import inspect
 import logging
 import os
@@ -11,10 +9,10 @@ from flask import Response, current_app, jsonify, request
 from pydantic import BaseModel, ValidationError
 
 from ai import AIConfigError, LLMError
-from controllers.mailer import send_auth_code
+from controllers.mailer import MailError, send_auth_code
 from game import service
 from game.store import GameError
-from models.models import AuthCode, CodeRequest, utcnow
+from models.models import AuthCode, CodeRequest, User, VerifyRequest, utcnow
 
 
 type METHOD_NAME = Literal["GET", "POST", "PUT", "DELETE", "PATCH"]
@@ -30,7 +28,13 @@ AUTH_CODES = "auth_codes"
 CODE_TTL = timedelta(minutes=10)
 RESEND_COOLDOWN = timedelta(seconds=60)
 MAX_ATTEMPTS = 5
-CODE_LENGTH = 8
+# Same length as the boxes of the front (CODE_LENGTH in Home.tsx) and the pattern of VerifyRequest
+CODE_LENGTH = 6
+
+
+def _skip_code() -> bool:
+    """Local development only: no code to ask for (AUTH_SKIP_CODE=1, set by ai/dev_server.py)."""
+    return os.environ.get("AUTH_SKIP_CODE", "").lower() in ("1", "true", "yes")
 
 
 # Routes can take URL parameters (<session_id>…), hence Callable[..., Any]
@@ -71,17 +75,37 @@ def _respond(action: Callable[[], Any]) -> Any:
         return jsonify(error=str(e)), 500
 
 
-def _hash_code(email: str, code: str) -> str:
-    secret = os.environ["AUTH_CODE_SECRET"].encode()
-    return hmac.new(secret, f"{email}:{code}".encode(), hashlib.sha256).hexdigest()
-
-
 def _parse[M: BaseModel](model: type[M]) -> M | tuple[Any, int]:
+    """Validate the JSON body. Returns the model, or a (response, status) on error."""
     try:
         return model.model_validate(request.get_json(silent=True) or {})
     except ValidationError as e:
         return jsonify(error=e.errors(include_url=False, include_context=False, include_input=False)), 400
 
+
+def _check_code(email: str, code: str) -> Any | None:
+    """None when the code is right (and it is then used up), otherwise the error answer."""
+    db = _db()
+    docs = db.find(AUTH_CODES, {"email": email}, limit=1)
+    if not docs:
+        return jsonify(error="No code requested for this email."), 400
+
+    auth_code = AuthCode.from_document(docs[0])
+
+    if auth_code.expires_at < utcnow():
+        db.delete(AUTH_CODES, auth_code.id)
+        return jsonify(error="Code expired."), 400
+
+    if auth_code.attempts >= MAX_ATTEMPTS:
+        db.delete(AUTH_CODES, auth_code.id)
+        return jsonify(error="Too many attempts, request a new code."), 429
+
+    if not auth_code.code_hash == code:
+        db.update(AUTH_CODES, auth_code.id, {"attempts": auth_code.attempts + 1})
+        return jsonify(error="Invalid code."), 401
+
+    db.delete(AUTH_CODES, auth_code.id)
+    return None
 
 
 class Router:
@@ -89,11 +113,19 @@ class Router:
     @staticmethod
     @route("auth/code", "POST")
     def auth_code() -> Any:
+        """Step 1: send a random 6-digit code by email.
+
+        Body: {"email": "..."}
+        - 204: code sent
+        - 400: invalid payload
+        - 429: a code was sent less than 60s ago
+        - 502: the email provider failed
+        """
         payload = _parse(CodeRequest)
         if isinstance(payload, tuple):
             return payload
 
-        db = current_app.extensions["db"]
+        db = _db()
         now = utcnow()
 
         previous = [AuthCode.from_document(d) for d in db.find(AUTH_CODES, {"email": payload.email})]
@@ -103,20 +135,44 @@ class Router:
             db.delete(AUTH_CODES, old.id)
 
         code = f"{secrets.randbelow(10 ** CODE_LENGTH):0{CODE_LENGTH}d}"
-        db.insert(AUTH_CODES, AuthCode(
+        code_id = db.insert(AUTH_CODES, AuthCode(
             email=payload.email,
-            code_hash=_hash_code(payload.email, code),
+            code_hash=code,
             expires_at=now + CODE_TTL,
         ).to_document())
 
-        send_auth_code(payload.email, code, int(CODE_TTL.total_seconds() // 60))
+        try:
+            send_auth_code(payload.email, code, int(CODE_TTL.total_seconds() // 60))
+        except MailError:
+            db.delete(AUTH_CODES, code_id)
+            return jsonify(error="Could not send the email, please try again later."), 502
         return "", 204
 
 
     @staticmethod
     @route("sessions", "POST")
     def create_session() -> Any:
-        return _respond(lambda: service.create_session(_db(), str(_body().get("email", ""))))
+        """Step 2: check the code, then log in or create the user, and find or start their game.
+
+        Body: {"email": "...", "code": "123456"} (no code in local development, see _skip_code)
+        - 200: {"sessionId", "isNew", "state"}, the game of this e-mail
+        - 400: invalid payload / no valid code
+        - 401: wrong code
+        - 429: too many attempts (the code is invalidated)
+        """
+        payload = _parse(CodeRequest if _skip_code() else VerifyRequest)
+        if isinstance(payload, tuple):
+            return payload
+        if isinstance(payload, VerifyRequest):
+            error = _check_code(payload.email, payload.code)
+            if error is not None:
+                return error
+
+        db = _db()
+        if not db.find(USERS, {"email": payload.email}, limit=1):
+            db.insert(USERS, User(email=payload.email).to_document())
+
+        return _respond(lambda: service.create_session(db, payload.email))
 
 
     @staticmethod

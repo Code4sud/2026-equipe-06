@@ -14,4 +14,14 @@ services:
         value: monhackathon
       - key: MISTRAL_API_KEY
         sync: false
+      - key: AUTH_CODE_SECRET
+        sync: false
+      - key: BREVO_API_KEY
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+      - key: MAIL_FROM_NAME
+        sync: false
+
+
 
