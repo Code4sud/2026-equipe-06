@@ -1,0 +1,175 @@
+@import '@fontsource-variable/plus-jakarta-sans';
+
+/* ========== "Pioche ta voix" theme (from the Figma mockup) ========== */
+:root {
+  /* Font */
+  --font-main: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
+
+  /* Background and text */
+  --color-bg: #faeac7;
+  --color-text: #1e1633;
+
+  /* Brand colors */
+  --color-yellow: #ffdd22;
+  --color-pink: #ff5ac8;
+  --color-purple: #bb6bff;
+  --color-green: #4dff1e;
+  --color-orange: #ff9900;
+
+  /* Card families: border/text, light background (front), background (back) */
+  --card-yellow: #ffc922;
+  --card-yellow-face: #fff6e5;
+  --card-yellow-back: #fdefc2;
+
+  --card-pink: #ff22cc;
+  --card-pink-face: #ffe8fa;
+  --card-pink-back: #ffc0f0;
+
+  --card-purple: #9922ff;
+  --card-purple-face: #f8e8ff;
+  --card-purple-back: #eac4ff;
+
+  --card-green: #00f56e;
+  --card-green-face: #e8ffe8;
+  --card-green-back: #bfffbf;
+
+  /* Shapes */
+  --radius-card: 24px;
+  --radius-pill: 999px;
+  --border-card: 6px;
+
+  /* Spacing */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+
+  /* Base */
+  font-family: var(--font-main);
+  line-height: 1.5;
+  font-weight: 500;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  color-scheme: light;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+button {
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+input,
+textarea {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+/*
+ * Gentle floating: small drift and tilt around the element's anchor point.
+ * Uses the `translate` and `rotate` properties so it adds up with any existing `transform`.
+ * Tune per element with --float-duration, --float-delay, --float-distance, --float-angle.
+ */
+@keyframes float {
+  0%,
+  100% {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+  25% {
+    translate: calc(var(--float-distance, 6px) * 0.6) calc(var(--float-distance, 6px) * -0.8);
+    rotate: var(--float-angle, 2deg);
+  }
+  50% {
+    translate: calc(var(--float-distance, 6px) * -0.4) calc(var(--float-distance, 6px) * -1);
+    rotate: calc(var(--float-angle, 2deg) * -0.6);
+  }
+  75% {
+    translate: calc(var(--float-distance, 6px) * -0.8) calc(var(--float-distance, 6px) * -0.4);
+    rotate: calc(var(--float-angle, 2deg) * 0.5);
+  }
+}
+
+.floating {
+  animation: float var(--float-duration, 10s) ease-in-out var(--float-delay, 0s) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating {
+    animation: none;
+  }
+}
+
+/* ---------- Screen transitions (View Transitions API, see utils/viewTransition.ts) ---------- */
+
+/* Elements that move from one place to another (cards…) */
+::view-transition-group(*) {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.3, 0.7, 0.3, 1);
+}
+
+/* Whole screen: the old one fades up and out, the new one rises in */
+::view-transition-old(root) {
+  animation: screen-out 0.3s ease-in both;
+}
+
+::view-transition-new(root) {
+  animation: screen-in 0.45s cubic-bezier(0.2, 0.8, 0.3, 1) 0.1s both;
+}
+
+@keyframes screen-out {
+  to {
+    opacity: 0;
+    translate: 0 -16px;
+  }
+}
+
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    translate: 0 24px;
+  }
+}
+
+/* Chosen card moving from the drawing to the left of the turn screen */
+::view-transition-group(chosen-card) {
+  animation-duration: 0.6s;
+}
+
+/* Visible to screen readers only */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

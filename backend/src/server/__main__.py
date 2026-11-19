@@ -40,6 +40,7 @@ def build_app() -> App:
     app_builder = AppBuilder(name=ServerEnvironment.get("APP_NAME"))                                    \
         .addPort(ServerEnvironment.get("PORT"))                                                         \
         .addHost(ServerEnvironment.get("HOST"))                                                         \
+        .addCORS(origins=ServerEnvironment.get("FRONTEND_URL", "*"))                                    \
         .addDatabase(ServerEnvironment.get("DB_URI"), ServerEnvironment.get("DB_NAME"), MongoDatabase)  \
         .addRoute("/", lambda: "Hello World!")
 

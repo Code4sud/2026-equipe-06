@@ -1,0 +1,43 @@
+.drawing {
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-2);
+}
+
+.drawing-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(var(--space-2), 2vw, var(--space-3));
+  /* Room for the lifted card */
+  padding-top: var(--space-4);
+}
+
+.drawing-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 700;
+  text-align: center;
+}
+
+.drawing-error p {
+  margin: 0;
+}
+
+/* Once a card is chosen, the title and the collection button fade out */
+.drawing > .pill-title,
+.drawing > .btn {
+  transition: opacity 0.3s ease;
+}
+
+.drawing.is-leaving > .pill-title,
+.drawing.is-leaving > .btn {
+  opacity: 0;
+}

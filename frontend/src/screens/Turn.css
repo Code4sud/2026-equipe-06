@@ -1,0 +1,385 @@
+/* The screen takes the chosen card's colors (--card-color, --card-face, --card-back) */
+.turn {
+  display: grid;
+  grid-template-columns: auto minmax(0, 52rem);
+  justify-content: center;
+  align-items: center;
+  gap: clamp(2rem, 6vw, 6rem);
+  min-height: 100vh;
+  padding: var(--space-4) var(--space-3);
+}
+
+/* Chosen card, big, on the left (arrives from the drawing with a View Transition) */
+.turn-card {
+  display: flex;
+  flex-direction: column;
+  width: clamp(14rem, 22vw, 20rem);
+  aspect-ratio: 5 / 7;
+  /* Fixed values: a % padding would be relative to the grid column */
+  padding: clamp(1.7rem, 2.6vw, 2.4rem) clamp(1.4rem, 2.2vw, 2rem) clamp(1.1rem, 1.8vw, 1.6rem);
+  color: var(--card-color);
+  /* Background and border: see cardShine.css (class card-shine) */
+  border-radius: var(--radius-card);
+  --card-rotation: -3deg;
+  transform: perspective(900px) rotate(var(--card-rotation)) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  --float-distance: 5px;
+  --float-angle: 1.5deg;
+}
+
+/* A little reflection at rest, more under the pointer (higher specificity than card-shine's transition) */
+.turn-card.card-shine {
+  --glare-strength: 0.35;
+  transition:
+    transform 0.25s ease-out,
+    --glare-strength 0.25s ease;
+}
+
+.turn-card.card-shine:hover {
+  --glare-strength: 1;
+}
+
+.turn-card-title {
+  font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.turn-card-brand {
+  margin-top: auto;
+  align-self: center;
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+/* Center: the assistant, what it just said, and the answer */
+.turn-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: center;
+}
+
+.turn-assistant-text {
+  max-width: 34ch;
+  min-height: 2.5em;
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+/* Hidden words keep their place so the sentence does not jump around */
+.word {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.word.is-visible {
+  opacity: 1;
+}
+
+.turn-answer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 12rem;
+}
+
+.turn-error {
+  margin: 0;
+  font-weight: 700;
+}
+
+.turn-main-button {
+  font-size: 1.25rem;
+}
+
+/* Voice answer */
+.turn-voice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.turn-mic {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 4rem;
+  height: 4rem;
+  color: var(--color-text);
+  background: var(--color-purple);
+  border-radius: 50%;
+  /* Keeps the rings (z-index: -1) inside the mic, under its icon */
+  isolation: isolate;
+}
+
+.turn-mic svg {
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+/* Rings spreading out while the mic listens */
+.turn-mic.is-listening::before,
+.turn-mic.is-listening::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--color-purple);
+  z-index: -1;
+  animation: mic-ring 1.8s ease-out infinite;
+}
+
+.turn-mic.is-listening::after {
+  animation-delay: 0.9s;
+}
+
+@keyframes mic-ring {
+  from {
+    opacity: 0.5;
+    scale: 1;
+  }
+  to {
+    opacity: 0;
+    scale: 2;
+  }
+}
+
+.turn-transcript {
+  max-width: 40ch;
+  min-height: 1.5em;
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.turn-voice-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.turn-hint {
+  margin: 0;
+  font-size: 0.95rem;
+  opacity: 0.7;
+}
+
+/* Text answer */
+.turn-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.turn-form-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.turn-input {
+  width: 100%;
+  padding: 0.9em 1.4em;
+  font-size: 1.15rem;
+  color: var(--color-text);
+  background: #fff;
+  border: 3px solid var(--color-purple);
+  border-radius: var(--radius-pill);
+}
+
+.turn-input:focus {
+  outline: 3px solid var(--color-purple);
+  outline-offset: 3px;
+}
+
+.turn-mic-button {
+  display: grid;
+  place-items: center;
+  padding: 0 1em;
+}
+
+.turn-mic-button svg {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+/* Narrow screens: small card on top, assistant below */
+@media (max-width: 48rem) {
+  .turn {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: var(--space-3);
+  }
+
+  .turn-card {
+    width: 9rem;
+    --card-rotation: -2deg;
+  }
+
+  .turn-card-title {
+    font-size: 1rem;
+  }
+}
+
+/* "+1 carte dans ta collection" toast, top of the screen */
+.turn-toast-zone {
+  position: fixed;
+  top: var(--space-3);
+  left: 50%;
+  translate: -50% 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.turn-toast {
+  margin: 0;
+  padding: 0.6em 1.4em;
+  font-weight: 800;
+  white-space: nowrap;
+  background: var(--color-yellow);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 10px 20px -12px rgb(30 22 51 / 0.4);
+  animation: toast 2.8s ease both;
+}
+
+@keyframes toast {
+  0% {
+    opacity: 0;
+    translate: 0 -12px;
+    scale: 0.9;
+  }
+  10%,
+  85% {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+  100% {
+    opacity: 0;
+    translate: 0 -8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word {
+    transition: none;
+  }
+
+  .turn-mic.is-listening::before,
+  .turn-mic.is-listening::after,
+  .turn-toast {
+    animation: none;
+  }
+}
+
+/* Mirror: pick the cards of the collection that look like you */
+.turn-pick {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.turn-pick-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  margin: 0;
+  /* Room for the lifted card */
+  padding: var(--space-3) 0 0;
+  list-style: none;
+}
+
+/* Picking: the cards appear one after the other */
+.turn-pick-grid > li {
+  animation: pick-in 0.45s cubic-bezier(0.2, 0.8, 0.3, 1.1) both;
+  animation-delay: calc(var(--index) * 70ms);
+}
+
+@keyframes pick-in {
+  from {
+    opacity: 0;
+    translate: 0 40px;
+    scale: 0.9;
+  }
+}
+
+/* ---------- Mirror: a screen of its own (cream background, no card on the left) ---------- */
+.turn.turn-mirror {
+  grid-template-columns: minmax(0, 60rem);
+  align-items: start;
+}
+
+/*
+ * Picking: the screen fits the window and only the cards scroll,
+ * so the assistant's message and the button always stay in view
+ */
+.turn.is-picking {
+  height: 100vh;
+  align-items: stretch;
+}
+
+.turn.is-picking .turn-stage {
+  min-height: 0;
+}
+
+.turn.is-picking .turn-answer {
+  flex: 1;
+  min-height: 0;
+}
+
+.turn.is-picking .turn-pick {
+  height: 100%;
+  min-height: 0;
+}
+
+.turn.is-picking .turn-pick-grid {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  /* Room for the lifted and tilted cards inside the scrolling area */
+  padding: var(--space-3) var(--space-2);
+}
+
+/* Picked cards, kept on screen, smaller */
+.turn-kept {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.turn-kept .collection-card {
+  width: clamp(8rem, 10vw, 10rem);
+  padding: 0.9rem 0.8rem 0.7rem;
+}
+
+.turn-kept .collection-card-theme {
+  font-size: 0.8rem;
+}
+
+.turn-kept .collection-card-quote {
+  font-size: 0.75rem;
+}
+
+.turn-kept .collection-card-skill {
+  font-size: 0.75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .turn-pick-grid > li {
+    animation: none;
+  }
+}

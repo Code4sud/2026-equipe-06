@@ -1,0 +1,217 @@
+"""The talking part: open a card, answer the young person, welcome him back.
+
+The functions are plain: they receive the context and the history, and return text.
+Saving anything (messages, entries, summaries) is the job of the caller.
+"""
+
+import logging
+import re
+
+from . import guards, rules
+from .config import get_config
+from .context import NOTHING_YET, context_blocks, last_quote
+from .llm import LLMError, complete, complete_json
+from .models import Card, CollectionItem, Message, SessionContext, TurnReply
+from .prompts import level_note, render, system_prompt
+
+log = logging.getLogger(__name__)
+
+# The mirror card is a short exchange of its own
+_MIRROR_FORMAT = "mirror"
+
+_SKIP_MESSAGE = "Passer : j'aimerais une autre question sur cette carte."
+
+
+def open_turn(ctx: SessionContext, card: Card) -> str:
+    """The first thing said on a card: its own opener, as written in cards.json.
+
+    The young person just chose a new theme, so the card opens that theme. It is not rewritten to
+    link back to what was said before: in the first real test, the rewritten opener pulled the
+    conversation back to the previous subject. Links can still come during the turn, if he brings
+    the subject back himself. `ctx` is kept so the signature does not change if this evolves.
+    """
+    return card.opener
+
+
+def _situation_notes(
+    *, exchanges: int, must_close: bool, dont_know_streak: int, skip: bool, first_card: bool
+) -> str:
+    notes = []
+    if first_card:
+        notes.append("C'est la toute première carte de la partie : reste très léger.")
+    if skip:
+        notes.append(
+            "Il a appuyé sur « Passer » : pose une autre question sur la même carte, sous un autre angle, "
+            "sans commenter qu'il a passé."
+        )
+    if dont_know_streak >= rules.DONT_KNOW_BEFORE_NEW_CARD:
+        notes.append(
+            f"Il a dit « je sais pas » {dont_know_streak} fois de suite : fais court, sans insister, et propose-lui "
+            "une autre carte. Mets card_exhausted à true."
+        )
+    if must_close:
+        notes.append(
+            "C'est le dernier échange possible sur cette carte : ta réponse est la transition (un petit retour "
+            "avec ses mots, puis « On pioche une autre carte ? »). Mets card_exhausted à true."
+        )
+    elif exchanges >= rules.SOFT_CLOSE_EXCHANGES:
+        notes.append(
+            f"Ça fait déjà {exchanges} échanges sur cette carte. Sauf si sa dernière réponse apporte vraiment "
+            "quelque chose de nouveau, fais maintenant la transition et mets card_exhausted à true."
+        )
+    elif exchanges < rules.MIN_EXCHANGES:
+        notes.append("Il est trop tôt pour proposer une autre carte : continue sur celle-ci.")
+    return "\n".join(notes)
+
+
+_TRANSITION = "On pioche une autre carte ?"
+
+
+def _with_transition(text: str) -> str:
+    """When a card ends, the last words must be the transition, never a question he can no longer answer."""
+    if "pioche" in text.lower():
+        return text
+    sentences = re.split(r"(?<=[.!?…])\s+", text.strip())
+    while sentences and sentences[-1].rstrip().endswith("?"):
+        sentences.pop()
+    return " ".join([*sentences, _TRANSITION])
+
+
+def _mirror_notes(exchanges: int) -> str:
+    # The first message of the mirror is the pick of cards, so the last question comes at MIRROR_QUESTIONS + 1
+    if exchanges >= rules.MIRROR_QUESTIONS + 1:
+        return (
+            "C'est ton dernier échange du miroir : remercie simplement, reprends un fait qu'il a dit, "
+            "annonce que tu vas lui montrer ce que tu as repéré, et mets card_exhausted à true."
+        )
+    return ""
+
+
+def _as_chat(messages: list[Message]) -> list[dict[str, str]]:
+    return [{"role": m.role, "content": m.text} for m in messages]
+
+
+def pick_message(selected: list[CollectionItem]) -> str:
+    """The message standing for the pick of cards in the mirror (the first message of the mirror)."""
+    if not selected:
+        return "Je n'ai pas choisi de carte."
+    return "J'ai choisi ces cartes de ma collection : " + " ; ".join(item.fact for item in selected) + "."
+
+
+def reply(
+    ctx: SessionContext,
+    card: Card,
+    history: list[Message],
+    user_text: str,
+    *,
+    selected: list[CollectionItem] | None = None,
+    skip: bool = False,
+) -> TurnReply:
+    """What the AI answers to the young person's last message.
+
+    `history` is the conversation of this card so far, without the new message.
+    - mirror: the first call has no text and `selected` (even empty) = the cards he picked;
+    - `skip`: he pressed "Passer" (new question on the same card).
+    """
+    is_mirror = card.format == _MIRROR_FORMAT
+    if selected is not None and not user_text:
+        user_text = pick_message(selected)
+    if skip:
+        user_text = _SKIP_MESSAGE
+
+    # Failsafe: obvious distress never goes through the model
+    if guards.looks_like_distress(user_text):
+        return TurnReply(reply=guards.DISTRESS_MESSAGE, safety="distress", turn_ended=True)
+
+    messages = [*history, Message(role="user", text=user_text)]
+    exchanges = sum(1 for m in messages if m.role == "user")
+    must_close = False if is_mirror else rules.turn_must_close(exchanges)
+    streak = 0 if is_mirror else guards.trailing_dont_know(messages)
+
+    blocks = context_blocks(ctx)
+    if is_mirror:
+        system = system_prompt(
+            "mirror",
+            turn_summaries=blocks["turn_summaries"],
+            collection=blocks["collection"],
+            constraints=blocks["constraints"],
+            exchanges=str(exchanges),
+            situation_notes=_mirror_notes(exchanges),
+        )
+    else:
+        system = system_prompt(
+            "turn",
+            card_title=card.title,
+            level_note=level_note(card.level),
+            intention=card.intention,
+            exchanges=str(exchanges),
+            min_exchanges=str(rules.MIN_EXCHANGES),
+            max_exchanges=str(rules.MAX_EXCHANGES),
+            situation_notes=_situation_notes(
+                exchanges=exchanges,
+                must_close=must_close,
+                dont_know_streak=streak,
+                skip=skip,
+                first_card=not ctx.turn_summaries,
+            ),
+            **blocks,
+        )
+
+    data = complete_json(
+        model=get_config().chat_model,
+        system=system,
+        messages=_as_chat(messages),
+        temperature=0.7,
+        max_tokens=250,
+    )
+
+    text = guards.clean_for_speech(str(data.get("reply", "")))
+    if not text:
+        raise LLMError("The model returned an empty reply.")
+
+    safety = str(data.get("safety", "none"))
+    if safety == "distress":
+        # The model saw distress that the failsafe did not: same fixed text, same end of game
+        return TurnReply(reply=guards.DISTRESS_MESSAGE, safety="distress", turn_ended=True)
+
+    exhausted = bool(data.get("card_exhausted"))
+    if is_mirror:
+        # The first user message of a mirror is the pick of cards: the questions come after it
+        ended = exhausted or exchanges >= rules.MIRROR_QUESTIONS + 1
+    else:
+        # An exhausted card is honored only once the minimum is reached, unless the limit forces it
+        ended = (
+            (exhausted and exchanges >= rules.MIN_EXCHANGES)
+            or must_close
+            or streak >= rules.DONT_KNOW_BEFORE_NEW_CARD
+        )
+        if ended:
+            text = _with_transition(text)
+    return TurnReply(reply=text, safety="heavy" if safety == "heavy" else "none", turn_ended=ended)
+
+
+def welcome_back(ctx: SessionContext) -> str:
+    """One sentence to recognize a young person who comes back after a while."""
+    fallback = "Re ! Content de te revoir. On reprend où t'en étais, ou tu préfères partir sur autre chose ?"
+    if not ctx.turn_summaries and not ctx.collection:
+        return fallback
+
+    blocks = context_blocks(ctx)
+    prompt = render(
+        "welcome_back",
+        turn_summaries=blocks["turn_summaries"],
+        last_quote=last_quote(ctx) if ctx.collection else NOTHING_YET,
+        constraints=blocks["constraints"],
+    )
+    try:
+        text = complete(
+            model=get_config().chat_model,
+            system=prompt,
+            messages=[{"role": "user", "content": "Il vient d'arriver."}],
+            temperature=0.7,
+            max_tokens=120,
+        )
+    except LLMError:
+        log.exception("Could not write the welcome back sentence, using the default one")
+        return fallback
+    return guards.clean_for_speech(text) or fallback

@@ -1,0 +1,136 @@
+.tutorial {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-2);
+  text-align: center;
+}
+
+/* Decorative shapes */
+.tutorial-decor > * {
+  position: absolute;
+  pointer-events: none;
+}
+
+.tutorial-flower {
+  top: 6vh;
+  right: 8vw;
+  width: clamp(3rem, 6vw, 5.5rem);
+  --float-duration: 10s;
+  --float-angle: 6deg;
+}
+
+.tutorial-star {
+  bottom: 8vh;
+  left: 6vw;
+  width: clamp(4rem, 8vw, 7rem);
+  --float-duration: 12s;
+  --float-delay: -5s;
+  --float-angle: -6deg;
+}
+
+.tutorial-lead {
+  margin: 0;
+  font-weight: 700;
+}
+
+/* Steps: one tile per card color */
+.tutorial-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+  width: min(100%, 64rem);
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tutorial-step {
+  position: relative;
+  padding: var(--space-4) var(--space-2) var(--space-3);
+  border: var(--border-card) solid var(--step-color);
+  border-radius: var(--radius-card);
+  background: var(--step-face);
+  text-align: left;
+}
+
+.tutorial-step:nth-child(odd) {
+  transform: rotate(-1deg);
+}
+
+.tutorial-step:nth-child(even) {
+  transform: rotate(1deg);
+}
+
+.tutorial-step-yellow {
+  --step-color: var(--card-yellow);
+  --step-face: var(--card-yellow-face);
+}
+
+.tutorial-step-pink {
+  --step-color: var(--card-pink);
+  --step-face: var(--card-pink-face);
+}
+
+.tutorial-step-purple {
+  --step-color: var(--card-purple);
+  --step-face: var(--card-purple-face);
+}
+
+.tutorial-step-green {
+  --step-color: var(--card-green);
+  --step-face: var(--card-green-face);
+}
+
+.tutorial-step-number {
+  position: absolute;
+  top: calc(var(--space-2) * -1.2);
+  left: var(--space-2);
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--color-text);
+  background: var(--step-color);
+  border-radius: 50%;
+}
+
+.tutorial-step h2 {
+  margin: 0 0 var(--space-1);
+  font-size: 1.25rem;
+}
+
+.tutorial-step p {
+  margin: 0;
+}
+
+.tutorial-reassurance {
+  max-width: 36rem;
+  margin: var(--space-1) 0 0;
+  font-weight: 700;
+}
+
+.tutorial-start {
+  min-width: 14rem;
+  font-size: 1.4rem;
+}
+
+@media (max-width: 56rem) {
+  .tutorial-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: var(--space-4);
+  }
+}
+
+@media (max-width: 32rem) {
+  .tutorial-steps {
+    grid-template-columns: 1fr;
+  }
+}

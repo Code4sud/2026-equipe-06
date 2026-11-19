@@ -1,0 +1,124 @@
+/* Card front, same size as in the drawing */
+.collection-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: clamp(11rem, 17vw, 15.5rem);
+  aspect-ratio: 5 / 7;
+  /* Fixed values: a % padding would be relative to the parent, not the card.
+     Same proportions as the drawn cards (12% / 10% / 8% of the card width) */
+  padding: clamp(1.3rem, 2vw, 1.85rem) clamp(1.1rem, 1.7vw, 1.55rem) clamp(0.9rem, 1.35vw, 1.25rem);
+  /* Long content scrolls inside the quote instead of stretching the card */
+  overflow: hidden;
+  font: inherit;
+  text-align: left;
+  color: var(--card-color);
+  /* Background and border: see cardShine.css (class card-shine) */
+  border-radius: var(--radius-card);
+  transform: perspective(900px) rotate(var(--tilt, 0deg)) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition:
+    transform 0.2s ease,
+    --glare-strength 0.25s ease;
+  /* Keeps some room around the card when scrolled into view */
+  scroll-margin: var(--space-4);
+}
+
+li:nth-child(odd) > .collection-card {
+  --tilt: -1deg;
+}
+
+li:nth-child(even) > .collection-card {
+  --tilt: 1deg;
+}
+
+button.collection-card {
+  cursor: pointer;
+}
+
+button.collection-card::-moz-focus-inner {
+  border: 0;
+}
+
+/* Selected (focus or hover): rises and straightens, like a card in the drawing, with the shine */
+.collection-card:focus,
+.collection-card:hover {
+  outline: none;
+  transform: perspective(900px) translateY(-16px) scale(1.04) rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg));
+  box-shadow: 0 14px 22px -14px rgb(30 22 51 / 0.4);
+  --glare-strength: 1;
+}
+
+/* Keyboard selection (no pointer): a small fixed lean and highlight */
+.collection-card:focus {
+  --tilt-x: -3deg;
+  --tilt-y: 4deg;
+  --glare-x: 30%;
+  --glare-y: 18%;
+}
+
+/* Only shown (cards kept during the mirror exchange): no lift, no reflection */
+.collection-card.is-static:hover {
+  transform: perspective(900px) rotate(var(--tilt, 0deg));
+  box-shadow: none;
+  --glare-strength: 0;
+}
+
+/* Picked in the mirror */
+.collection-card.is-selected {
+  box-shadow:
+    0 0 0 5px var(--color-purple),
+    0 14px 22px -14px rgb(30 22 51 / 0.4);
+}
+
+.collection-card-check {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  font-weight: 800;
+  color: var(--color-text);
+  background: var(--color-purple);
+  border-radius: 50%;
+}
+
+.collection-card-theme {
+  font-size: clamp(0.95rem, 1.35vw, 1.2rem);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.collection-card-quote {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  font-size: 0.95rem;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--color-text);
+}
+
+.collection-card-skill {
+  align-self: flex-start;
+  padding: 0.3em 0.8em;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--color-text);
+  background: var(--card-back);
+  border-radius: var(--radius-pill);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collection-card {
+    transition: none;
+  }
+
+  .collection-card:focus,
+  .collection-card:hover {
+    transform: translateY(-16px) scale(1.04);
+  }
+}
