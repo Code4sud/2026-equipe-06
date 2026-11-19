@@ -154,7 +154,9 @@ Côté ton :
 - L'IA ne commente pas la carte comme un compliment. Elle peut la relier à l'histoire : « Celle-là, c'est pour ton PC. »
 - Pas de récapitulatif long : le jeu reprend tout de suite.
 
-*Point à discuter en équipe* : un nom comme « Bricoleur » décrit la personne et peut l'enfermer dans une case. Un nom tourné vers l'action (« Trouve d'où vient une panne ») avec la phrase source sur la carte limiterait ce risque.
+Le nom des cartes est une étiquette courte (« Patience », « Montage vidéo »), toujours affichée avec la phrase source. Les règles de nommage sont dans [COMPETENCES.md](COMPETENCES.md).
+
+*Le moment exact de la validation (pendant le tour ou au bilan final) est à régler entre l'équipe Limites et l'équipe moteur.*
 
 ### La fin de session
 
@@ -216,7 +218,6 @@ L'IA qui discute **ne repère pas les compétences en même temps** : un second 
 ## À décider en équipe
 
 - **Identité de l'IA** : un personnage avec un prénom, une personnalité et une voix choisie (plus chaleureux, mais attention à ne pas faire croire que c'est un humain), ou un assistant neutre sans nom. Si elle a une voix, laquelle (genre, âge apparent) ?
-- **Le nom des cartes à collectionner** : étiquette (« Bricoleur ») ou action (« Trouve d'où vient une panne »).
 
 ## À trancher avec l'équipe moteur
 
@@ -295,7 +296,7 @@ jamais de métier. Si on te le demande, dis que tu es une IA.
 >
 > *L'IA sait que les moments clés sont le choix des pièces et le premier démarrage : elle pose ses questions là, sans suggérer ce que le jeune a fait. Elle lui renvoie un fait avec ses propres mots, et il valide.*
 >
-> **La carte à collectionner apparaît** : *« Trouve d'où vient une panne »*, avec la phrase « j'ai tout redémonté, la ram était mal mise ».
+> **La carte à collectionner apparaît** : *« Diagnostic de panne »*, avec la phrase « j'ai tout redémonté, la ram était mal mise ».
 >
 > *Il est en confiance : la conversation peut toucher au personnel. Ton plus lent et plus doux.*
 >
