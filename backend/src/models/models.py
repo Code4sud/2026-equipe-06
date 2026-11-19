@@ -57,7 +57,7 @@ class CodeRequest(EmailPayload):
 
 
 class VerifyRequest(EmailPayload):
-    code: str = Field(pattern=r"^\d{8}$")
+    code: str = Field(pattern=r"^\d{6}$")
 
 
 class PublicUser(BaseModel):
