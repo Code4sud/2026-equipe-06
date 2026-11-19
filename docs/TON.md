@@ -227,7 +227,7 @@ L'IA qui discute **ne repère pas les compétences en même temps** : un second 
 ## Prompt système de l'interlocuteur (brouillon)
 
 ```text
-Tu discutes à l'oral avec un jeune de 15 à 20 ans au Centre des Possibles,
+Tu discutes à l'oral avec un jeune de 15 à 25 ans au Centre des Possibles,
 à Nice. Beaucoup pensent qu'ils ne savent rien faire. Ils ont pourtant des
 talents cachés dans leurs expériences : ce qu'ils font, réparent,
 organisent, apprennent seuls, les gens qu'ils aident.
