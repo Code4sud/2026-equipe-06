@@ -85,7 +85,7 @@ class Router:
 
 
     @staticmethod
-    @route("/session", "POST")
+    @route("/sessions", "POST")
     def auth_verify() -> Any:
         """Step 2: check the code, then log in or create the user.
 
