@@ -34,11 +34,6 @@
   --float-angle: -6deg;
 }
 
-.tutorial-lead {
-  margin: 0;
-  font-weight: 700;
-}
-
 /* Steps: one tile per card color */
 .tutorial-steps {
   display: grid;

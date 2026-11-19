@@ -4,7 +4,6 @@ import { moveFocusWithArrows } from '../utils/arrowNavigation'
 import './Tutorial.css'
 
 interface TutorialProps {
-  isNewUser: boolean
   onStart: () => void
   /** Quitter (see GameMenu) */
   menu?: ReactNode
@@ -29,7 +28,7 @@ const STEPS = [
   },
 ] as const
 
-export function Tutorial({ isNewUser, onStart, menu }: TutorialProps) {
+export function Tutorial({ onStart, menu }: TutorialProps) {
   return (
     <main className="tutorial" onKeyDown={moveFocusWithArrows}>
       {menu}
@@ -38,8 +37,8 @@ export function Tutorial({ isNewUser, onStart, menu }: TutorialProps) {
         <Star className="tutorial-star floating" color="var(--color-pink)" />
       </div>
 
-      <h1 className="pill-title">{isNewUser ? 'Comment ça marche ?' : 'Content de te revoir !'}</h1>
-      {!isNewUser && <p className="tutorial-lead">Petit rappel avant de reprendre :</p>}
+      {/* Same screen for everyone: coming back starts a new game, only the collection is kept */}
+      <h1 className="pill-title">Comment ça marche ?</h1>
 
       <ol className="tutorial-steps">
         {STEPS.map((step, index) => (
