@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "source": "docs/CARTES.md (cartes validées)",
   "notes": [
     "Généré à partir de docs/CARTES.md, qui fait référence : en cas d'écart, CARTES.md prévaut.",
@@ -7,7 +7,8 @@
     "title : le thème affiché sur la carte. Ce n'est pas une question.",
     "opener : amorce de référence. L'IA l'adapte toujours au jeune et ne la répète jamais mot pour mot d'une carte à l'autre. Jamais de question fermée.",
     "intention : où se cachent les talents sur cette carte. L'IA s'en sert pour orienter ses relances et ne la dit jamais.",
-    "level : toutes les cartes sont des portes d'entrée générales. La profondeur vient de la conversation, pas de la carte.",
+    "level : sert au tirage (RULES_V2.md). general = léger, toujours possible, la première carte est toujours légère ; specific = moyen, seulement après une carte où le jeune s'est investi ; personal = profond, seulement si le jeune choisit la carte parmi plusieurs, jamais au hasard.",
+    "La profondeur de l'échange vient d'abord de la conversation : une carte légère peut mener loin si le jeune s'ouvre.",
     "number : numéro de la carte dans CARTES.md et COMPETENCES.md.",
     "Le joker (repiocher) est ajouté par le front : il n'est pas dans ce fichier."
   ],
@@ -133,7 +134,7 @@
       "number": 10,
       "family": "prides",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Un petit truc réussi récemment",
       "intention": "Réussites concrètes",
       "opener": "Raconte-moi un petit truc que t'as réussi récemment."
@@ -143,7 +144,7 @@
       "number": 11,
       "family": "prides",
       "format": "text",
-      "level": "general",
+      "level": "personal",
       "title": "Un truc dont t'es fier en secret",
       "intention": "Fierté intérieure, exigence",
       "opener": "Parle-moi d'un truc dont t'es fier, même si t'en parles à personne."
@@ -153,7 +154,7 @@
       "number": 12,
       "family": "prides",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Quelqu'un qui a compté sur toi",
       "intention": "Fiabilité, responsabilité",
       "opener": "Raconte-moi la dernière fois que quelqu'un a compté sur toi."
@@ -163,7 +164,7 @@
       "number": 13,
       "family": "prides",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Le dernier truc appris tout seul",
       "intention": "Autonomie, apprendre seul",
       "opener": "Raconte-moi le dernier truc que t'as appris tout seul."
@@ -173,7 +174,7 @@
       "number": 14,
       "family": "prides",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Un truc où t'as progressé",
       "intention": "Progression, persévérance",
       "opener": "Raconte-moi un truc où t'as progressé."
@@ -183,7 +184,7 @@
       "number": 15,
       "family": "prides",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Ce qu'on te demande souvent",
       "intention": "Compétence reconnue par les autres",
       "opener": "Parle-moi du truc qu'on te demande souvent de faire."
@@ -193,7 +194,7 @@
       "number": 16,
       "family": "prides",
       "format": "text",
-      "level": "general",
+      "level": "personal",
       "title": "Un truc que tu pensais pas pouvoir faire",
       "intention": "Dépassement de soi",
       "opener": "Raconte-moi une fois où t'as réussi un truc que tu pensais pas pouvoir faire."
@@ -203,7 +204,7 @@
       "number": 17,
       "family": "prides",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Un truc que t'as aidé à organiser ou à réparer",
       "intention": "Organisation, compétences manuelles",
       "opener": "Raconte-moi le dernier truc que t'as aidé à organiser ou à réparer."
@@ -213,7 +214,7 @@
       "number": 18,
       "family": "prides",
       "format": "text",
-      "level": "general",
+      "level": "personal",
       "title": "Un truc cool sur toi",
       "intention": "Image de soi, ce qui compte pour lui",
       "opener": "Imagine que tu rencontres quelqu'un. Dis-moi le truc cool que tu lui raconterais sur toi."
@@ -233,7 +234,7 @@
       "number": 20,
       "family": "relationships",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "La dernière fois que t'as donné un coup de main",
       "intention": "Entraide, sens du service",
       "opener": "Raconte-moi la dernière fois que t'as donné un coup de main à quelqu'un."
@@ -243,7 +244,7 @@
       "number": 21,
       "family": "relationships",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Quelqu'un qui t'a parlé d'un problème",
       "intention": "Écoute, conseil, résolution de problèmes",
       "opener": "Raconte-moi la dernière fois que quelqu'un t'a parlé d'un problème."
@@ -253,7 +254,7 @@
       "number": 22,
       "family": "relationships",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Un truc que t'as expliqué à quelqu'un",
       "intention": "Pédagogie, transmission",
       "opener": "Raconte-moi une fois où t'as expliqué un truc à quelqu'un."
@@ -263,7 +264,7 @@
       "number": 23,
       "family": "relationships",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Ta place dans un groupe",
       "intention": "Rôle dans un groupe, leadership",
       "opener": "Raconte-moi la dernière fois que t'as fait un truc en groupe, et ce que tu faisais, toi."
@@ -273,7 +274,7 @@
       "number": 24,
       "family": "relationships",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Bien s'entendre avec quelqu'un",
       "intention": "Valeurs relationnelles",
       "opener": "Dis-moi ce qui fait que tu t'entends bien avec quelqu'un."
@@ -293,7 +294,7 @@
       "number": 26,
       "family": "relationships",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Un truc réussi à plusieurs",
       "intention": "Travail en équipe, rôle",
       "opener": "Raconte-moi un truc que vous avez réussi à plusieurs, et ce que tu faisais, toi."
@@ -303,7 +304,7 @@
       "number": 27,
       "family": "challenges",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Un truc qui a pas marché du premier coup",
       "intention": "Persévérance, adaptation",
       "opener": "Raconte-moi la dernière fois qu'un truc a pas marché du premier coup."
@@ -313,7 +314,7 @@
       "number": 28,
       "family": "challenges",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Un problème réglé, même tout petit",
       "intention": "Résolution de problèmes",
       "opener": "Raconte-moi un problème que t'as réussi à régler, même tout petit."
@@ -323,7 +324,7 @@
       "number": 29,
       "family": "challenges",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Quand tu savais pas comment faire",
       "intention": "Débrouillardise, recherche d'info",
       "opener": "Raconte-moi la dernière fois que tu savais pas comment faire un truc, et comment tu t'en es sorti."
@@ -333,7 +334,7 @@
       "number": 30,
       "family": "challenges",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Quand rien s'est passé comme prévu",
       "intention": "Improvisation, sang-froid",
       "opener": "Raconte-moi une fois où rien s'est passé comme prévu."
@@ -343,7 +344,7 @@
       "number": 31,
       "family": "challenges",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Quand un truc devient saoulant",
       "intention": "Motivation, endurance",
       "opener": "Dis-moi ce qui te fait continuer quand un truc devient saoulant à faire."
@@ -353,7 +354,7 @@
       "number": 32,
       "family": "challenges",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Changer de façon de faire",
       "intention": "Flexibilité, remise en question",
       "opener": "Raconte-moi une fois où t'as dû changer ta façon de faire parce que ça marchait pas."
@@ -363,7 +364,7 @@
       "number": 33,
       "family": "challenges",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Un défi pas gagné d'avance",
       "intention": "Goût du défi, prise de risque",
       "opener": "Parle-moi d'un défi qui te donne envie d'essayer, même si c'est pas gagné d'avance."
@@ -373,7 +374,7 @@
       "number": 34,
       "family": "challenges",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Plein de trucs à faire en même temps",
       "intention": "Organisation, gestion des priorités",
       "opener": "Raconte-moi la dernière fois que t'avais plein de trucs à faire en même temps."
@@ -413,7 +414,7 @@
       "number": 38,
       "family": "dreams",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Ce que t'aimerais mieux savoir faire",
       "intention": "Objectifs, envie de progresser",
       "opener": "Dis-moi ce que t'aimerais savoir mieux faire d'ici quelques mois."
@@ -423,7 +424,7 @@
       "number": 39,
       "family": "dreams",
       "format": "text",
-      "level": "general",
+      "level": "personal",
       "title": "Une de tes journées dans quelques années",
       "intention": "Projection, mode de vie souhaité",
       "opener": "Imagine une de tes journées dans quelques années. Raconte-moi comment elle commence."
@@ -433,7 +434,7 @@
       "number": 40,
       "family": "dreams",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Un boulot où tu te sentirais bien",
       "intention": "Environnement de travail idéal",
       "opener": "Décris-moi un boulot où tu te sentirais bien."
@@ -443,7 +444,7 @@
       "number": 41,
       "family": "dreams",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Un projet à réaliser un jour",
       "intention": "Projets, initiative",
       "opener": "Parle-moi d'un projet, même petit, que t'aimerais réaliser un jour."
@@ -463,7 +464,7 @@
       "number": 43,
       "family": "values",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "La dernière fois que tu t'es senti utile",
       "intention": "Sens, utilité",
       "opener": "Raconte-moi la dernière fois que tu t'es senti vraiment utile."
@@ -473,7 +474,7 @@
       "number": 44,
       "family": "values",
       "format": "text",
-      "level": "general",
+      "level": "personal",
       "title": "Ce qui te donne envie de bien faire",
       "intention": "Motivation, exigence",
       "opener": "Dis-moi ce qui te donne envie de bien faire un truc."
@@ -483,7 +484,7 @@
       "number": 45,
       "family": "values",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Ce qui t'aide quand on te demande un truc",
       "intention": "Besoin de cadre ou d'autonomie",
       "opener": "Quand quelqu'un te demande de faire un truc, dis-moi ce qui t'aide à bien le faire."
@@ -493,7 +494,7 @@
       "number": 46,
       "family": "values",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Un groupe où tu te sentais bien",
       "intention": "Travail en équipe, ambiance recherchée",
       "opener": "Raconte-moi un groupe où tu te sentais bien, au sport, en cours ou ailleurs."
@@ -503,7 +504,7 @@
       "number": 47,
       "family": "values",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Un effort qui a fini par payer",
       "intention": "Persévérance, rapport à l'effort",
       "opener": "Raconte-moi un effort qui a fini par payer."
@@ -513,7 +514,7 @@
       "number": 48,
       "family": "values",
       "format": "text",
-      "level": "general",
+      "level": "personal",
       "title": "Quelqu'un de bien",
       "intention": "Valeurs, respect des autres",
       "opener": "Décris-moi quelqu'un de bien, pour toi."
@@ -523,7 +524,7 @@
       "number": 49,
       "family": "values",
       "format": "text",
-      "level": "general",
+      "level": "personal",
       "title": "Un truc où tu t'es dit « ça, c'est moi »",
       "intention": "Identité, valeurs",
       "opener": "Raconte-moi la dernière fois que t'as fait un truc et que tu t'es dit « ça, c'est moi »."
@@ -533,7 +534,7 @@
       "number": 50,
       "family": "values",
       "format": "text",
-      "level": "general",
+      "level": "specific",
       "title": "Une journée qui valait le coup",
       "intention": "Ce qui donne du sens",
       "opener": "Raconte-moi une bonne journée, une de celles où tu te dis le soir que ça valait le coup."

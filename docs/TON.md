@@ -128,7 +128,7 @@ Le pont vers la carte suivante part de ce qui vient d'être dit : « Tu parlais 
 
 ### Le ton selon la profondeur de la conversation
 
-Les 50 cartes ([CARTES.md](CARTES.md)) sont toutes des **portes d'entrée générales**. Il n'y a pas de cartes générées sur mesure : c'est la **conversation** qui va plus en profondeur, en s'adaptant aux réponses du jeune. Le tirage et la progression entre les cartes sont définis avec l'équipe Thèmes.
+Les 50 cartes ([CARTES.md](CARTES.md)) ont un **niveau** (léger, moyen, profond) qui sert au **tirage**, selon [RULES_V2.md](RULES_V2.md). Il n'y a pas de cartes générées sur mesure : c'est surtout la **conversation** qui va plus en profondeur, en s'adaptant aux réponses du jeune. Une carte légère peut mener loin s'il s'ouvre.
 
 Côté ton, l'IA s'ajuste à la profondeur atteinte :
 
@@ -199,7 +199,7 @@ Fourni par [CARTES.md](CARTES.md) :
 - Une **phrase d'amorce** de référence, que l'IA adapte au jeune.
 - L'**intention** (« Peut révéler ») : quel type de talent la carte peut faire émerger. L'IA s'en sert pour savoir où orienter ses questions.
 
-À définir avec l'équipe Thèmes : la progression et le tirage des cartes au fil de la session.
+- Le **niveau** (léger, moyen, profond), qui sert au tirage.
 
 ### De l'équipe Limites, pour chaque cas
 
