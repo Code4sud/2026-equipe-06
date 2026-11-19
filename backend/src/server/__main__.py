@@ -1,7 +1,7 @@
 import os
 import sys
 
-from app.app_builder import AppBuilder, AppException
+from app.app_builder import AppBuilder, AppException, App
 from router.router import Router, RouterException
 from db.mongo import MongoDatabase
 from dotenv import load_dotenv
@@ -34,20 +34,26 @@ class ServerEnvironment:
         return value
 
 
+def build_app() -> App:
+    ServerEnvironment.load()
+
+    app_builder = AppBuilder(name=ServerEnvironment.get("APP_NAME"))                                    \
+        .addPort(ServerEnvironment.get("PORT"))                                                         \
+        .addHost(ServerEnvironment.get("HOST"))                                                         \
+        .addDatabase(ServerEnvironment.get("DB_URI"), ServerEnvironment.get("DB_NAME"), MongoDatabase)  \
+        .addRoute("/", lambda: "Hello World!")
+
+    for route_name, route_func, route_type in Router():
+        app_builder.addRoute(f"/api/{route_name}", route_func, [route_type])
+
+    return app_builder.build()
+
+
 def main():
     ServerEnvironment.load()
 
     try:
-        app_builder = AppBuilder(name=ServerEnvironment.get("APP_NAME"))                                    \
-            .addPort(ServerEnvironment.get("PORT"))                                                         \
-            .addHost(ServerEnvironment.get("HOST"))                                                         \
-            .addDatabase(ServerEnvironment.get("DB_URI"), ServerEnvironment.get("DB_NAME"), MongoDatabase)  \
-            .addRoute("/", lambda: "Hello World!")
-
-        for route_name, route_func, route_type in Router():
-            app_builder.addRoute(f"/api/{route_name}", route_func, [route_type])
-
-        app_builder.build().run()
+        build_app().run()
 
     except AppException as e:
         print(f"\nApp error: {e}", file=sys.stderr)
