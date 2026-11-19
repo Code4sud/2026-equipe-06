@@ -10,6 +10,8 @@ Level = Literal["general", "specific", "personal"]
 Role = Literal["assistant", "user"]
 Safety = Literal["none", "heavy", "distress"]
 Engagement = Literal["open", "neutral", "closed"]
+# How the AI's words are said aloud: enthusiastic only when what the young person said deserves it
+Tone = Literal["neutral", "enthusiastic"]
 
 
 @dataclass(frozen=True)
@@ -98,6 +100,7 @@ class TurnReply:
     reply: str
     safety: Safety
     turn_ended: bool
+    tone: Tone = "neutral"
 
 
 @dataclass(frozen=True)

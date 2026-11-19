@@ -9,7 +9,7 @@ import os
 import time
 from typing import Any
 
-from ai import analysis, conversation, drawing, rules
+from ai import analysis, conversation, drawing, rules, voice
 from ai.data import get_card, mirror_card
 from ai.llm import LLMError
 from ai.models import Card, Message
@@ -53,8 +53,8 @@ def card_json(card: Card) -> dict[str, Any]:
     return {"id": card.id, "family": card.family, "format": card.format, "title": card.title}
 
 
-def message_json(text: str) -> dict[str, str]:
-    return {"author": "assistant", "text": text}
+def message_json(text: str, tone: str = "neutral") -> dict[str, str]:
+    return {"author": "assistant", "text": text, "tone": tone}
 
 
 def entry_json(entry: Document) -> dict[str, Any]:
@@ -218,7 +218,7 @@ def send_message(
     history += [Message("user", user_text), Message("assistant", reply.reply)]
     db.update(TURNS, turn_id, {"history": history_to_doc(history)})
 
-    result: dict[str, Any] = {"message": message_json(reply.reply), "turnEnded": reply.turn_ended}
+    result: dict[str, Any] = {"message": message_json(reply.reply, reply.tone), "turnEnded": reply.turn_ended}
     if reply.safety != "none":
         result["safety"] = reply.safety
     if reply.turn_ended:
@@ -230,6 +230,30 @@ def send_message(
             if created:
                 result["newEntries"] = [entry_json(e) for e in created]
     return result
+
+
+# ---- Voice ----------------------------------------------------------------------------------------
+
+# Longest text read aloud: a reply is two or three short sentences, the summary paragraph a bit more
+_MAX_SPEECH_CHARS = 1200
+
+
+def speech(db: Database, session_id: str, text: str, tone: str) -> bytes:
+    """The mp3 of something the AI said in this game. Only its own words: the route cannot read anything else."""
+    text = text.strip()
+    if not text or len(text) > _MAX_SPEECH_CHARS:
+        raise GameError(400, "text is required (1200 characters at most)")
+    session = load_session(db, session_id)
+    # The summary paragraph is read aloud too
+    said = {session.get("summary_overview", "")} | {
+        m.text
+        for turn in db.find(TURNS, {"session_id": session_id}, limit=500)
+        for m in history_of(turn)
+        if m.role == "assistant"
+    }
+    if text not in said:
+        raise GameError(404, "This text was not said in this game")
+    return voice.speak(text, "enthusiastic" if tone == "enthusiastic" else "neutral")
 
 
 # ---- Leaving a card, going to the summary --------------------------------------------------------
@@ -308,6 +332,8 @@ def get_summary(db: Database, session_id: str) -> dict[str, Any]:
     selected = [item_of(e) for e in entries if e["id"] in selected_ids]
 
     result = summarize(context_of(session, entries), kept_items(entries), selected, mirror_messages)
+    # Kept so the speech route can read it aloud (and only this one)
+    db.update(SESSIONS, session_id, {"summary_overview": result.overview})
     try:
         mentions = find_sensitive_mentions(_everything_said(db, session_id))
     except LLMError:

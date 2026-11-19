@@ -192,6 +192,11 @@ export const mockApi: Api = {
     return {}
   },
 
+  // No voice in the mock: the text is shown at its usual pace
+  async speak() {
+    return null
+  },
+
   async getCollection(sessionId) {
     await delay(300)
     return getSessionOrThrow(sessionId).collection

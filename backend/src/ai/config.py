@@ -41,6 +41,9 @@ class AIConfig:
     stt_model: str
     tts_model: str
     tts_voice: str | None
+    # How expressive the voice is, per tone (TTS v3 only; at least 1.0). Chosen by ear on 19/11
+    tts_expressiveness_neutral: float
+    tts_expressiveness_enthusiastic: float
     # Where cards.json, rome.json and the sample report live
     data_dir: Path
 
@@ -61,6 +64,8 @@ def get_config() -> AIConfig:
         stt_model=os.environ.get("AI_STT_MODEL", "voxtral-mini-latest"),
         tts_model=os.environ.get("AI_TTS_MODEL", "voxtral-mini-tts-3-0"),
         tts_voice=os.environ.get("AI_TTS_VOICE") or None,
+        tts_expressiveness_neutral=float(os.environ.get("AI_TTS_EXPRESSIVENESS_NEUTRAL", "1.0")),
+        tts_expressiveness_enthusiastic=float(os.environ.get("AI_TTS_EXPRESSIVENESS_ENTHUSIASTIC", "3.5")),
         data_dir=Path(os.environ.get("AI_DATA_DIR", str(default_data_dir))),
     )
 

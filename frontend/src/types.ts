@@ -14,9 +14,13 @@ export interface Card {
   image?: string
 }
 
+/** How the assistant's words are said aloud: enthusiastic only when what the user said deserves it */
+export type Tone = 'neutral' | 'enthusiastic'
+
 export interface Message {
   author: 'assistant' | 'user'
   text: string
+  tone?: Tone
 }
 
 /** Added silently by the agent when an answer is worth keeping as a skill */

@@ -78,6 +78,22 @@ def _with_transition(text: str) -> str:
     return " ".join([*sentences, _TRANSITION])
 
 
+_MIRROR_CLOSING = "Merci pour tout ça. À mon tour de te montrer ce que j'ai repéré."
+
+
+def _with_mirror_closing(text: str) -> str:
+    """The mirror ends on a thank-you, never on a question or an invitation he could no longer answer."""
+    sentences = re.split(r"(?<=[.!?…])\s+", text.strip())
+    while sentences and guards.hands_over(sentences[-1]):
+        sentences.pop()
+    if any("repér" in s or "montrer" in s for s in sentences):
+        return " ".join(sentences)
+    # What is left is kept only if it already thanks him ("Prends ton temps." alone would make no sense)
+    if any("merci" in s.lower() for s in sentences):
+        return " ".join([*sentences, "À mon tour de te montrer ce que j'ai repéré."])
+    return _MIRROR_CLOSING
+
+
 def _mirror_notes(exchanges: int) -> str:
     # The first message of the mirror is the pick of cards, so the last question comes at MIRROR_QUESTIONS + 1
     if exchanges >= rules.MIRROR_QUESTIONS + 1:
@@ -202,7 +218,7 @@ def reply(
             "ait envie de continuer : une question ouverte, une invitation (« Raconte-moi ça. ») ou ses mots en "
             "suspens (« Tout le week-end sur ce moteur… »)."
         )
-    elif not is_mirror and keeps_going and guards.is_closed_question(text):
+    elif keeps_going and guards.is_closed_question(text):
         log.info("Closed question rewritten: %r", guards.last_question(text))
         data, text = ask(
             f"Attention : ta réponse précédente finissait par « {guards.last_question(text)} », une question fermée "
@@ -219,6 +235,8 @@ def reply(
     if is_mirror:
         # The first user message of a mirror is the pick of cards: the questions come after it
         ended = exhausted or exchanges >= rules.MIRROR_QUESTIONS + 1
+        if ended:
+            text = _with_mirror_closing(text)
     else:
         # An exhausted card is honored only once the minimum is reached, unless the limit forces it
         ended = (
@@ -228,7 +246,19 @@ def reply(
         )
         if ended:
             text = _with_transition(text)
-    return TurnReply(reply=text, safety="heavy" if safety == "heavy" else "none", turn_ended=ended)
+    # Enthusiasm only while the card goes on and the subject is light; a transition is said calmly
+    # Never twice in a row: only enthusiastic replies keep their "!", so the previous one tells
+    previous = next((m.text for m in reversed(history) if m.role == "assistant"), "")
+    enthusiastic = str(data.get("tone")) == "enthusiastic" and safety == "none" and not ended and "!" not in previous
+    if not enthusiastic:
+        # An exclamation mark would make the voice lively anyway: neutral replies stay calm
+        text = text.replace(" !", ".").replace("!", ".")
+    return TurnReply(
+        reply=text,
+        safety="heavy" if safety == "heavy" else "none",
+        turn_ended=ended,
+        tone="enthusiastic" if enthusiastic else "neutral",
+    )
 
 
 def welcome_back(ctx: SessionContext) -> str:

@@ -26,7 +26,9 @@ export function focusSmoothly(element: HTMLElement) {
 export function moveFocusWithArrows(event: KeyboardEvent<HTMLElement>) {
   const direction = KEY_DIRECTIONS[event.key]
   if (!direction) return
-  const inTextField = event.target instanceof HTMLInputElement
+  // Left/Right move the cursor in a text field; a checkbox has no cursor, the arrows move away from it
+  const inTextField =
+    event.target instanceof HTMLInputElement && !['checkbox', 'radio', 'button'].includes(event.target.type)
   if (inTextField && (direction === 'left' || direction === 'right')) return
 
   const items = Array.from(event.currentTarget.querySelectorAll<HTMLElement>(FOCUSABLE))
@@ -42,6 +44,11 @@ export function moveFocusWithArrows(event: KeyboardEvent<HTMLElement>) {
   const next = closestInDirection(current, items, direction)
   if (next) focusSmoothly(next)
   event.preventDefault()
+}
+
+/** Distance between two segments [a1, a2] and [b1, b2] on one axis: 0 when they overlap */
+function gapBetween(a1: number, a2: number, b1: number, b2: number) {
+  return Math.max(0, b1 - a2, a1 - b2)
 }
 
 function closestInDirection(current: HTMLElement, items: HTMLElement[], direction: Direction) {
@@ -67,11 +74,18 @@ function closestInDirection(current: HTMLElement, items: HTMLElement[], directio
     }[direction]
     if (!isInDirection) continue
 
-    // Distance along the direction, with sideways offset weighing more
+    // Measured between edges, not centers: under a wide text field, the buttons right below it are
+    // closer than a centered link further down (the centers made the arrows skip the buttons)
     const vertical = direction === 'up' || direction === 'down'
-    const along = vertical ? Math.abs(y - fromY) : Math.abs(x - fromX)
-    const across = vertical ? Math.abs(x - fromX) : Math.abs(y - fromY)
-    const score = along + across * 2
+    const along = vertical
+      ? gapBetween(from.top, from.bottom, rect.top, rect.bottom)
+      : gapBetween(from.left, from.right, rect.left, rect.right)
+    const across = vertical
+      ? gapBetween(from.left, from.right, rect.left, rect.right)
+      : gapBetween(from.top, from.bottom, rect.top, rect.bottom)
+    // The offset between centers only breaks ties (two buttons side by side under the same field)
+    const centerOffset = vertical ? Math.abs(x - fromX) : Math.abs(y - fromY)
+    const score = along + across * 2 + centerOffset * 0.1
 
     if (score < bestScore) {
       bestScore = score

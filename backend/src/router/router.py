@@ -7,7 +7,7 @@ import secrets
 from datetime import timedelta
 from typing import Any, Callable, Dict, Iterator, Literal, Tuple
 
-from flask import current_app, jsonify, request
+from flask import Response, current_app, jsonify, request
 from pydantic import BaseModel, ValidationError
 
 from ai import AIConfigError, LLMError
@@ -55,9 +55,12 @@ def _body() -> Dict[str, Any]:
 
 
 def _respond(action: Callable[[], Any]) -> Any:
-    """Runs a game action and turns its result, or its error, into a JSON answer."""
+    """Runs a game action and turns its result, or its error, into an answer: JSON, or mp3 for the voice."""
     try:
-        return jsonify(action())
+        result = action()
+        if isinstance(result, bytes):
+            return Response(result, mimetype="audio/mpeg", headers={"Cache-Control": "private, max-age=86400"})
+        return jsonify(result)
     except GameError as e:
         return jsonify(error=e.message), e.status
     except LLMError as e:
@@ -150,6 +153,14 @@ class Router:
     @route("sessions/<session_id>/turns/<turn_id>/skip", "POST")
     def skip_turn(session_id: str, turn_id: str) -> Any:
         return _respond(lambda: service.skip_turn(_db(), session_id, turn_id))
+
+
+    @staticmethod
+    @route("sessions/<session_id>/speech", "POST")
+    def speech(session_id: str) -> Any:
+        """The AI's words read aloud (mp3). Errors come back as JSON, like the other routes."""
+        body = _body()
+        return _respond(lambda: service.speech(_db(), session_id, str(body.get("text", "")), str(body.get("tone", ""))))
 
 
     @staticmethod

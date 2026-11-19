@@ -4,8 +4,9 @@ import { AssistantOrb, type OrbState } from '../components/AssistantOrb'
 import { CollectionCard } from '../components/CollectionCard'
 import { useCardTilt } from '../hooks/useCardTilt'
 import { useSpeechRecognition } from '../hooks/useSpeechRecognition'
-import type { ActiveTurn, CollectionEntry } from '../types'
+import type { ActiveTurn, CollectionEntry, Tone } from '../types'
 import { cardColorClass } from '../utils/cardColors'
+import { loadSpeech, type LoadedSpeech } from '../utils/speech'
 import { focusSmoothly, moveFocusWithArrows } from '../utils/arrowNavigation'
 import { prefersReducedMotion, withViewTransition } from '../utils/viewTransition'
 import '../styles/cardShine.css'
@@ -45,6 +46,9 @@ export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
   const speech = useSpeechRecognition()
   const cardTilt = useCardTilt()
   const [assistantText, setAssistantText] = useState(turn.firstMessage.text)
+  const [assistantTone, setAssistantTone] = useState<Tone>(turn.firstMessage.tone ?? 'neutral')
+  // The voice is being fetched: the orb thinks, nothing is shown yet
+  const [voiceLoading, setVoiceLoading] = useState(false)
   const [phase, setPhase] = useState<Phase>('speaking')
   const [turnEnded, setTurnEnded] = useState(false)
   // Mirror: the backend asks to pick cards from the collection
@@ -67,31 +71,55 @@ export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
   const words = useMemo(() => assistantText.split(/\s+/).filter(Boolean), [assistantText])
   const { supported: voiceSupported, start: startListening, cancel: cancelListening } = speech
 
-  // The assistant "speaks": its words appear one by one, then the user can answer
+  // The assistant speaks: its voice is fetched, then its words appear at the pace of the voice.
+  // The user can answer only once the voice has finished (the mic must not hear it)
   useEffect(() => {
     if (phase !== 'speaking') return
-    const finish = () => setPhase(turnEnded ? 'ended' : pickRequested ? 'picking' : 'answering')
-    if (prefersReducedMotion()) {
-      setRevealedWords(words.length)
-      const timer = setTimeout(finish, 0)
-      return () => clearTimeout(timer)
-    }
-    setRevealedWords(0)
-    let count = 0
+    let cancelled = false
+    let voice: LoadedSpeech | null = null
+    let wordTimer: ReturnType<typeof setInterval> | undefined
     let endTimer: ReturnType<typeof setTimeout> | undefined
-    const timer = setInterval(() => {
-      count += 1
-      setRevealedWords(count)
-      if (count >= words.length) {
-        clearInterval(timer)
-        endTimer = setTimeout(finish, PAUSE_AFTER_SPEAKING_MS)
+    const finish = () => setPhase(turnEnded ? 'ended' : pickRequested ? 'picking' : 'answering')
+
+    setRevealedWords(0)
+    setVoiceLoading(true)
+    void (async () => {
+      voice = await loadSpeech(sessionId, assistantText, assistantTone)
+      if (cancelled) {
+        voice?.stop()
+        return
       }
-    }, WORD_INTERVAL_MS)
+      setVoiceLoading(false)
+      const voiceDone = voice ? voice.play() : Promise.resolve()
+      const wordsDone = new Promise<void>((resolve) => {
+        if (prefersReducedMotion() || words.length === 0) {
+          setRevealedWords(words.length)
+          resolve()
+          return
+        }
+        // With the voice, the words follow its pace (a bit ahead of it); without, the usual pace
+        const interval = voice ? Math.max(60, (voice.durationMs * 0.9) / words.length) : WORD_INTERVAL_MS
+        let count = 0
+        wordTimer = setInterval(() => {
+          count += 1
+          setRevealedWords(count)
+          if (count >= words.length) {
+            clearInterval(wordTimer)
+            resolve()
+          }
+        }, interval)
+      })
+      await Promise.all([voiceDone, wordsDone])
+      if (!cancelled) endTimer = setTimeout(finish, PAUSE_AFTER_SPEAKING_MS)
+    })()
+
     return () => {
-      clearInterval(timer)
+      cancelled = true
+      clearInterval(wordTimer)
       clearTimeout(endTimer)
+      voice?.stop()
     }
-  }, [phase, words, turnEnded, pickRequested])
+  }, [phase, words, turnEnded, pickRequested, sessionId, assistantText, assistantTone])
 
   // Voice is the main way to answer: listen as soon as it is the user's turn
   useEffect(() => {
@@ -160,6 +188,7 @@ export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
       setTurnEnded(response.turnEnded)
       setPickRequested(response.pickFromCollection ?? false)
       setAssistantText(response.message.text)
+      setAssistantTone(response.message.tone ?? 'neutral')
       setPhase('speaking')
     } catch {
       setError('Ta réponse n’est pas partie. Réessaie !')
@@ -239,7 +268,13 @@ export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
   const keptEntries = collection?.filter((entry) => keptIds.includes(entry.id)) ?? []
 
   const orbState: OrbState =
-    phase === 'speaking' ? 'speaking' : phase === 'thinking' ? 'thinking' : speech.listening ? 'listening' : 'idle'
+    phase === 'thinking' || (phase === 'speaking' && voiceLoading)
+      ? 'thinking'
+      : phase === 'speaking'
+        ? 'speaking'
+        : speech.listening
+          ? 'listening'
+          : 'idle'
 
   return (
     <main
