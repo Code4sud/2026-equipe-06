@@ -280,6 +280,18 @@
   --card-back: var(--card-green-back);
 }
 
+.game-card-blue {
+  --card-color: var(--card-blue);
+  --card-face: var(--card-blue-face);
+  --card-back: var(--card-blue-back);
+}
+
+.game-card-orange {
+  --card-color: var(--card-orange);
+  --card-face: var(--card-orange-face);
+  --card-back: var(--card-orange-back);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .game-card {
     animation: none;

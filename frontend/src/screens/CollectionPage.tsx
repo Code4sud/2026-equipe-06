@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { api } from '../api'
 import { CollectionCard } from '../components/CollectionCard'
 import type { CollectionEntry } from '../types'
@@ -11,10 +11,12 @@ const MIN_SLOTS = 5
 interface CollectionPageProps {
   sessionId: string
   onBack: () => void
+  /** Passer au bilan and Quitter (see GameMenu) */
+  menu?: ReactNode
 }
 
 /** Every card the agent kept, with the user's quote that made it keep it. */
-export function CollectionPage({ sessionId, onBack }: CollectionPageProps) {
+export function CollectionPage({ sessionId, onBack, menu }: CollectionPageProps) {
   const [entries, setEntries] = useState<CollectionEntry[] | null>(null)
   const [error, setError] = useState(false)
 
@@ -31,6 +33,7 @@ export function CollectionPage({ sessionId, onBack }: CollectionPageProps) {
 
   return (
     <main className="collection-page" onKeyDown={moveFocusWithArrows}>
+      {menu}
       <header className="collection-page-header">
         <button className="btn-link" onClick={onBack} autoFocus>
           ← Retour

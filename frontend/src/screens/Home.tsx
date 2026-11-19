@@ -9,7 +9,11 @@ import './Home.css'
 
 type Step = 'choice' | 'email' | 'code'
 
-const CODE_LENGTH = 6
+// Same length as the code sent by the backend (CODE_LENGTH in router.py)
+const CODE_LENGTH = 8
+
+// Local development (Vite dev server): no code to ask for, straight in after the e-mail
+const SKIP_CODE = import.meta.env.DEV
 
 interface HomeProps {
   onLogin: (session: Session) => void
@@ -33,6 +37,10 @@ export function Home({ onLogin }: HomeProps) {
     setLoading(true)
     setError(null)
     try {
+      if (SKIP_CODE) {
+        onLogin(await api.createSession(email, ''))
+        return
+      }
       await api.requestCode(email)
       setStep('code')
     } catch {
@@ -99,7 +107,7 @@ export function Home({ onLogin }: HomeProps) {
               />
             </label>
             <button className="btn" type="submit" disabled={loading}>
-              {loading ? '…' : 'Recevoir mon code'}
+              {loading ? '…' : SKIP_CODE ? 'C’est parti' : 'Recevoir mon code'}
             </button>
           </form>
         )}

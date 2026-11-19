@@ -24,6 +24,8 @@ class Card:
     intention: str
     # Reference first sentence, which the AI adapts. Stays on the server too
     opener: str
+    # Talents this card can bring out (docs/COMPETENCES.md): where to dig, never said to the young person
+    talents: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)

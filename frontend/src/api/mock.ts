@@ -60,6 +60,7 @@ const ANSWERS_WORTH_KEEPING = [1, 3]
 interface MockTurn {
   card: Card
   userMessages: string[]
+  ended?: boolean
 }
 
 interface MockSession {
@@ -67,6 +68,8 @@ interface MockSession {
   turns: Map<string, MockTurn>
   collection: CollectionEntry[]
   mirrorSelection?: string[]
+  /** Passer au bilan: no more cards */
+  finished?: boolean
 }
 
 const sessionsByEmail = new Map<string, string>()
@@ -110,6 +113,7 @@ export const mockApi: Api = {
   async drawCards(sessionId) {
     await delay()
     const session = getSessionOrThrow(sessionId)
+    if (session.finished) return []
     if (session.turns.size >= TURNS_BEFORE_MIRROR) return [MIRROR_CARD]
 
     let available = DECK.filter((card) => !session.drawnCardIds.has(card.id))
@@ -174,6 +178,20 @@ export const mockApi: Api = {
     return newEntries.length > 0 ? { message, turnEnded, newEntries } : { message, turnEnded }
   },
 
+  async skipTurn(sessionId, turnId) {
+    await delay(600)
+    getTurnOrThrow(sessionId, turnId).ended = true
+    return {}
+  },
+
+  async finishGame(sessionId, turnId) {
+    await delay(600)
+    const session = getSessionOrThrow(sessionId)
+    if (turnId) getTurnOrThrow(sessionId, turnId).ended = true
+    session.finished = true
+    return {}
+  },
+
   async getCollection(sessionId) {
     await delay(300)
     return getSessionOrThrow(sessionId).collection
@@ -189,15 +207,43 @@ export const mockApi: Api = {
 
   async getSummary(sessionId) {
     await delay()
-    const kept = getSessionOrThrow(sessionId).collection.filter((e) => e.status === 'kept')
+    const kept = getSessionOrThrow(sessionId).collection.filter((e) => e.status !== 'rejected')
     return {
-      overview: 'Tu as raconté plein de moments où tu prends des responsabilités et où tu te débrouilles.',
+      overview:
+        'Tu as raconté plein de moments où tu prends des responsabilités et où tu te débrouilles. Merci pour tout ça, et reviens quand tu veux.',
       collection: kept,
       personalityCards: [
-        { id: 'p1', title: 'Le pilier', description: 'Les autres savent qu’ils peuvent compter sur toi.' },
-        { id: 'p2', title: 'Le débrouillard', description: 'Quand ça coince, tu trouves une solution.' },
+        {
+          id: 'p1',
+          title: 'On peut compter sur toi',
+          description: 'Quand quelqu’un a besoin d’aide, tu es là.',
+          evidence: kept[0]?.quote ?? 'je l’ai aidé à réparer son vélo',
+        },
+        {
+          id: 'p2',
+          title: 'Trouve une solution quand ça coince',
+          description: 'Tu cherches, tu essaies, tu y arrives.',
+          evidence: kept[1]?.quote ?? 'j’ai regardé des tutos et j’ai essayé',
+        },
       ],
-      suggestions: ['Animateur socioculturel', 'Coach sportif', 'Guide touristique'],
+      suggestions: ['Animer des activités pour des jeunes', 'Réparer et entretenir des vélos', 'Accueillir du public'],
+      crossings: [
+        { kind: 'match', text: 'Le rapport parle d’aide aux autres, et tu m’as parlé de ton voisin.' },
+        { kind: 'gap', text: 'Le rapport parle de chiffres, on n’en a pas parlé : à toi de voir.' },
+      ],
+      sensitiveMentions: ['je porte le voile'],
+    }
+  },
+
+  async suggestWithMentions(sessionId, mentions) {
+    await delay()
+    getSessionOrThrow(sessionId)
+    return {
+      suggestions: [
+        'Animer des activités pour des jeunes',
+        'Réparer et entretenir des vélos',
+        `Accueillir du public, en tenant compte de « ${mentions[0]} »`,
+      ],
     }
   },
 }
