@@ -1,9 +1,17 @@
 {
   "nom": "PiocheTaVoix",
-  "pitch": "PiocheTaVoix est une application web qui permet aux utilisateurs de trouver leurs talents cachés via un mini jeu de cartes a thème menant à des questions personnalisées.",
-  "description": "Le problème résolu par PiocheTaVoix est celui de l'incapacité des utilisateurs à identifier leurs propres talents et compétences. \n\n PiocheTaVoix propose une solution innovante en utilisant un mini jeu de cartes à thème pour guider les utilisateurs à travers un processus d'auto-découverte. Chaque carte représente un thème ou une compétence spécifique, et en répondant à des questions personnalisées liées à ces cartes, les utilisateurs peuvent révéler leurs talents cachés et mieux comprendre leurs forces et faiblesses. \n\n Cette approche ludique et interactive rend le processus d'identification des talents plus engageant et accessible, permettant aux utilisateurs de découvrir des aspects d'eux-mêmes qu'ils n'auraient peut-être pas explorés autrement.",
-  "ecoles": ["42Nice", "Epitech Nice"],
-  "stack": ["React", "MongoDB", "Python3", "Docker"],
+  "pitch": "Pioche ta voix aide les utilisateurs de 15 à 25 ans qui pensent « ne rien savoir faire » à révéler leurs talents cachés. On pioche une carte à thème, on raconte à la voix, et l'IA transforme ces histoires en cartes compétences, avec leurs propres mots.",
+  "description": "Notre projet répond au sujet « Détecteur du potentiel caché », proposé par le Centre des Possibles et la Métropole Nice Côte d'Azur. Certains utilisateurs, notamment en décrochage, ne savent pas dire ce qu'ils savent faire, alors qu'ils ont souvent vécu des expériences porteuses de compétences : garder un petit frère, réparer un scooter, tenir la caisse d'une association.\n\nPioche ta voix est un jeu de cartes conversationnel pensé pour le parcours du Centre des Possibles. L'utilisateur pioche une carte à thème (« La dernière fois que t'as pas vu le temps passer », « Un problème réglé, même tout petit »…) et la raconte à la voix, à une IA qui l'écoute comme le ferait l'interlocuteur idéal, afin de déceler ses talents cachés et de lui en faire prendre conscience. Elle s'adapte à sa façon de parler, ne juge jamais, rebondit sur ses mots et pose ses questions là où se cachent les talents, sans jamais lui souffler la réponse.\n\nQuand une compétence apparaît dans son histoire, l'IA la lui renvoie sous forme de fait concret (« t'as tout redémonté et t'as trouvé d'où venait la panne »). S'il s'y reconnaît, il gagne une carte compétence à collectionner, avec la phrase exacte dont elle vient. Chaque compétence est reliée au référentiel ROME 4.0 de France Travail, pour que la synthèse soit directement exploitable par un conseiller ou un psychologue.\n\nL'utilisateur garde la main du début à la fin : il choisit ses cartes, peut passer ou s'arrêter, et valide tout ce qui est retenu. Aucun score, aucune note, aucun verdict sur la personne. L'IA ne fait aucune déduction sur la santé, l'origine, la famille ou la religion. L'outil éclaire le professionnel, il ne le remplace pas.\n\nEn trois jours, nous avons construit l'application web (React, reconnaissance vocale), le serveur et le module d'IA (Python), 50 cartes à thème réécrites pour inviter à raconter plutôt qu'interroger, et un guide du ton qui définit la façon dont l'IA parle aux utilisateurs.",
+  "ecoles": [
+    "42Nice",
+    "Epitech Nice"
+  ],
+  "stack": [
+    "React",
+    "MongoDB",
+    "Python3",
+    "Docker"
+  ],
   "demo": "https://two026-equipe-06-1-front.onrender.com",
   "video": "https://youtu.be/Aq5WXmQQooo?si=cyHYeW6adigiZ8Vj",
   "captures": []
