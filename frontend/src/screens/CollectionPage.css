@@ -24,7 +24,7 @@
   text-align: center;
 }
 
-/* Entries: card fronts, same size as in the drawing */
+/* Cards (see CollectionCard.css), centered, wrapping */
 .collection-grid {
   display: flex;
   flex-wrap: wrap;
@@ -32,77 +32,18 @@
   gap: clamp(var(--space-2), 2vw, var(--space-3));
   width: min(100%, 90rem);
   margin: 0;
-  /* Room for the lifted entry */
+  /* Room for the lifted card */
   padding: var(--space-3) 0 0;
   list-style: none;
 }
 
-.collection-entry {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
+/* Empty slot: same size as a card, dashed border, very light background */
+.collection-slot {
   width: clamp(11rem, 17vw, 15.5rem);
   aspect-ratio: 5 / 7;
-  /* Fixed values: a % padding would be relative to the whole grid, not the card.
-     Same proportions as the drawn cards (12% / 10% / 8% of the card width) */
-  padding: clamp(1.3rem, 2vw, 1.85rem) clamp(1.1rem, 1.7vw, 1.55rem) clamp(0.9rem, 1.35vw, 1.25rem);
-  /* Long content scrolls inside the quote instead of stretching the card */
-  overflow: hidden;
-  color: var(--card-color);
-  background: var(--card-face);
-  border: var(--border-card) solid var(--card-color);
+  background: rgb(255 255 255 / 0.3);
+  border: 3px dashed rgb(30 22 51 / 0.18);
   border-radius: var(--radius-card);
-  transform: rotate(var(--tilt, 0deg));
-  transition: transform 0.2s ease;
-}
-
-.collection-entry:nth-child(odd) {
-  --tilt: -1deg;
-}
-
-.collection-entry:nth-child(even) {
-  --tilt: 1deg;
-}
-
-/* Selected entry: rises and straightens, like a card in the drawing */
-.collection-entry:focus,
-.collection-entry:hover {
-  outline: none;
-  transform: translateY(-16px) scale(1.04);
-  box-shadow: 0 14px 22px -14px rgb(30 22 51 / 0.4);
-}
-
-.collection-entry-theme {
-  font-size: clamp(0.95rem, 1.35vw, 1.2rem);
-  font-weight: 700;
-  line-height: 1.25;
-}
-
-.collection-entry-quote {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  margin: 0;
-  font-size: 0.95rem;
-  font-style: italic;
-  line-height: 1.4;
-  color: var(--color-text);
-}
-
-.collection-entry-skill {
-  align-self: flex-start;
-  padding: 0.3em 0.8em;
-  font-size: 0.9rem;
-  font-weight: 800;
-  color: var(--color-text);
-  background: var(--card-back);
-  border-radius: var(--radius-pill);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .collection-entry {
-    transition: none;
-  }
 }
 
 @media (max-width: 40rem) {

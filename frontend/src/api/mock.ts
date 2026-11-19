@@ -17,7 +17,6 @@ const DECK: Card[] = [
   { id: 'c09', family: 'dreams', format: 'persona', title: 'Raconte une journée de ta vie dans 10 ans' },
   { id: 'c10', family: 'values', format: 'choice', title: 'Plutôt réparer un objet ou expliquer un truc à quelqu’un ?' },
   { id: 'c11', family: 'values', format: 'text', title: 'Un truc qui te met en colère quand c’est injuste' },
-  { id: 'c12', family: 'dreams', format: 'joker', title: 'Propose ton thème' },
 ]
 
 /** Final card, imposed alone once enough turns have been played */
@@ -29,6 +28,13 @@ const MIRROR_CARD: Card = {
 }
 const TURNS_BEFORE_MIRROR = 3
 
+// Mirror turn: the user first picks cards from the collection, then sums up. The agent only asks
+const MIRROR_SCRIPT = [
+  'Dernière carte : le miroir. Cette fois, c’est toi qui parles de toi. Pour commencer, choisis dans ta collection les cartes qui te ressemblent le plus.',
+  'Pourquoi celles-là ?',
+  'Et si tu devais raconter à un pote ce que t’as découvert sur toi aujourd’hui, tu dirais quoi ?',
+]
+
 const FOLLOW_UPS = [
   'Ok, raconte-moi un peu. Ça s’est passé comment ?',
   'Et toi, concrètement, tu t’y es pris comment ?',
@@ -36,16 +42,16 @@ const FOLLOW_UPS = [
 ]
 
 
-// Fake skills handed out in order
+// Fake findings handed out in order: mostly past experiences and know-how, a few qualities
 const SKILL_NAMES = [
-  'Sens des responsabilités',
-  'Débrouillardise',
+  'Garde d’enfants',
+  'Réparation mécanique (scooters)',
+  'Gestion d’une caisse',
+  'Montage vidéo',
   'Patience',
-  'Esprit d’équipe',
-  'Sens de l’organisation',
-  'Curiosité',
-  'Écoute',
-  'Persévérance',
+  'Organisation d’un événement',
+  'Cuisine pour un groupe',
+  'Médiation entre potes',
 ]
 
 // The agent "keeps" the 1st and 3rd answers of each turn
@@ -60,6 +66,7 @@ interface MockSession {
   drawnCardIds: Set<string>
   turns: Map<string, MockTurn>
   collection: CollectionEntry[]
+  mirrorSelection?: string[]
 }
 
 const sessionsByEmail = new Map<string, string>()
@@ -106,11 +113,12 @@ export const mockApi: Api = {
     if (session.turns.size >= TURNS_BEFORE_MIRROR) return [MIRROR_CARD]
 
     let available = DECK.filter((card) => !session.drawnCardIds.has(card.id))
-    if (available.length < 5) {
+    // 4 cards: the front adds the joker as the 5th one
+    if (available.length < 4) {
       session.drawnCardIds.clear()
       available = DECK
     }
-    const drawn = [...available].sort(() => Math.random() - 0.5).slice(0, 5)
+    const drawn = [...available].sort(() => Math.random() - 0.5).slice(0, 4)
     drawn.forEach((card) => session.drawnCardIds.add(card.id))
     return drawn
   },
@@ -122,19 +130,32 @@ export const mockApi: Api = {
     if (!card) throw new ApiError(404, `/cards/${cardId}`)
     const turnId = crypto.randomUUID()
     session.turns.set(turnId, { card, userMessages: [] })
-    const message: Message = { author: 'assistant', text: `${card.title}… vas-y, raconte !` }
-    return { turnId, message }
+    if (card.format === 'mirror') {
+      return { turnId, message: { author: 'assistant', text: MIRROR_SCRIPT[0] }, pickFromCollection: true }
+    }
+    return { turnId, message: { author: 'assistant', text: `${card.title}… vas-y, raconte !` } }
   },
 
-  async sendMessage(sessionId, turnId, text) {
+  async sendMessage(sessionId, turnId, text, selectedEntryIds) {
     await delay(700)
     const session = getSessionOrThrow(sessionId)
     const turn = getTurnOrThrow(sessionId, turnId)
     turn.userMessages.push(text)
     const answerNumber = turn.userMessages.length
 
+    // Mirror: the first message carries the picked cards, then the user explains and sums up
+    if (turn.card.format === 'mirror') {
+      if (selectedEntryIds) session.mirrorSelection = selectedEntryIds
+      const turnEnded = answerNumber >= MIRROR_SCRIPT.length
+      const message: Message = {
+        author: 'assistant',
+        text: turnEnded ? 'Merci. À mon tour de te montrer ce que j’ai repéré.' : MIRROR_SCRIPT[answerNumber],
+      }
+      return { message, turnEnded }
+    }
+
     const newEntries: CollectionEntry[] = []
-    if (turn.card.format !== 'mirror' && ANSWERS_WORTH_KEEPING.includes(answerNumber)) {
+    if (ANSWERS_WORTH_KEEPING.includes(answerNumber)) {
       newEntries.push({
         id: crypto.randomUUID(),
         card: turn.card,

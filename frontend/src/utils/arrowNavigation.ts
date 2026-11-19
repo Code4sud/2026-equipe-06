@@ -1,4 +1,5 @@
 import type { KeyboardEvent } from 'react'
+import { prefersReducedMotion } from './viewTransition'
 
 const FOCUSABLE = 'button:not(:disabled), input:not(:disabled), [tabindex="0"]'
 
@@ -9,6 +10,12 @@ const KEY_DIRECTIONS: Record<string, Direction> = {
   ArrowDown: 'down',
   ArrowLeft: 'left',
   ArrowRight: 'right',
+}
+
+/** Focuses an element and scrolls it into view smoothly (instead of the default jump). */
+export function focusSmoothly(element: HTMLElement) {
+  element.focus({ preventScroll: true })
+  element.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'nearest' })
 }
 
 /**
@@ -27,13 +34,13 @@ export function moveFocusWithArrows(event: KeyboardEvent<HTMLElement>) {
 
   const current = document.activeElement as HTMLElement | null
   if (!current || !items.includes(current)) {
-    items[0].focus()
+    focusSmoothly(items[0])
     event.preventDefault()
     return
   }
 
   const next = closestInDirection(current, items, direction)
-  if (next) next.focus()
+  if (next) focusSmoothly(next)
   event.preventDefault()
 }
 

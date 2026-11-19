@@ -26,7 +26,10 @@ export interface CollectionEntry {
   card: Card
   /** Exact sentence from the user that made the agent keep it */
   quote: string
-  /** Skill spotted, e.g. "Patience" */
+  /**
+   * What the agent spotted: mostly a past experience or know-how
+   * ("Réparation mécanique", "Gestion d'une caisse"), sometimes a quality ("Patience")
+   */
   skill: string
   /** 'proposed' until the user validates it in the summary */
   status: EntryStatus
@@ -47,6 +50,8 @@ export interface SessionDetails {
 export interface StartTurnResponse {
   turnId: string
   message: Message
+  /** Mirror turn: the user first picks cards from the collection, before the exchange */
+  pickFromCollection?: boolean
 }
 
 export interface SendMessageResponse {
@@ -80,4 +85,5 @@ export interface ActiveTurn {
   turnId: string
   card: Card
   firstMessage: Message
+  pickFromCollection?: boolean
 }

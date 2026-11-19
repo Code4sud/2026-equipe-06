@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { api } from '../api'
+import { CodeInput } from '../components/CodeInput'
 import { Logo } from '../components/Logo'
 import { Asterisk, Blob, Star, Triangle } from '../components/Shapes'
 import type { Session } from '../types'
@@ -7,6 +8,8 @@ import { moveFocusWithArrows } from '../utils/arrowNavigation'
 import './Home.css'
 
 type Step = 'choice' | 'email' | 'code'
+
+const CODE_LENGTH = 6
 
 interface HomeProps {
   onLogin: (session: Session) => void
@@ -41,6 +44,7 @@ export function Home({ onLogin }: HomeProps) {
 
   async function submitCode(event: FormEvent) {
     event.preventDefault()
+    if (code.length < CODE_LENGTH || loading) return
     setLoading(true)
     setError(null)
     try {
@@ -102,19 +106,12 @@ export function Home({ onLogin }: HomeProps) {
 
         {step === 'code' && (
           <form className="home-form" onSubmit={submitCode}>
-            <label className="field">
+            <div className="field">
               <span>On t’a envoyé un code à {email}</span>
-              <input
-                type="text"
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                required
-                autoFocus
-              />
-            </label>
-            <button className="btn" type="submit" disabled={loading}>
+              <CodeInput length={CODE_LENGTH} onChange={setCode} label="Code reçu par e-mail" autoFocus />
+            </div>
+            {/* aria-disabled instead of disabled: stays reachable with ↓ from the boxes */}
+            <button className="btn" type="submit" aria-disabled={code.length < CODE_LENGTH || loading}>
               {loading ? '…' : 'C’est parti'}
             </button>
           </form>

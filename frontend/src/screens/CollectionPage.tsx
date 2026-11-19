@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { api } from '../api'
+import { CollectionCard } from '../components/CollectionCard'
 import type { CollectionEntry } from '../types'
-import { cardColorClass } from '../utils/cardColors'
 import { moveFocusWithArrows } from '../utils/arrowNavigation'
-import '../components/GameCard.css'
 import './CollectionPage.css'
+
+/** Number of slots shown at least, filled with empty dashed slots */
+const MIN_SLOTS = 5
 
 interface CollectionPageProps {
   sessionId: string
@@ -48,14 +50,16 @@ export function CollectionPage({ sessionId, onBack }: CollectionPageProps) {
         </p>
       )}
 
-      {entries && entries.length > 0 && (
+      {entries && (
         <ul className="collection-grid">
           {entries.map((entry) => (
-            <li key={entry.id} className={`collection-entry ${cardColorClass(entry.card)}`} tabIndex={0}>
-              <span className="collection-entry-theme">{entry.card.title}</span>
-              <blockquote className="collection-entry-quote">« {entry.quote} »</blockquote>
-              <span className="collection-entry-skill">{entry.skill}</span>
+            <li key={entry.id}>
+              <CollectionCard entry={entry} />
             </li>
+          ))}
+          {/* Empty dashed slots so a small collection still looks like it is waiting to be filled */}
+          {Array.from({ length: Math.max(0, MIN_SLOTS - entries.length) }, (_, index) => (
+            <li key={`slot-${index}`} className="collection-slot" aria-hidden="true" />
           ))}
         </ul>
       )}

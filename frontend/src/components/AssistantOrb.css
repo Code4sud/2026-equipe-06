@@ -1,0 +1,77 @@
+.orb {
+  position: relative;
+  width: clamp(7rem, 12vw, 10rem);
+  aspect-ratio: 1;
+  flex-shrink: 0;
+}
+
+.orb > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Halo: turns slowly, faster while thinking */
+.orb-halo {
+  animation: orb-spin 20s linear infinite;
+}
+
+.orb.is-thinking .orb-halo {
+  animation-duration: 3s;
+}
+
+/* Body: breathes when idle, bounces while speaking, calmer while listening */
+.orb-body {
+  scale: 0.62;
+  animation: orb-breathe 4s ease-in-out infinite;
+}
+
+.orb.is-speaking .orb-body {
+  animation: orb-talk 0.45s ease-in-out infinite alternate;
+}
+
+.orb.is-listening .orb-body {
+  animation: orb-breathe 2.4s ease-in-out infinite;
+}
+
+.orb.is-thinking .orb-body {
+  animation: orb-spin 2.5s linear infinite reverse;
+}
+
+@keyframes orb-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes orb-breathe {
+  0%,
+  100% {
+    scale: 0.6;
+  }
+  50% {
+    scale: 0.68;
+  }
+}
+
+@keyframes orb-talk {
+  from {
+    scale: 0.58;
+    rotate: -6deg;
+  }
+  to {
+    scale: 0.74;
+    rotate: 6deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orb-halo,
+  .orb-body,
+  .orb.is-speaking .orb-body,
+  .orb.is-listening .orb-body,
+  .orb.is-thinking .orb-body {
+    animation: none;
+  }
+}

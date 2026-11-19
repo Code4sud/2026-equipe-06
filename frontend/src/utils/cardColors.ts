@@ -14,7 +14,10 @@ const FAMILY_COLORS: Record<CardFamily, CardColor> = {
 
 /**
  * CSS class setting --card-color, --card-face and --card-back (defined in GameCard.css).
- * The mirror card has its own look, whatever its family.
+ * The mirror and joker cards have their own look, whatever their family.
  */
-export const cardColorClass = (card: Card) =>
-  card.format === 'mirror' ? 'game-card-mirror' : `game-card-${FAMILY_COLORS[card.family]}`
+export function cardColorClass(card: Card) {
+  if (card.format === 'mirror') return 'game-card-mirror'
+  if (card.format === 'joker') return 'game-card-joker'
+  return `game-card-${FAMILY_COLORS[card.family]}`
+}
