@@ -135,8 +135,21 @@ class PersonalityCard:
 
 
 @dataclass(frozen=True)
+class Lead:
+    """A path to explore: what it is, why it fits what he told, and a first small step."""
+
+    title: str
+    why: str
+    first_step: str
+
+
+@dataclass(frozen=True)
 class Summary:
     overview: str
     crossings: list[Crossing]
     personality_cards: list[PersonalityCard]
-    suggestions: list[str]
+    suggestions: list[Lead]
+    # What he said himself in the mirror, word for word: his own conclusions come first
+    mirror_words: list[str] = field(default_factory=list)
+    # Questions he could bring to his adviser at the Centre
+    advisor_questions: list[str] = field(default_factory=list)

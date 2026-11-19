@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 import { Flower, Star } from '../components/Shapes'
+import { KeyboardHint } from '../components/KeyboardHint'
+import { delay } from '../utils/animation'
 import { moveFocusWithArrows } from '../utils/arrowNavigation'
 import './Tutorial.css'
 
@@ -33,16 +35,20 @@ export function Tutorial({ onStart, menu }: TutorialProps) {
     <main className="tutorial" onKeyDown={moveFocusWithArrows}>
       {menu}
       <div className="tutorial-decor" aria-hidden="true">
-        <Flower className="tutorial-flower floating" color="var(--color-orange)" />
-        <Star className="tutorial-star floating" color="var(--color-pink)" />
+        <Flower className="tutorial-flower floating pop-in" color="var(--color-orange)" />
+        <Star className="tutorial-star floating pop-in" color="var(--color-pink)" />
       </div>
 
       {/* Same screen for everyone: coming back starts a new game, only the collection is kept */}
-      <h1 className="pill-title">Comment ça marche ?</h1>
+      <h1 className="pill-title pop-in">Comment ça marche ?</h1>
 
       <ol className="tutorial-steps">
         {STEPS.map((step, index) => (
-          <li key={step.title} className={`tutorial-step tutorial-step-${step.color}`}>
+          <li
+            key={step.title}
+            className={`tutorial-step tutorial-step-${step.color} pop-in`}
+            style={delay(0.25 + index * 0.12)}
+          >
             <span className="tutorial-step-number" aria-hidden="true">
               {index + 1}
             </span>
@@ -52,17 +58,27 @@ export function Tutorial({ onStart, menu }: TutorialProps) {
         ))}
       </ol>
 
-      <p className="tutorial-reassurance">
+      <p className="tutorial-reassurance rise-in" style={delay(0.8)}>
         Ici, pas de note et pas de mauvaise réponse. Rien n’est gardé sans ton accord.
       </p>
       {/* The commands are recalled at the start (docs/RULES_V2.md) */}
-      <p className="tutorial-commands">
+      <p className="tutorial-commands rise-in" style={delay(0.9)}>
         À tout moment, tu peux passer une carte, aller directement au bilan ou quitter.
       </p>
 
-      <button className="btn tutorial-start" onClick={onStart} autoFocus>
+      <button className="btn tutorial-start pop-in" style={delay(1.15)} onClick={onStart} autoFocus>
         Piocher
       </button>
+
+      <KeyboardHint
+        className="rise-in"
+        style={delay(1.3)}
+        items={[
+          { keys: ['←', '↑', '→', '↓'], label: 'te déplacer' },
+          { keys: ['Entrée'], label: 'valider' },
+          { keys: ['abc'], label: 'pendant la discussion, tape pour écrire au lieu de parler' },
+        ]}
+      />
     </main>
   )
 }

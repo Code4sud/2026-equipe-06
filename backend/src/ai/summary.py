@@ -14,6 +14,7 @@ from .llm import complete_json
 from .models import (
     CollectionItem,
     Crossing,
+    Lead,
     Message,
     PersonalityCard,
     SessionContext,
@@ -28,6 +29,10 @@ _MAX_CARDS = 4
 _MAX_CROSSINGS = 4
 _MAX_SUGGESTIONS = 5
 _MAX_MENTIONS = 3
+_MAX_MIRROR_WORDS = 2
+_MAX_ADVISOR_QUESTIONS = 3
+# The first "message" of the mirror is the pick of cards, written by the code: not his words
+_PICK_PREFIXES = ("J'ai choisi ces cartes de ma collection", "Je n'ai pas choisi de carte")
 
 
 def _clean_text(value: Any) -> str:
@@ -86,7 +91,7 @@ def summarize(
     """
     blocks = context_blocks(ctx)
     # What the young person said himself: the only place proofs can come from
-    mirror_said = guards.user_texts(mirror_messages)
+    mirror_said = [t for t in guards.user_texts(mirror_messages) if not t.startswith(_PICK_PREFIXES)]
     evidence_pool = [item.quote for item in kept] + mirror_said
 
     system = render(
@@ -103,7 +108,7 @@ def summarize(
         system=system,
         messages=[{"role": "user", "content": "Écris le bilan."}],
         temperature=0.5,
-        max_tokens=1500,
+        max_tokens=2500,
         timeout_ms=60_000,
     )
 
@@ -111,14 +116,41 @@ def summarize(
         overview=_clean_text(data.get("overview")),
         crossings=_keep_crossings(data.get("crossings")),
         personality_cards=_keep_cards(data.get("personality_cards"), evidence_pool),
-        # A job title says nothing about the young person: no sensitive-word filter here
         suggestions=_keep_suggestions(data.get("suggestions")),
+        mirror_words=_keep_mirror_words(data.get("mirror_words"), mirror_said),
+        advisor_questions=[
+            q for q in (_clean_text(x) for x in _as_list(data.get("advisor_questions"))) if q
+        ][:_MAX_ADVISOR_QUESTIONS],
     )
 
 
-def _keep_suggestions(raw: Any) -> list[str]:
-    items = raw if isinstance(raw, list) else []
-    return [s for s in (str(x).strip() for x in items) if s][:_MAX_SUGGESTIONS]
+def _as_list(raw: Any) -> list[Any]:
+    return raw if isinstance(raw, list) else []
+
+
+def _keep_suggestions(raw: Any) -> list[Lead]:
+    leads: list[Lead] = []
+    for item in _as_list(raw):
+        if isinstance(item, str):
+            # A bare title (older answer shape): still a path, without the why
+            item = {"title": item}
+        if not isinstance(item, dict):
+            continue
+        # A job title says nothing about the young person: no sensitive-word filter on it
+        title = str(item.get("title", "")).strip()
+        if title:
+            leads.append(Lead(title=title, why=_clean_text(item.get("why")), first_step=_clean_text(item.get("first_step"))))
+    return leads[:_MAX_SUGGESTIONS]
+
+
+def _keep_mirror_words(raw: Any, mirror_said: list[str]) -> list[str]:
+    """His own sentences from the mirror, only if he really said them word for word."""
+    words: list[str] = []
+    for item in _as_list(raw):
+        quote = str(item).strip().strip("«»\"' ")
+        if quote and guards.is_exact_quote(quote, mirror_said) and not guards.is_sensitive(quote) and quote not in words:
+            words.append(quote)
+    return words[:_MAX_MIRROR_WORDS]
 
 
 # ---- Sensitive things the young person said himself (docs/RULES_V2.md) --------------------------
@@ -155,7 +187,7 @@ def find_sensitive_mentions(said: list[str]) -> list[str]:
 
 def suggest_with_mentions(
     ctx: SessionContext, kept: list[CollectionItem], mirror_messages: list[Message], mentions: list[str]
-) -> list[str]:
+) -> list[Lead]:
     """The suggestions again, taking into account what he agreed to share (explicit consent)."""
     blocks = context_blocks(ctx)
     mirror_said = guards.user_texts(mirror_messages)
@@ -172,6 +204,6 @@ def suggest_with_mentions(
         ),
         messages=[{"role": "user", "content": "Écris les pistes."}],
         temperature=0.5,
-        max_tokens=600,
+        max_tokens=1200,
     )
     return _keep_suggestions(data.get("suggestions"))

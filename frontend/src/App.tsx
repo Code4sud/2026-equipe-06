@@ -121,6 +121,7 @@ function App() {
         sessionId={session.sessionId}
         turn={turn}
         onTurnEnded={() => goTo('drawing')}
+        onQuit={() => void quit()}
         menu={menu}
       />
     )
@@ -134,6 +135,7 @@ function App() {
         sessionId={session.sessionId}
         turn={turn}
         onTurnEnded={() => goTo('summary')}
+        onQuit={() => void quit()}
         menu={menu}
       />
     )

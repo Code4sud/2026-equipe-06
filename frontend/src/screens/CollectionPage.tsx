@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { api } from '../api'
 import { CollectionCard } from '../components/CollectionCard'
 import type { CollectionEntry } from '../types'
+import { delay } from '../utils/animation'
 import { moveFocusWithArrows } from '../utils/arrowNavigation'
 import './CollectionPage.css'
 
@@ -38,7 +39,7 @@ export function CollectionPage({ sessionId, onBack, menu }: CollectionPageProps)
         <button className="btn-link" onClick={onBack} autoFocus>
           ← Retour
         </button>
-        <h1 className="pill-title">Ta collection</h1>
+        <h1 className="pill-title pop-in">Ta collection</h1>
       </header>
 
       {error && (
@@ -55,14 +56,19 @@ export function CollectionPage({ sessionId, onBack, menu }: CollectionPageProps)
 
       {entries && (
         <ul className="collection-grid">
-          {entries.map((entry) => (
-            <li key={entry.id}>
+          {entries.map((entry, index) => (
+            <li key={entry.id} className="pop-in" style={delay(0.15 + index * 0.08)}>
               <CollectionCard entry={entry} />
             </li>
           ))}
           {/* Empty dashed slots so a small collection still looks like it is waiting to be filled */}
           {Array.from({ length: Math.max(0, MIN_SLOTS - entries.length) }, (_, index) => (
-            <li key={`slot-${index}`} className="collection-slot" aria-hidden="true" />
+            <li
+              key={`slot-${index}`}
+              className="collection-slot rise-in"
+              style={delay(0.2 + (entries.length + index) * 0.08)}
+              aria-hidden="true"
+            />
           ))}
         </ul>
       )}

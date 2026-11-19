@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { api } from '../api'
 import { GameCard } from '../components/GameCard'
+import { KeyboardHint } from '../components/KeyboardHint'
+import { delay } from '../utils/animation'
 import type { ActiveTurn, Card } from '../types'
 import { moveFocusWithArrows } from '../utils/arrowNavigation'
 import { prefersReducedMotion } from '../utils/viewTransition'
@@ -136,7 +138,7 @@ export function Drawing({
   return (
     <main className={`drawing${chosenId || redrawing ? ' is-leaving' : ''}`} onKeyDown={moveFocusWithArrows}>
       {menu}
-      <h1 className="pill-title">{!revealed ? 'On pioche…' : isMirror ? 'Dernière carte !' : 'Choisis une carte'}</h1>
+      <h1 className="pill-title pop-in">{!revealed ? 'On pioche…' : isMirror ? 'Dernière carte !' : 'Choisis une carte'}</h1>
 
       {cards && (
         <div className="drawing-cards">
@@ -159,9 +161,17 @@ export function Drawing({
       )}
 
       {revealed && (
-        <button className="btn" onClick={onOpenCollection} disabled={chosenId !== null || redrawing}>
+        <button className="btn rise-in" onClick={onOpenCollection} disabled={chosenId !== null || redrawing}>
           Voir ma collection
         </button>
+      )}
+
+      {revealed && (
+        <KeyboardHint
+          className="rise-in"
+          style={delay(0.3)}
+          items={[{ keys: ['←', '↑', '→', '↓'], label: 'te déplacer' }]}
+        />
       )}
 
       {error && (

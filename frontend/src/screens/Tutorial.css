@@ -18,6 +18,7 @@
 }
 
 .tutorial-flower {
+  --delay: 0.9s;
   top: 6vh;
   right: 8vw;
   width: clamp(3rem, 6vw, 5.5rem);
@@ -26,6 +27,7 @@
 }
 
 .tutorial-star {
+  --delay: 1.05s;
   bottom: 8vh;
   left: 6vw;
   width: clamp(4rem, 8vw, 7rem);

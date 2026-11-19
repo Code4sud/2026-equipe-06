@@ -104,12 +104,15 @@ button.collection-card::-moz-focus-inner {
 
 .collection-card-skill {
   align-self: flex-start;
-  padding: 0.3em 0.8em;
+  max-width: 100%;
+  padding: 0.4em 0.8em;
   font-size: 0.9rem;
   font-weight: 800;
+  line-height: 1.25;
   color: var(--color-text);
   background: var(--card-back);
-  border-radius: var(--radius-pill);
+  /* A fixed rounding, not a full pill: a skill name on two or three lines keeps its margins */
+  border-radius: 0.9em;
 }
 
 @media (prefers-reduced-motion: reduce) {

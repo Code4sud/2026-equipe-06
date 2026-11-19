@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { api } from '../api'
 import { CodeInput } from '../components/CodeInput'
 import { Logo } from '../components/Logo'
@@ -7,7 +7,7 @@ import type { Session } from '../types'
 import { moveFocusWithArrows } from '../utils/arrowNavigation'
 import './Home.css'
 
-type Step = 'choice' | 'email' | 'code'
+type Step = 'start' | 'email' | 'code'
 
 // Same length as the code sent by the backend (CODE_LENGTH in router.py)
 const CODE_LENGTH = 6
@@ -20,17 +20,23 @@ interface HomeProps {
 }
 
 export function Home({ onLogin }: HomeProps) {
-  const [step, setStep] = useState<Step>('choice')
-  const [isFirstTime, setIsFirstTime] = useState(true)
+  const [step, setStep] = useState<Step>('start')
   const [email, setEmail] = useState('')
   const [code, setCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  function chooseMode(firstTime: boolean) {
-    setIsFirstTime(firstTime)
-    setStep('email')
-  }
+  // Enter starts, wherever the focus is (the start line is also a button, for touch screens)
+  useEffect(() => {
+    if (step !== 'start') return
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key !== 'Enter') return
+      event.preventDefault()
+      setStep('email')
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [step])
 
   async function submitEmail(event: FormEvent) {
     event.preventDefault()
@@ -65,7 +71,7 @@ export function Home({ onLogin }: HomeProps) {
 
   function goBack() {
     setError(null)
-    setStep(step === 'code' ? 'email' : 'choice')
+    setStep(step === 'code' ? 'email' : 'start')
   }
 
   return (
@@ -82,21 +88,17 @@ export function Home({ onLogin }: HomeProps) {
       </div>
 
       <div className="home-panel">
-        {step === 'choice' && (
-          <>
-            <button className="btn" onClick={() => chooseMode(true)} autoFocus>
-              C’est ma première fois
-            </button>
-            <button className="btn" onClick={() => chooseMode(false)}>
-              Je reviens
-            </button>
-          </>
+        {/* Same start for everyone: no "first time" or "coming back" */}
+        {step === 'start' && (
+          <button className="home-start" onClick={() => setStep('email')} autoFocus>
+            Appuie sur <kbd>Entrée</kbd> pour commencer
+          </button>
         )}
 
         {step === 'email' && (
-          <form className="home-form" onSubmit={submitEmail}>
+          <form className="home-form rise-in" onSubmit={submitEmail}>
             <label className="field">
-              <span>{isFirstTime ? 'Bienvenue ! C’est quoi ton e-mail ?' : 'Content de te revoir ! Ton e-mail ?'}</span>
+              <span>C’est quoi ton e-mail ?</span>
               <input
                 type="email"
                 value={email}
@@ -113,7 +115,7 @@ export function Home({ onLogin }: HomeProps) {
         )}
 
         {step === 'code' && (
-          <form className="home-form" onSubmit={submitCode}>
+          <form className="home-form rise-in" onSubmit={submitCode}>
             <div className="field">
               <span>On t’a envoyé un code à {email}</span>
               <CodeInput length={CODE_LENGTH} onChange={setCode} label="Code reçu par e-mail" autoFocus />
@@ -131,7 +133,7 @@ export function Home({ onLogin }: HomeProps) {
           </p>
         )}
 
-        {step !== 'choice' && (
+        {step !== 'start' && (
           <button className="btn-link" onClick={goBack}>
             ← Retour
           </button>

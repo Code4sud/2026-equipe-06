@@ -12,7 +12,7 @@ from typing import Any
 from ai import analysis, conversation, drawing, rules, voice
 from ai.data import get_card, mirror_card
 from ai.llm import LLMError
-from ai.models import Card, Message
+from ai.models import Card, Lead, Message
 from ai import guards
 from ai.summary import find_sensitive_mentions, suggest_with_mentions, summarize
 from db.protocol import Database, Document
@@ -339,6 +339,10 @@ def _everything_said(db: Database, session_id: str) -> list[str]:
     return [text for turn in turns for text in guards.user_texts(history_of(turn))]
 
 
+def lead_json(lead: Lead) -> dict[str, str]:
+    return {"title": lead.title, "why": lead.why, "firstStep": lead.first_step}
+
+
 def get_summary(db: Database, session_id: str) -> dict[str, Any]:
     # Called once the young person has kept or rejected his entries: only the kept ones count
     session, entries, mirror_messages = _summary_material(db, session_id)
@@ -360,8 +364,10 @@ def get_summary(db: Database, session_id: str) -> dict[str, Any]:
             {"id": f"p{i}", "title": c.title, "description": c.description, "evidence": c.evidence}
             for i, c in enumerate(result.personality_cards)
         ],
-        "suggestions": result.suggestions,
+        "suggestions": [lead_json(lead) for lead in result.suggestions],
         "crossings": [{"kind": c.kind, "text": c.text} for c in result.crossings],
+        "mirrorWords": result.mirror_words,
+        "advisorQuestions": result.advisor_questions,
         # Asked at the summary: "do you want us to take this into account?" Nothing is stored
         "sensitiveMentions": mentions,
     }
@@ -376,4 +382,4 @@ def suggestions_with_mentions(db: Database, session_id: str, mentions: list[Any]
         raise GameError(400, "mentions must be sentences the young person said")
     session, entries, mirror_messages = _summary_material(db, session_id)
     suggestions = suggest_with_mentions(context_of(session, entries), kept_items(entries), mirror_messages, wanted)
-    return {"suggestions": suggestions}
+    return {"suggestions": [lead_json(lead) for lead in suggestions]}

@@ -37,6 +37,9 @@ export interface CollectionEntry {
   skill: string
   /** 'proposed' until the user validates it in the summary */
   status: EntryStatus
+  /** The official ROME skill matching the quote, for the adviser (shown small) */
+  romeLabel?: string | null
+  romeCode?: string | null
 }
 
 export interface Session {
@@ -65,6 +68,8 @@ export interface SendMessageResponse {
   newEntries?: CollectionEntry[]
   /** Mirror turn only: the front shows the collection so the user picks entries */
   pickFromCollection?: boolean
+  /** 'heavy': a heavy subject came up; 'distress': the game stops on a help message (3114, 112) */
+  safety?: 'heavy' | 'distress'
 }
 
 export interface EntryUpdate {
@@ -85,13 +90,24 @@ export interface Crossing {
   text: string
 }
 
+/** A path to explore: what it is, why it fits what the user told, and a first small step */
+export interface Suggestion {
+  title: string
+  why: string
+  firstStep: string
+}
+
 export interface Summary {
   overview: string
+  /** What the user said in the mirror, word for word: his own conclusions, shown first */
+  mirrorWords: string[]
   /** The entries the user kept */
   collection: CollectionEntry[]
   personalityCards: PersonalityCard[]
-  suggestions: string[]
+  suggestions: Suggestion[]
   crossings: Crossing[]
+  /** Questions the user could bring to his adviser at the Centre */
+  advisorQuestions: string[]
   /**
    * What the user said himself about his health, religion or origin, in his words.
    * Never kept: the summary asks whether he wants it taken into account for the suggestions.
@@ -105,7 +121,7 @@ export interface LeaveResponse {
 }
 
 export interface SuggestionsResponse {
-  suggestions: string[]
+  suggestions: Suggestion[]
 }
 
 /** Front-only: the turn being played, kept in App state */

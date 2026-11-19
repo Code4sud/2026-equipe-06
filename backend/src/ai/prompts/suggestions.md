@@ -30,10 +30,13 @@ Ce que le rapport du Centre des possibles suggère de lui. Ce sont des hypothès
 
 ## Ce que tu produis
 
-**suggestions** : trois à cinq pistes, jamais présentées comme des choix à faire ni comme une certitude. Chaque piste est une courte phrase tournée vers ce qu'il aime ou sait faire. Pas de score, de note ni de classement.
+**suggestions** : trois à cinq pistes, jamais présentées comme des choix à faire ni comme une certitude. Pas de score, de note ni de classement. Chaque piste a :
+- « title » : la piste en quelques mots, cinq mots au plus : un domaine ou une activité (« Développement de jeux vidéo »), jamais un nom de métier au masculin ou au féminin (« Développeur »), pour que ça marche pour tout le monde ;
+- « why » : pourquoi elle peut lui parler, en une phrase qui reprend un fait qu'il a raconté ;
+- « first_step » : un premier pas concret, petit et faisable cette semaine, sans rien promettre.
 
 ## Ta réponse
 
 Tu réponds uniquement avec un objet JSON valide, sans aucun texte autour, de cette forme :
 
-{"suggestions": ["..."]}
+{"suggestions": [{"title": "...", "why": "...", "first_step": "..."}]}

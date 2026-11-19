@@ -231,10 +231,31 @@ export const mockApi: Api = {
           evidence: kept[1]?.quote ?? 'j’ai regardé des tutos et j’ai essayé',
         },
       ],
-      suggestions: ['Animer des activités pour des jeunes', 'Réparer et entretenir des vélos', 'Accueillir du public'],
+      suggestions: [
+        {
+          title: 'Animation pour des jeunes',
+          why: 'Parce que tu aides ton voisin et que tu expliques bien.',
+          firstStep: 'Demander à ton conseiller comment passer une journée dans un centre de loisirs.',
+        },
+        {
+          title: 'Réparation de vélos',
+          why: 'Parce que tu répares des vélos le samedi.',
+          firstStep: 'Aller voir un atelier vélo associatif près de chez toi.',
+        },
+        {
+          title: 'Accueil du public',
+          why: 'Parce que les gens viennent facilement te demander de l’aide.',
+          firstStep: 'Regarder une vidéo d’un agent d’accueil qui raconte sa journée.',
+        },
+      ],
       crossings: [
         { kind: 'match', text: 'Le rapport parle d’aide aux autres, et tu m’as parlé de ton voisin.' },
         { kind: 'gap', text: 'Le rapport parle de chiffres, on n’en a pas parlé : à toi de voir.' },
+      ],
+      mirrorWords: ['je pense que j’aime bien aider et réparer des trucs'],
+      advisorQuestions: [
+        'Le rapport parle de chiffres : on pourrait regarder ensemble si ça me parle ?',
+        'Comment je peux essayer un atelier de réparation pour voir si ça me plaît ?',
       ],
       sensitiveMentions: ['je porte le voile'],
     }
@@ -245,9 +266,11 @@ export const mockApi: Api = {
     getSessionOrThrow(sessionId)
     return {
       suggestions: [
-        'Animer des activités pour des jeunes',
-        'Réparer et entretenir des vélos',
-        `Accueillir du public, en tenant compte de « ${mentions[0]} »`,
+        {
+          title: 'Accueil du public',
+          why: `Parce que tu l’as dit toi-même : « ${mentions[0]} ».`,
+          firstStep: 'En parler avec ton conseiller.',
+        },
       ],
     }
   },

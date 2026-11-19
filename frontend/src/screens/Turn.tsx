@@ -17,6 +17,8 @@ interface TurnProps {
   sessionId: string
   turn: ActiveTurn
   onTurnEnded: () => void
+  /** After a distress message the game does not go on: the only button leaves */
+  onQuit: () => void
   /** Passer au bilan and Quitter (see GameMenu) */
   menu?: ReactNode
 }
@@ -42,7 +44,7 @@ function MicIcon() {
   )
 }
 
-export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
+export function Turn({ sessionId, turn, onTurnEnded, onQuit, menu }: TurnProps) {
   const speech = useSpeechRecognition()
   const cardTilt = useCardTilt()
   const [assistantText, setAssistantText] = useState(turn.firstMessage.text)
@@ -51,6 +53,8 @@ export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
   const [voiceLoading, setVoiceLoading] = useState(false)
   const [phase, setPhase] = useState<Phase>('speaking')
   const [turnEnded, setTurnEnded] = useState(false)
+  // The AI answered with the help numbers: no next card, only "Quitter"
+  const [distress, setDistress] = useState(false)
   // Mirror: the backend asks to pick cards from the collection
   const [pickRequested, setPickRequested] = useState(turn.pickFromCollection ?? false)
   const [collection, setCollection] = useState<CollectionEntry[] | null>(null)
@@ -186,6 +190,7 @@ export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
       const added = response.newEntries?.length ?? 0
       if (added > 0) setToast((current) => ({ id: (current?.id ?? 0) + 1, count: added }))
       setTurnEnded(response.turnEnded)
+      if (response.safety === 'distress') setDistress(true)
       setPickRequested(response.pickFromCollection ?? false)
       setAssistantText(response.message.text)
       setAssistantTone(response.message.tone ?? 'neutral')
@@ -339,11 +344,16 @@ export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
             </p>
           )}
 
-          {phase === 'ended' && (
-            <button className="btn turn-main-button" onClick={onTurnEnded} autoFocus>
-              {isMirror ? 'Voir mon bilan' : 'Piocher la suite'}
-            </button>
-          )}
+          {phase === 'ended' &&
+            (distress ? (
+              <button className="btn turn-main-button pop-in" onClick={onQuit} autoFocus>
+                Quitter
+              </button>
+            ) : (
+              <button className="btn turn-main-button pop-in" onClick={onTurnEnded} autoFocus>
+                {isMirror ? 'Voir mon bilan' : 'Piocher la suite'}
+              </button>
+            ))}
 
           {phase === 'picking' && collection && (
             <div className="turn-pick" ref={pickRef}>
@@ -373,7 +383,7 @@ export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
           )}
 
           {phase === 'answering' && mode === 'voice' && (
-            <div className="turn-voice">
+            <div className="turn-voice rise-in">
               <span className={`turn-mic${speech.listening ? ' is-listening' : ''}`} aria-hidden="true">
                 <MicIcon />
               </span>
@@ -402,7 +412,7 @@ export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
 
           {phase === 'answering' && mode === 'text' && (
             <form
-              className="turn-form"
+              className="turn-form rise-in"
               onSubmit={(event: FormEvent) => {
                 event.preventDefault()
                 sendAnswer(draft)
