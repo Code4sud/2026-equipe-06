@@ -8,8 +8,13 @@
   ],
   "stack": [
     "React",
-    "MongoDB",
+    "TypeScript",
+    "Vite",
     "Python3",
+    "Flask",
+    "MongoDB",
+    "Mistral AI",
+    "Voxtral",
     "Docker"
   ],
   "demo": "https://two026-equipe-06-1-front.onrender.com",
