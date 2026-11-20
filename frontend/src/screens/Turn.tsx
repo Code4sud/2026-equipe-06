@@ -8,6 +8,7 @@ import type { ActiveTurn, CollectionEntry, Tone } from '../types'
 import { cardColorClass } from '../utils/cardColors'
 import { loadSpeech, type LoadedSpeech } from '../utils/speech'
 import { focusSmoothly, moveFocusWithArrows } from '../utils/arrowNavigation'
+import { playSound } from '../utils/sounds'
 import { prefersReducedMotion, withViewTransition } from '../utils/viewTransition'
 import '../styles/cardShine.css'
 import '../components/GameCard.css'
@@ -195,7 +196,10 @@ export function Turn({ sessionId, turn, onTurnEnded, onQuit, menu }: TurnProps) 
     try {
       const response = await api.sendMessage(sessionId, turn.turnId, answer, selectedEntryIds)
       const added = response.newEntries?.length ?? 0
-      if (added > 0) setToast((current) => ({ id: (current?.id ?? 0) + 1, count: added }))
+      if (added > 0) {
+        setToast((current) => ({ id: (current?.id ?? 0) + 1, count: added }))
+        playSound('reward')
+      }
       setTurnEnded(response.turnEnded)
       if (response.safety === 'distress') setDistress(true)
       setPickRequested(response.pickFromCollection ?? false)
@@ -257,10 +261,13 @@ export function Turn({ sessionId, turn, onTurnEnded, onQuit, menu }: TurnProps) 
   }
 
   function sendSelection() {
-    if (phase === 'picking') submit('', selectedIds)
+    if (phase !== 'picking') return
+    playSound('place')
+    submit('', selectedIds)
   }
 
   function toggleEntry(entry: CollectionEntry) {
+    playSound(selectedIds.includes(entry.id) ? 'deselect' : 'select')
     setSelectedIds((current) =>
       current.includes(entry.id) ? current.filter((id) => id !== entry.id) : [...current, entry.id],
     )
