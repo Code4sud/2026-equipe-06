@@ -195,6 +195,7 @@ class Router:
             db.delete(AUTH_CODES, old.id)
 
         code = f"{secrets.randbelow(10**CODE_LENGTH):0{CODE_LENGTH}d}"
+        code = _hash_code(payload.email, code)
         code_id = db.insert(
             AUTH_CODES,
             AuthCode(
