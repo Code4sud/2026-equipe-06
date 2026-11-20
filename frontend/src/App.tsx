@@ -20,6 +20,8 @@ function App() {
   const [drawnCards, setDrawnCards] = useState<Card[] | null>(null)
   // Changing the key remounts the drawing screen, for a fresh draw with its animation
   const [drawKey, setDrawKey] = useState(0)
+  // Shown once on the home screen after Effacer toutes mes données
+  const [erased, setErased] = useState(false)
 
   /** Every screen change goes through a View Transition (see index.css) */
   function goTo(next: Screen) {
@@ -47,7 +49,13 @@ function App() {
   const turnInProgress = turn && (screen === 'in_turn' || screen === 'mirror') ? turn : null
 
   function backHome() {
+    goHome(false)
+  }
+
+  /** erased: the home screen says that everything was deleted */
+  function goHome(erased: boolean) {
     withViewTransition(() => {
+      setErased(erased)
       setSession(null)
       setTurn(null)
       setDrawnCards(null)
@@ -67,6 +75,13 @@ function App() {
     backHome()
   }
 
+  /** Effacer toutes mes données: everything is deleted on the server, then back to the home screen */
+  async function erase() {
+    if (!session) return
+    await api.eraseData(session.sessionId)
+    goHome(true)
+  }
+
   /** Passer au bilan: ends the card in progress, then straight to the summary (no mirror) */
   async function finish() {
     if (!session) return
@@ -78,11 +93,11 @@ function App() {
     })
   }
 
-  const menu = <GameMenu onQuit={quit} onFinish={finish} />
-  const quitOnlyMenu = <GameMenu onQuit={quit} />
+  const menu = <GameMenu onQuit={quit} onFinish={finish} onErase={erase} />
+  const quitOnlyMenu = <GameMenu onQuit={quit} onErase={erase} />
 
   if (!session || screen === 'home') {
-    return <Home onLogin={handleLogin} />
+    return <Home onLogin={handleLogin} erased={erased} />
   }
 
   if (screen === 'tutorial') {
@@ -121,6 +136,7 @@ function App() {
         sessionId={session.sessionId}
         turn={turn}
         onTurnEnded={() => goTo('drawing')}
+        onQuit={() => void quit()}
         menu={menu}
       />
     )
@@ -134,6 +150,7 @@ function App() {
         sessionId={session.sessionId}
         turn={turn}
         onTurnEnded={() => goTo('summary')}
+        onQuit={() => void quit()}
         menu={menu}
       />
     )

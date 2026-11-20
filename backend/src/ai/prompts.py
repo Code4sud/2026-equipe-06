@@ -1,6 +1,8 @@
-"""Loads the Markdown prompts of the prompts/ folder and fills in their <<placeholders>>.
+"""Loads the Markdown prompts of the prompts/ folder and fills in their
+<<placeholders>>.
 
-The prompts are plain French text, so anyone on the team can edit them without touching the code.
+The prompts are plain French text, so anyone on the team can edit them without
+touching the code.
 """
 
 import re
@@ -18,7 +20,10 @@ _SHARED = ("persona", "rules", "limits")
 LEVEL_NOTES: dict[str, str] = {
     "general": "Léger, rapide, un peu d'humour. On fait connaissance.",
     "specific": "Curieux, plus attentif aux détails. Tu reprends ses mots.",
-    "personal": "Plus lent, plus doux, plus de silences. Tu le laisses venir, tu ne pousses jamais.",
+    "personal": (
+        "Plus lent, plus doux, plus de silences. Tu le laisses venir, tu ne "
+        "pousses jamais."
+    ),
 }
 MIRROR_LEVEL_NOTE = "Posé et doux. C'est lui qui parle de lui."
 
@@ -35,7 +40,9 @@ def level_note(level: Level | None) -> str:
 
 
 def render(name: str, **values: str) -> str:
-    """The text of prompts/<name>.md with each <<key>> replaced. Fails if one is left unfilled."""
+    """The text of prompts/<name>.md with each <<key>> replaced. Fails if one
+    is left unfilled.
+    """
     text = _read(name)
     for key, value in values.items():
         text = text.replace(f"<<{key}>>", value)
@@ -46,5 +53,9 @@ def render(name: str, **values: str) -> str:
 
 
 def system_prompt(task: str, **values: str) -> str:
-    """Conversation prompt: persona, rules and limits, then the task of the call."""
-    return "\n\n".join([*(_read(name) for name in _SHARED), render(task, **values)])
+    """Conversation prompt: persona, rules and limits, then the task of the
+    call.
+    """
+    return "\n\n".join(
+        [*(_read(name) for name in _SHARED), render(task, **values)]
+    )

@@ -1,4 +1,6 @@
-"""Thin layer over the Mistral SDK: one place to call the model, parse JSON and handle errors."""
+"""Thin layer over the Mistral SDK: one place to call the model, parse JSON and
+handle errors.
+"""
 
 import json
 import logging
@@ -6,7 +8,8 @@ import re
 from functools import lru_cache
 from typing import Any
 
-# mypy cannot see the package types (it has no top-level __init__.py), hence the ignore
+# mypy cannot see the package types (it has no top-level __init__.py), hence
+# the ignore
 from mistralai.client import Mistral  # type: ignore[import-not-found]
 
 from .config import get_config
@@ -17,7 +20,8 @@ Messages = list[dict[str, str]]
 
 
 class LLMError(Exception):
-    """The model could not be reached or did not answer in the expected shape."""
+    """The model could not be reached or did not answer in the expected shape.
+    """
 
 
 @lru_cache(maxsize=1)
@@ -26,7 +30,8 @@ def client() -> Mistral:
 
 
 def _content_to_text(content: Any) -> str:
-    # The answer is a plain string, or a list of chunks. Only text chunks count:
+    # The answer is a plain string, or a list of chunks. Only text chunks
+    # count:
     # reasoning models also send "thinking" chunks, which are not the answer.
     if isinstance(content, str):
         return content
@@ -46,7 +51,8 @@ def complete(
     timeout_ms: int = 30_000,
 ) -> str:
     """One call to the chat model. Returns the text of the answer."""
-    # Plain dicts are what the API takes; the SDK's own message types are not needed here
+    # Plain dicts are what the API takes; the SDK's own message types are not
+    # needed here
     chat: list[Any] = [{"role": "system", "content": system}, *messages]
     try:
         if json_mode:
@@ -66,17 +72,22 @@ def complete(
                 max_tokens=max_tokens,
                 timeout_ms=timeout_ms,
             )
-    except Exception as exc:  # the SDK raises several kinds of errors (network, API, validation)
+    # the SDK raises several kinds of errors (network, API, validation)
+    except Exception as exc:
         raise LLMError(f"Mistral call failed: {exc}") from exc
 
     if not result.choices:
         raise LLMError("Mistral returned no answer.")
     choice = result.choices[0]
-    text = _content_to_text(choice.message.content if choice.message else None).strip()
+    text = _content_to_text(
+        choice.message.content if choice.message else None
+    ).strip()
     if not text:
-        # Typically a reasoning model that used all its tokens thinking: retrying would not help
+        # Typically a reasoning model that used all its tokens thinking:
+        # retrying would not help
         raise LLMError(
-            f"Empty answer from {model} (finish_reason={choice.finish_reason}). "
+            f"Empty answer from {model} "
+            f"(finish_reason={choice.finish_reason}). "
             "If it is a reasoning model, use a non-reasoning one."
         )
     return text
@@ -86,7 +97,8 @@ def _parse_json(text: str) -> dict[str, Any]:
     try:
         data = json.loads(text)
     except json.JSONDecodeError:
-        # Sometimes the model adds text around the object: take the outermost {...}
+        # Sometimes the model adds text around the object: take the outermost
+        # {...}
         match = re.search(r"\{.*\}", text, flags=re.DOTALL)
         if not match:
             raise
@@ -105,7 +117,9 @@ def complete_json(
     max_tokens: int,
     timeout_ms: int = 30_000,
 ) -> dict[str, Any]:
-    """Like `complete`, but the answer is a JSON object. One retry if it cannot be parsed."""
+    """Like `complete`, but the answer is a JSON object. One retry if it cannot
+    be parsed.
+    """
     last_error: Exception | None = None
     for attempt in (1, 2):
         text = complete(
@@ -121,5 +135,9 @@ def complete_json(
             return _parse_json(text)
         except (json.JSONDecodeError, ValueError) as exc:
             last_error = exc
-            log.warning("Invalid JSON from the model (attempt %s): %s", attempt, text[:200])
+            log.warning(
+                "Invalid JSON from the model (attempt %s): %s",
+                attempt,
+                text[:200],
+            )
     raise LLMError(f"The model did not return valid JSON: {last_error}")

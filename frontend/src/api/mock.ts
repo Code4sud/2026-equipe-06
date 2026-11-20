@@ -110,6 +110,16 @@ export const mockApi: Api = {
     return { state: 'drawing', collection: session.collection, turnsCount: session.turns.size }
   },
 
+  async eraseData(sessionId) {
+    await delay()
+    getSessionOrThrow(sessionId)
+    sessions.delete(sessionId)
+    for (const [email, id] of sessionsByEmail) {
+      if (id === sessionId) sessionsByEmail.delete(email)
+    }
+    return {}
+  },
+
   async drawCards(sessionId) {
     await delay()
     const session = getSessionOrThrow(sessionId)
@@ -197,6 +207,12 @@ export const mockApi: Api = {
     return null
   },
 
+  // The recording is ignored: a fixed answer stands for what was said
+  async transcribe() {
+    await delay(500)
+    return 'Le week-end dernier, j’ai réparé le scooter de mon cousin.'
+  },
+
   async getCollection(sessionId) {
     await delay(300)
     return getSessionOrThrow(sessionId).collection
@@ -208,6 +224,15 @@ export const mockApi: Api = {
     if (!entry) throw new ApiError(404, `/sessions/${sessionId}/collection/${entryId}`)
     Object.assign(entry, update)
     return entry
+  },
+
+  async deleteEntry(sessionId, entryId) {
+    await delay(200)
+    const session = getSessionOrThrow(sessionId)
+    const index = session.collection.findIndex((e) => e.id === entryId)
+    if (index < 0) throw new ApiError(404, `/sessions/${sessionId}/collection/${entryId}`)
+    session.collection.splice(index, 1)
+    return {}
   },
 
   async getSummary(sessionId) {
@@ -231,12 +256,82 @@ export const mockApi: Api = {
           evidence: kept[1]?.quote ?? 'j’ai regardé des tutos et j’ai essayé',
         },
       ],
-      suggestions: ['Animer des activités pour des jeunes', 'Réparer et entretenir des vélos', 'Accueillir du public'],
+      suggestions: [
+        {
+          title: 'Animation pour des jeunes',
+          why: 'Parce que tu aides ton voisin et que tu expliques bien.',
+          firstStep: 'Demander à ton conseiller comment passer une journée dans un centre de loisirs.',
+        },
+        {
+          title: 'Réparation de vélos',
+          why: 'Parce que tu répares des vélos le samedi.',
+          firstStep: 'Aller voir un atelier vélo associatif près de chez toi.',
+        },
+        {
+          title: 'Accueil du public',
+          why: 'Parce que les gens viennent facilement te demander de l’aide.',
+          firstStep: 'Regarder une vidéo d’un agent d’accueil qui raconte sa journée.',
+        },
+      ],
       crossings: [
         { kind: 'match', text: 'Le rapport parle d’aide aux autres, et tu m’as parlé de ton voisin.' },
         { kind: 'gap', text: 'Le rapport parle de chiffres, on n’en a pas parlé : à toi de voir.' },
       ],
+      mirrorWords: ['je pense que j’aime bien aider et réparer des trucs'],
+      advisorQuestions: [
+        'Le rapport parle de chiffres : on pourrait regarder ensemble si ça me parle ?',
+        'Comment je peux essayer un atelier de réparation pour voir si ça me plaît ?',
+      ],
       sensitiveMentions: ['je porte le voile'],
+      technical: {
+        skills: [
+          {
+            code: '1A102',
+            label: 'Assurer l’encadrement de l’enfant ou d’un groupe d’enfants',
+            category: 'Savoir-faire',
+            domain: 'Management, Social, Soin',
+            issue: 'Animation',
+            objective: 'Animer des activités',
+            strength: 'transversal',
+            cards: 2,
+            families: 2,
+            evidence: kept.slice(0, 2).map((e) => ({
+              quote: e.quote,
+              fact: e.skill,
+              cardTitle: e.card.title,
+              family: e.card.family,
+            })),
+          },
+          {
+            code: '6D104',
+            label: 'Faire preuve de sens des responsabilités',
+            category: 'Savoir-être',
+            domain: 'Savoir-être professionnels',
+            issue: 'Savoir-être',
+            objective: 'Avoir le sens des responsabilités',
+            strength: 'single',
+            cards: 1,
+            families: 1,
+            evidence: kept.slice(2, 3).map((e) => ({
+              quote: e.quote,
+              fact: e.skill,
+              cardTitle: e.card.title,
+              family: e.card.family,
+            })),
+          },
+        ],
+        unmapped: [],
+        domains: [
+          { domain: 'Management, Social, Soin', skills: 1, stories: 2 },
+          { domain: 'Savoir-être professionnels', skills: 1, stories: 1 },
+        ],
+        turns: [
+          { cardTitle: 'Ton dernier week-end', family: 'passions', answers: 4, words: 96, engagement: 'open', endedBy: 'completed', kept: 1 },
+          { cardTitle: 'Quelqu’un qui compte sur toi', family: 'relationships', answers: 3, words: 41, engagement: 'neutral', endedBy: 'completed', kept: 1 },
+          { cardTitle: 'Un truc qui te met en colère quand c’est injuste', family: 'values', answers: 1, words: 3, engagement: 'closed', endedBy: 'skipped', kept: 0 },
+        ],
+        topics: ['réparer des vélos', 'monter un PC'],
+      },
     }
   },
 
@@ -245,9 +340,11 @@ export const mockApi: Api = {
     getSessionOrThrow(sessionId)
     return {
       suggestions: [
-        'Animer des activités pour des jeunes',
-        'Réparer et entretenir des vélos',
-        `Accueillir du public, en tenant compte de « ${mentions[0]} »`,
+        {
+          title: 'Accueil du public',
+          why: `Parce que tu l’as dit toi-même : « ${mentions[0]} ».`,
+          firstStep: 'En parler avec ton conseiller.',
+        },
       ],
     }
   },

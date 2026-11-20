@@ -8,6 +8,7 @@ import type { ActiveTurn, CollectionEntry, Tone } from '../types'
 import { cardColorClass } from '../utils/cardColors'
 import { loadSpeech, type LoadedSpeech } from '../utils/speech'
 import { focusSmoothly, moveFocusWithArrows } from '../utils/arrowNavigation'
+import { playSound } from '../utils/sounds'
 import { prefersReducedMotion, withViewTransition } from '../utils/viewTransition'
 import '../styles/cardShine.css'
 import '../components/GameCard.css'
@@ -17,6 +18,8 @@ interface TurnProps {
   sessionId: string
   turn: ActiveTurn
   onTurnEnded: () => void
+  /** After a distress message the game does not go on: the only button leaves */
+  onQuit: () => void
   /** Passer au bilan and Quitter (see GameMenu) */
   menu?: ReactNode
 }
@@ -42,8 +45,10 @@ function MicIcon() {
   )
 }
 
-export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
-  const speech = useSpeechRecognition()
+export function Turn({ sessionId, turn, onTurnEnded, onQuit, menu }: TurnProps) {
+  // The mic grows with the voice (--level, written by useSpeechRecognition)
+  const micRef = useRef<HTMLSpanElement>(null)
+  const speech = useSpeechRecognition(sessionId, micRef)
   const cardTilt = useCardTilt()
   const [assistantText, setAssistantText] = useState(turn.firstMessage.text)
   const [assistantTone, setAssistantTone] = useState<Tone>(turn.firstMessage.tone ?? 'neutral')
@@ -51,6 +56,8 @@ export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
   const [voiceLoading, setVoiceLoading] = useState(false)
   const [phase, setPhase] = useState<Phase>('speaking')
   const [turnEnded, setTurnEnded] = useState(false)
+  // The AI answered with the help numbers: no next card, only "Quitter"
+  const [distress, setDistress] = useState(false)
   // Mirror: the backend asks to pick cards from the collection
   const [pickRequested, setPickRequested] = useState(turn.pickFromCollection ?? false)
   const [collection, setCollection] = useState<CollectionEntry[] | null>(null)
@@ -69,7 +76,12 @@ export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
   const isMirror = turn.card.format === 'mirror'
 
   const words = useMemo(() => assistantText.split(/\s+/).filter(Boolean), [assistantText])
-  const { supported: voiceSupported, start: startListening, cancel: cancelListening } = speech
+  const {
+    supported: voiceSupported,
+    start: startListening,
+    stop: stopListening,
+    cancel: cancelListening,
+  } = speech
 
   // The assistant speaks: its voice is fetched, then its words appear at the pace of the voice.
   // The user can answer only once the voice has finished (the mic must not hear it)
@@ -123,7 +135,7 @@ export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
 
   // Voice is the main way to answer: listen as soon as it is the user's turn
   useEffect(() => {
-    if (phase === 'answering' && mode === 'voice' && voiceSupported) startListening()
+    if (phase === 'answering' && mode === 'voice' && voiceSupported) void startListening()
   }, [phase, mode, voiceSupported, startListening])
 
   // Microphone refused or broken: fall back to the keyboard
@@ -167,7 +179,7 @@ export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
   }, [toast])
 
   // In voice mode, what was typed before switching back to the mic comes first
-  const voiceAnswer = [draft, speech.transcript].filter(Boolean).join(' ')
+  const voiceText = [draft, speech.transcript].filter(Boolean).join(' ')
 
   async function submit(answer: string, selectedEntryIds?: string[]) {
     const previousPhase = phase
@@ -184,8 +196,12 @@ export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
     try {
       const response = await api.sendMessage(sessionId, turn.turnId, answer, selectedEntryIds)
       const added = response.newEntries?.length ?? 0
-      if (added > 0) setToast((current) => ({ id: (current?.id ?? 0) + 1, count: added }))
+      if (added > 0) {
+        setToast((current) => ({ id: (current?.id ?? 0) + 1, count: added }))
+        playSound('reward')
+      }
       setTurnEnded(response.turnEnded)
+      if (response.safety === 'distress') setDistress(true)
       setPickRequested(response.pickFromCollection ?? false)
       setAssistantText(response.message.text)
       setAssistantTone(response.message.tone ?? 'neutral')
@@ -202,6 +218,27 @@ export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
       setMode('text')
       setPhase('answering')
     }
+  }
+
+  /** C’est bon (voice): the recording is turned into text by the backend, then sent */
+  async function sendVoiceAnswer() {
+    if (phase !== 'answering' || speech.transcribing) return
+    let heard: string
+    try {
+      heard = await stopListening()
+    } catch {
+      setError('On n’a pas réussi à t’entendre. Écris ta réponse !')
+      setMode('text')
+      return
+    }
+    // What was typed before switching back to the mic comes first
+    const answer = [draft, heard].filter(Boolean).join(' ').trim()
+    if (!answer) {
+      setError('On ne t’a pas entendu. Réessaie !')
+      void startListening()
+      return
+    }
+    void submit(answer)
   }
 
   function sendAnswer(text: string) {
@@ -224,10 +261,13 @@ export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
   }
 
   function sendSelection() {
-    if (phase === 'picking') submit('', selectedIds)
+    if (phase !== 'picking') return
+    playSound('place')
+    submit('', selectedIds)
   }
 
   function toggleEntry(entry: CollectionEntry) {
+    playSound(selectedIds.includes(entry.id) ? 'deselect' : 'select')
     setSelectedIds((current) =>
       current.includes(entry.id) ? current.filter((id) => id !== entry.id) : [...current, entry.id],
     )
@@ -255,20 +295,29 @@ export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
       const pressingButton = event.key === ' ' && event.target instanceof HTMLButtonElement
       const inField = event.target instanceof HTMLInputElement
       if (mode === 'voice' && phase === 'answering' && typing && !pressingButton && !inField) {
-        cancelListening()
-        setDraft(voiceAnswer ? `${voiceAnswer} ${event.key}` : event.key)
+        const typedBefore = draft
+        setDraft(typedBefore ? `${typedBefore} ${event.key}` : event.key)
         setMode('text')
         event.preventDefault()
+        // What was said is transcribed and slipped in after what was typed before
+        stopListening()
+          .then((heard) => {
+            if (!heard) return
+            setDraft((current) =>
+              [typedBefore, heard, current.slice(typedBefore.length).trimStart()].filter(Boolean).join(' '),
+            )
+          })
+          .catch(() => setError('On n’a pas réussi à t’entendre : écris ta réponse.'))
       }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [mode, phase, voiceAnswer, cancelListening])
+  }, [mode, phase, draft, stopListening])
 
   const keptEntries = collection?.filter((entry) => keptIds.includes(entry.id)) ?? []
 
   const orbState: OrbState =
-    phase === 'thinking' || (phase === 'speaking' && voiceLoading)
+    phase === 'thinking' || speech.transcribing || (phase === 'speaking' && voiceLoading)
       ? 'thinking'
       : phase === 'speaking'
         ? 'speaking'
@@ -339,11 +388,16 @@ export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
             </p>
           )}
 
-          {phase === 'ended' && (
-            <button className="btn turn-main-button" onClick={onTurnEnded} autoFocus>
-              {isMirror ? 'Voir mon bilan' : 'Piocher la suite'}
-            </button>
-          )}
+          {phase === 'ended' &&
+            (distress ? (
+              <button className="btn turn-main-button pop-in" onClick={onQuit} autoFocus>
+                Quitter
+              </button>
+            ) : (
+              <button className="btn turn-main-button pop-in" onClick={onTurnEnded} autoFocus>
+                {isMirror ? 'Voir mon bilan' : 'Piocher la suite'}
+              </button>
+            ))}
 
           {phase === 'picking' && collection && (
             <div className="turn-pick" ref={pickRef}>
@@ -373,25 +427,30 @@ export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
           )}
 
           {phase === 'answering' && mode === 'voice' && (
-            <div className="turn-voice">
-              <span className={`turn-mic${speech.listening ? ' is-listening' : ''}`} aria-hidden="true">
+            <div className="turn-voice rise-in">
+              <span ref={micRef} className={`turn-mic${speech.listening ? ' is-listening' : ''}`} aria-hidden="true">
                 <MicIcon />
               </span>
               <p className="turn-transcript" aria-live="polite">
-                {voiceAnswer || (speech.listening ? 'Je t’écoute…' : 'Le micro est en pause.')}
+                {voiceText ||
+                  (speech.transcribing
+                    ? 'J’écris ce que tu as dit…'
+                    : speech.listening
+                      ? 'Je t’écoute…'
+                      : 'Le micro est en pause.')}
               </p>
               <div className="turn-voice-actions">
                 {/* Never disabled: it must be able to hold the focus before anything is said */}
                 <button
                   className="btn turn-main-button"
-                  onClick={() => sendAnswer(voiceAnswer)}
-                  aria-disabled={!voiceAnswer}
+                  onClick={() => void sendVoiceAnswer()}
+                  aria-disabled={speech.transcribing || (!speech.listening && !draft)}
                   autoFocus
                 >
                   C’est bon
                 </button>
-                {!speech.listening && (
-                  <button className="btn" onClick={startListening}>
+                {!speech.listening && !speech.transcribing && (
+                  <button className="btn" onClick={() => void startListening()}>
                     Reparler
                   </button>
                 )}
@@ -402,7 +461,7 @@ export function Turn({ sessionId, turn, onTurnEnded, menu }: TurnProps) {
 
           {phase === 'answering' && mode === 'text' && (
             <form
-              className="turn-form"
+              className="turn-form rise-in"
               onSubmit={(event: FormEvent) => {
                 event.preventDefault()
                 sendAnswer(draft)

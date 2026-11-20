@@ -1,0 +1,59 @@
+{
+  "interests": [
+    "Réaliste",
+    "Social",
+    "Entreprenant",
+    "Investigateur",
+    "Conventionnel",
+    "Artistique"
+  ],
+  "aptitudes": {
+    "Compréhension orale": 5,
+    "Compréhension écrite": 4,
+    "Expression orale": 5,
+    "Expression écrite": 5,
+    "Fluidité des idées": 4,
+    "Originalité": 1,
+    "Sensibilité aux problèmes": 5,
+    "Raisonnement déductif": 7,
+    "Raisonnement inductif": 4
+  },
+  "personality": [
+    "Humilité-honnêteté",
+    "Extraversion",
+    "Émotivité",
+    "Ouverture à l'expérience",
+    "Caractère consciencieux",
+    "Agréabilité"
+  ],
+  "jobs_by_zone": {
+    "1": [
+      "Ouvrier agricole",
+      "Bûcheron abatteur",
+      "Parqueteur",
+      "Agent de service en restauration",
+      "Technicien d'assainissement"
+    ],
+    "2": [
+      "Surveillant des espaces de loisirs (Maître-nageur sauveteur / Pisteur-secouriste)",
+      "Monteur de pneus",
+      "Soigneur animalier",
+      "Signaleur",
+      "Ouvrier d'élevage"
+    ],
+    "3": [
+      "Sapeur-pompier",
+      "Policier",
+      "Tailleur de pierre",
+      "Aide-soignant",
+      "Commissaire de justice"
+    ],
+    "4": [
+      "Infirmier"
+    ],
+    "5": [
+      "Masseur-kinésithérapeute",
+      "IADE (Infirmier Anesthésiste Diplômé d'État)"
+    ]
+  }
+}

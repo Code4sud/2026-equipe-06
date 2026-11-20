@@ -1,7 +1,10 @@
-"""End-of-turn analysis: a second, silent call that reads the whole turn and extracts what to keep.
+"""End-of-turn analysis: a second, silent call that reads the whole turn and
+extracts what to keep.
 
-The talking AI never spots skills while talking: that would turn the conversation into a form.
-Everything the model returns goes through the safeguards of guards.py before being kept.
+The talking AI never spots skills while talking: that would turn the
+conversation into a form.
+Everything the model returns goes through the safeguards of guards.py before
+being kept.
 """
 
 import logging
@@ -12,7 +15,14 @@ from .config import get_config
 from .context import format_items
 from .data import load_rome, rome_prompt_list
 from .llm import complete_json
-from .models import Card, Engagement, Message, NewEntry, SessionContext, TurnAnalysis
+from .models import (
+    Card,
+    Engagement,
+    Message,
+    NewEntry,
+    SessionContext,
+    TurnAnalysis,
+)
 from .prompts import render
 
 log = logging.getLogger(__name__)
@@ -34,8 +44,10 @@ def _transcript(card: Card, messages: list[Message]) -> str:
 
 
 def _one_per_skill(entries: list[NewEntry]) -> list[NewEntry]:
-    """Within one turn, two entries with the same ROME skill are nearly always the same experience
-    told in two answers (formatting a computer, then uninstalling software): keep the one with the
+    """Within one turn, two entries with the same ROME skill are nearly always
+    the same experience
+    told in two answers (formatting a computer, then uninstalling software):
+    keep the one with the
     most complete quote, in the original order."""
     best: dict[str, NewEntry] = {}
     for entry in entries:
@@ -44,11 +56,17 @@ def _one_per_skill(entries: list[NewEntry]) -> list[NewEntry]:
         current = best.get(entry.rome_code)
         if current is None or len(entry.quote) > len(current.quote):
             best[entry.rome_code] = entry
-    return [e for e in entries if e.rome_code is None or best[e.rome_code] is e]
+    return [
+        e for e in entries if e.rome_code is None or best[e.rome_code] is e
+    ]
 
 
-def _keep_entries(raw: Any, ctx: SessionContext, said: list[str]) -> list[NewEntry]:
-    """Keeps only the entries that pass every safeguard, at most MAX_ENTRIES_PER_TURN."""
+def _keep_entries(
+    raw: Any, ctx: SessionContext, said: list[str]
+) -> list[NewEntry]:
+    """Keeps only the entries that pass every safeguard, at most
+    MAX_ENTRIES_PER_TURN.
+    """
     if not isinstance(raw, list):
         return []
     rome = load_rome()
@@ -62,7 +80,11 @@ def _keep_entries(raw: Any, ctx: SessionContext, said: list[str]) -> list[NewEnt
         fact = str(item.get("fact", "")).strip()
 
         if not guards.is_exact_quote(quote, said):
-            log.info("Entry dropped: the quote is not in what the young person said: %r", quote[:80])
+            log.info(
+                "Entry dropped: the quote is not in what the young person "
+                "said: %r",
+                quote[:80],
+            )
             continue
         if not fact or guards.is_sensitive(fact):
             log.info("Entry dropped: empty or sensitive fact: %r", fact)
@@ -73,7 +95,8 @@ def _keep_entries(raw: Any, ctx: SessionContext, said: list[str]) -> list[NewEnt
         code = item.get("rome_code")
         skill = rome.get(str(code)) if code else None
         if code and skill is None:
-            # An invented code: the entry is still worth keeping, but without a ROME label
+            # An invented code: the entry is still worth keeping, but without a
+            # ROME label
             log.info("Unknown ROME code %r, kept without it", code)
         kept.append(
             NewEntry(
@@ -87,11 +110,15 @@ def _keep_entries(raw: Any, ctx: SessionContext, said: list[str]) -> list[NewEnt
     return _one_per_skill(kept)[: rules.MAX_ENTRIES_PER_TURN]
 
 
-def analyze_turn(ctx: SessionContext, card: Card, history: list[Message]) -> TurnAnalysis:
+def analyze_turn(
+    ctx: SessionContext, card: Card, history: list[Message]
+) -> TurnAnalysis:
     """Reads a finished turn. `history` is the whole conversation of this card.
 
-    Returns the entries to add to the collection (silently), the summary of the turn to remember,
-    the engagement signal for the next draw, and what the young person declared he wants to avoid.
+    Returns the entries to add to the collection (silently), the summary of the
+    turn to remember,
+    the engagement signal for the next draw, and what the young person declared
+    he wants to avoid.
     """
     said = guards.user_texts(history)
     system = render(
@@ -110,17 +137,25 @@ def analyze_turn(ctx: SessionContext, card: Card, history: list[Message]) -> Tur
         timeout_ms=60_000,
     )
 
-    # The summary is the memory of later turns: sensitive information must not stay in it
+    # The summary is the memory of later turns: sensitive information must not
+    # stay in it
     summary = guards.strip_sensitive(str(data.get("summary", "")))
 
     engagement = str(data.get("engagement", "neutral"))
     if engagement not in _ENGAGEMENTS:
         engagement = "neutral"
 
-    topics = [t for t in _as_str_list(data.get("topics_to_explore"), 3) if not guards.is_sensitive(t)]
-    # A constraint is kept only if the young person really said it, word for word
+    topics = [
+        t
+        for t in _as_str_list(data.get("topics_to_explore"), 3)
+        if not guards.is_sensitive(t)
+    ]
+    # A constraint is kept only if the young person really said it, word for
+    # word
     constraints = [
-        c for c in _as_str_list(data.get("declared_constraints"), 3) if guards.is_exact_quote(c, said)
+        c
+        for c in _as_str_list(data.get("declared_constraints"), 3)
+        if guards.is_exact_quote(c, said)
     ]
 
     return TurnAnalysis(

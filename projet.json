@@ -14,5 +14,13 @@
   ],
   "demo": "https://two026-equipe-06-1-front.onrender.com",
   "video": "https://youtu.be/Aq5WXmQQooo?si=cyHYeW6adigiZ8Vj",
-  "captures": []
+  "captures": [
+    "captures/accueil.png",
+    "captures/tutoriel.png",
+    "captures/tirage.png",
+    "captures/discussion.png",
+    "captures/bilan-toi.png",
+    "captures/bilan-talents.png",
+    "captures/fiche-technique.png"
+  ]
 }

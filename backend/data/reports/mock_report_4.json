@@ -1,0 +1,62 @@
+{
+  "interests": [
+    "Social",
+    "Conventionnel",
+    "Réaliste",
+    "Investigateur",
+    "Entreprenant",
+    "Artistique"
+  ],
+  "aptitudes": {
+    "Compréhension orale": 5,
+    "Compréhension écrite": 6,
+    "Expression orale": 5,
+    "Expression écrite": 5,
+    "Fluidité des idées": 3,
+    "Originalité": 4,
+    "Sensibilité aux problèmes": 7,
+    "Raisonnement déductif": 6,
+    "Raisonnement inductif": 4
+  },
+  "personality": [
+    "Humilité-honnêteté",
+    "Caractère consciencieux",
+    "Agréabilité",
+    "Extraversion",
+    "Ouverture à l'expérience",
+    "Émotivité"
+  ],
+  "jobs_by_zone": {
+    "1": [
+      "Agent d'accueil et d'animation",
+      "Agent de service en restauration",
+      "Bûcheron abatteur",
+      "Plongeur",
+      "Cuisinier en restauration rapide"
+    ],
+    "2": [
+      "Auxiliaire de vie",
+      "Conducteur d'ambulance",
+      "Garde d'enfants à domicile",
+      "Surveillant des espaces de loisirs (Maître-nageur sauveteur / Pisteur-secouriste)",
+      "Conducteur de bus / car"
+    ],
+    "3": [
+      "Aide médico-psychologique",
+      "Coach sportif",
+      "Chef d'équipe de surveillants pénitentiaires",
+      "Sapeur-pompier",
+      "Commissaire de justice"
+    ],
+    "4": [
+      "Pilote de ligne",
+      "Garde-chasse / Agent de l'Office Français de la Biodiversité (OFB)"
+    ],
+    "5": [
+      "Sage-femme",
+      "Praticien en Activité Physique Adaptée (APA)",
+      "IADE (Infirmier Anesthésiste Diplômé d'État)",
+      "Médecin Anesthésiste-Réanimateur"
+    ]
+  }
+}

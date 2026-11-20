@@ -1,6 +1,8 @@
-"""What each API route does. Returns plain dicts in the shapes of frontend/src/types.ts.
+"""What each API route does. Returns plain dicts in the shapes of
+frontend/src/types.ts.
 
-Every function receives the database explicitly, so the same code runs on MongoDB (the server)
+Every function receives the database explicitly, so the same code runs on
+MongoDB (the server)
 and on an in-memory database (ai/dev_server.py, for local tests).
 """
 
@@ -12,9 +14,13 @@ from typing import Any
 from ai import analysis, conversation, drawing, rules, voice
 from ai.data import get_card, mirror_card
 from ai.llm import LLMError
-from ai.models import Card, Message
-from ai import guards
-from ai.summary import find_sensitive_mentions, suggest_with_mentions, summarize
+from ai.models import Card, Lead, Message
+from ai import guards, technical
+from ai.summary import (
+    find_sensitive_mentions,
+    suggest_with_mentions,
+    summarize,
+)
 from db.protocol import Database, Document
 
 from .store import (
@@ -39,18 +45,26 @@ from .store import (
 
 log = logging.getLogger(__name__)
 
-# After how many cards the mirror comes. Can be lowered for a demo with AI_MIRROR_AFTER_TURNS=1
-MIRROR_AFTER_TURNS = int(os.environ.get("AI_MIRROR_AFTER_TURNS", rules.MIRROR_MIN_TURNS))
+# After how many cards the mirror comes. Can be lowered for a demo with
+# AI_MIRROR_AFTER_TURNS=1
+MIRROR_AFTER_TURNS = int(
+    os.environ.get("AI_MIRROR_AFTER_TURNS", rules.MIRROR_MIN_TURNS)
+)
 
 _STATUSES = ("proposed", "kept", "rejected")
 
 
-# ---- Shapes of the front ------------------------------------------------------------------------
+# ---- Shapes of the front ----------------------------------------------------
 
 
 def card_json(card: Card) -> dict[str, Any]:
     # level, intention and opener stay on the server
-    return {"id": card.id, "family": card.family, "format": card.format, "title": card.title}
+    return {
+        "id": card.id,
+        "family": card.family,
+        "format": card.format,
+        "title": card.title,
+    }
 
 
 def message_json(text: str, tone: str = "neutral") -> dict[str, str]:
@@ -62,7 +76,8 @@ def entry_json(entry: Document) -> dict[str, Any]:
         "id": entry["id"],
         "card": card_json(get_card(entry["card_id"])),
         "quote": entry["quote"],
-        # The front shows one label: the fact. The ROME skill is sent along for when it shows it too
+        # The front shows one label: the fact. The ROME skill is sent along for
+        # when it shows it too
         "skill": entry["fact"],
         "fact": entry["fact"],
         "romeCode": entry.get("rome_code"),
@@ -71,33 +86,83 @@ def entry_json(entry: Document) -> dict[str, Any]:
     }
 
 
-# ---- Sessions -----------------------------------------------------------------------------------
+# ---- Sessions ---------------------------------------------------------------
 
 
 def create_session(db: Database, email: str) -> dict[str, Any]:
-    """Creates the game of this e-mail, or finds it again (the code is checked by the route)."""
+    """Creates the game of this e-mail, or finds it again (the code is checked
+    by the route).
+    """
     email = email.strip().lower()
     if not email:
         raise GameError(400, "email is required")
     existing = find_session_by_email(db, email)
     if existing:
-        # Coming back starts a new game, like a new player: only the collection is kept
-        _restart_game(db, existing["id"], email)
-        return {"sessionId": existing["id"], "isNew": False, "state": "drawing"}
+        # Coming back starts a new game, like a new player: only the collection
+        # is kept
+        _restart_game(db, existing["id"], email, existing.get("report_id"))
+        return {
+            "sessionId": existing["id"],
+            "isNew": False,
+            "state": "drawing",
+        }
     session_id = db.insert(SESSIONS, new_session(email))
     return {"sessionId": session_id, "isNew": True, "state": "drawing"}
 
 
-def _restart_game(db: Database, session_id: str, email: str) -> None:
-    """Back to the start of a game: draw, memory of the turns, mirror and timer start again.
+def _restart_game(
+    db: Database, session_id: str, email: str, report_id: str | None
+) -> None:
+    """Back to the start of a game: draw, memory of the turns, mirror and timer
+    start again.
 
-    The entries of the collection are separate documents: they stay. A card left in the middle is
+    The entries of the collection are separate documents: they stay. A card
+    left in the middle is
     closed without being analyzed.
     """
     for turn in db.find(TURNS, {"session_id": session_id}, limit=500):
         if not turn.get("ended"):
             db.update(TURNS, turn["id"], {"ended": True})
-    db.update(SESSIONS, session_id, new_session(email))
+    # Same account, same report
+    db.update(SESSIONS, session_id, new_session(email, report_id))
+
+
+# GDPR: everything is erased 6 months after the last visit
+# (said on the « Tes données » page)
+RETENTION_SECONDS = 183 * 24 * 3600
+
+
+def inactive_session_ids(db: Database) -> list[str]:
+    """The games nobody came back to for RETENTION_SECONDS: to be erased.
+
+    Read in pages and filtered here (no MongoDB operator), so the in-memory
+    database works too.
+    """
+    limit = time.time() - RETENTION_SECONDS
+    found: list[str] = []
+    skip = 0
+    while page := db.find(SESSIONS, {}, limit=500, skip=skip):
+        for session in page:
+            seen = session.get("last_seen") or session.get("created_at") or 0
+            if float(seen) < limit:
+                found.append(session["id"])
+        skip += len(page)
+    return found
+
+
+def erase_game(db: Database, session_id: str) -> str:
+    """Effacer toutes mes données: the game, every turn (the raw
+    conversation) and the collection.
+
+    Returns the e-mail, so the route can erase the account and its login
+    codes too.
+    """
+    session = load_session(db, session_id)
+    for collection in (TURNS, ENTRIES):
+        for doc in db.find(collection, {"session_id": session_id}, limit=500):
+            db.delete(collection, doc["id"])
+    db.delete(SESSIONS, session_id)
+    return str(session.get("email", ""))
 
 
 def get_session(db: Database, session_id: str) -> dict[str, Any]:
@@ -109,17 +174,24 @@ def get_session(db: Database, session_id: str) -> dict[str, Any]:
     }
 
 
-# ---- Draws and turns ----------------------------------------------------------------------------
+# ---- Draws and turns --------------------------------------------------------
 
 
 def draw_cards(db: Database, session_id: str) -> list[dict[str, Any]]:
-    """Four cards (the front adds the joker), or the mirror card alone when the game is over."""
+    """Four cards (the front adds the joker), or the mirror card alone when the
+    game is over.
+    """
     session = load_session(db, session_id)
     if session.get("state") == "summary":
         return []
     state = draw_state_of(session)
-    minutes = (time.time() - float(session.get("created_at", time.time()))) / 60
-    if state.turns_played >= MIRROR_AFTER_TURNS or minutes >= rules.MIRROR_MAX_MINUTES:
+    minutes = (
+        time.time() - float(session.get("created_at", time.time()))
+    ) / 60
+    if (
+        state.turns_played >= MIRROR_AFTER_TURNS
+        or minutes >= rules.MIRROR_MAX_MINUTES
+    ):
         return [card_json(mirror_card())]
     return [card_json(card) for card in drawing.draw_cards(state)]
 
@@ -144,7 +216,13 @@ def start_turn(db: Database, session_id: str, card_id: str) -> dict[str, Any]:
     )
 
     is_mirror = card.format == "mirror"
-    db.update(SESSIONS, session_id, {"state": "mirror", "mirror_turn_id": turn_id} if is_mirror else {"state": "in_turn"})
+    db.update(
+        SESSIONS,
+        session_id,
+        {"state": "mirror", "mirror_turn_id": turn_id}
+        if is_mirror
+        else {"state": "in_turn"},
+    )
     result: dict[str, Any] = {"turnId": turn_id, "message": message_json(text)}
     if is_mirror:
         result["pickFromCollection"] = True
@@ -152,9 +230,17 @@ def start_turn(db: Database, session_id: str, card_id: str) -> dict[str, Any]:
 
 
 def _finish_turn(
-    db: Database, session: Document, card: Card, history: list[Message], *, distress: bool
+    db: Database,
+    session: Document,
+    card: Card,
+    history: list[Message],
+    *,
+    distress: bool,
+    ended_by: technical.EndedBy = "completed",
 ) -> list[Document]:
-    """End of a card: remember it for the next draw and run the silent analysis. Returns the new entries."""
+    """End of a card: remember it for the next draw and run the silent
+    analysis. Returns the new entries.
+    """
     session_id = session["id"]
     state = draw_state_of(session)
     state.played_ids.add(card.id)
@@ -163,23 +249,45 @@ def _finish_turn(
     summaries = list(session.get("turn_summaries", []))
     constraints = list(session.get("declared_constraints", []))
     created: list[Document] = []
+    answers, words = technical.count_answers(history)
+    log_line: dict[str, Any] = {
+        "card_id": card.id,
+        "answers": answers,
+        "words": words,
+        "engagement": None,
+        "topics": [],
+        "ended_by": "stopped" if distress else ended_by,
+    }
 
-    # Nothing to analyze after a distress message, or when the card was skipped before any answer
+    # Nothing to analyze after a distress message, or when the card was skipped
+    # before any answer
     if not distress and any(m.role == "user" for m in history):
         ctx = context_of(session, load_entries(db, session_id))
         try:
             result = analysis.analyze_turn(ctx, card, history)
         except LLMError:
-            log.exception("The analysis of the turn failed: nothing is kept from this card")
+            log.exception(
+                "The analysis of the turn failed: nothing is kept from this "
+                "card"
+            )
             state.last_engagement = "neutral"
         else:
             state.last_engagement = result.engagement
             state.topics_to_explore = result.topics_to_explore
+            log_line["engagement"] = result.engagement
+            log_line["topics"] = result.topics_to_explore
             if result.summary:
                 summaries.append(
-                    {"card_id": card.id, "card_title": card.title, "summary": result.summary, "engagement": result.engagement}
+                    {
+                        "card_id": card.id,
+                        "card_title": card.title,
+                        "summary": result.summary,
+                        "engagement": result.engagement,
+                    }
                 )
-            constraints += [c for c in result.declared_constraints if c not in constraints]
+            constraints += [
+                c for c in result.declared_constraints if c not in constraints
+            ]
             for e in result.entries:
                 doc = {
                     "session_id": session_id,
@@ -191,9 +299,15 @@ def _finish_turn(
                     "status": "proposed",
                     "created_at": time.time(),
                 }
-                # insert gets a copy: pymongo adds a non-JSON "_id" to the dict it receives
+                # insert gets a copy: pymongo adds a non-JSON "_id" to the dict
+                # it receives
                 created.append({**doc, "id": db.insert(ENTRIES, dict(doc))})
-            log.info("Turn done on %r: %d entries kept, engagement %s", card.title, len(created), result.engagement)
+            log.info(
+                "Turn done on %r: %d entries kept, engagement %s",
+                card.title,
+                len(created),
+                result.engagement,
+            )
 
     db.update(
         SESSIONS,
@@ -202,6 +316,7 @@ def _finish_turn(
             "state": "drawing",
             "draw": draw_state_to_doc(state),
             "turn_summaries": summaries,
+            "turn_log": [*session.get("turn_log", []), log_line],
             "declared_constraints": constraints,
         },
     )
@@ -209,7 +324,11 @@ def _finish_turn(
 
 
 def send_message(
-    db: Database, session_id: str, turn_id: str, text: str, selected_ids: list[Any] | None
+    db: Database,
+    session_id: str,
+    turn_id: str,
+    text: str,
+    selected_ids: list[Any] | None,
 ) -> dict[str, Any]:
     session = load_session(db, session_id)
     turn = load_turn(db, session_id, turn_id)
@@ -223,16 +342,33 @@ def send_message(
     if is_mirror and selected_ids is not None:
         wanted = {str(i) for i in selected_ids}
         selected = [item for item in ctx.collection if item.id in wanted]
-        db.update(SESSIONS, session_id, {"mirror_selected_ids": [item.id for item in selected]})
+        db.update(
+            SESSIONS,
+            session_id,
+            {"mirror_selected_ids": [item.id for item in selected]},
+        )
 
     if turn.get("ended"):
         raise GameError(409, "This card is over")
-    reply = conversation.reply(ctx, card, history, text, selected=selected)
-    user_text = text or (conversation.pick_message(selected) if selected is not None else "")
+    # Later mirror messages: the pick stored at the start, so the model still
+    # knows which picked cards tell the same story
+    picked = selected
+    if is_mirror and picked is None:
+        wanted = set(session.get("mirror_selected_ids", []))
+        picked = [item for item in ctx.collection if item.id in wanted]
+    reply = conversation.reply(
+        ctx, card, history, text, selected=selected, picked=picked
+    )
+    user_text = text or (
+        conversation.pick_message(selected) if selected is not None else ""
+    )
     history += [Message("user", user_text), Message("assistant", reply.reply)]
     db.update(TURNS, turn_id, {"history": history_to_doc(history)})
 
-    result: dict[str, Any] = {"message": message_json(reply.reply, reply.tone), "turnEnded": reply.turn_ended}
+    result: dict[str, Any] = {
+        "message": message_json(reply.reply, reply.tone),
+        "turnEnded": reply.turn_ended,
+    }
     if reply.safety != "none":
         result["safety"] = reply.safety
     if reply.turn_ended:
@@ -240,20 +376,25 @@ def send_message(
         if is_mirror:
             db.update(SESSIONS, session_id, {"state": "summary"})
         else:
-            created = _finish_turn(db, session, card, history, distress=reply.safety == "distress")
+            created = _finish_turn(
+                db, session, card, history, distress=reply.safety == "distress"
+            )
             if created:
                 result["newEntries"] = [entry_json(e) for e in created]
     return result
 
 
-# ---- Voice ----------------------------------------------------------------------------------------
+# ---- Voice ------------------------------------------------------------------
 
-# Longest text read aloud: a reply is two or three short sentences, the summary paragraph a bit more
+# Longest text read aloud: a reply is two or three short sentences, the summary
+# paragraph a bit more
 _MAX_SPEECH_CHARS = 1200
 
 
 def speech(db: Database, session_id: str, text: str, tone: str) -> bytes:
-    """The mp3 of something the AI said in this game. Only its own words: the route cannot read anything else."""
+    """The mp3 of something the AI said in this game. Only its own words: the
+    route cannot read anything else.
+    """
     text = text.strip()
     if not text or len(text) > _MAX_SPEECH_CHARS:
         raise GameError(400, "text is required (1200 characters at most)")
@@ -267,16 +408,47 @@ def speech(db: Database, session_id: str, text: str, tone: str) -> bytes:
     }
     if text not in said:
         raise GameError(404, "This text was not said in this game")
-    return voice.speak(text, "enthusiastic" if tone == "enthusiastic" else "neutral")
+    return voice.speak(
+        text, "enthusiastic" if tone == "enthusiastic" else "neutral"
+    )
 
 
-# ---- Leaving a card, going to the summary --------------------------------------------------------
+# An answer of a few minutes in opus weighs well under 1 MB
+_MAX_AUDIO_BYTES = 10 * 1024 * 1024
+_AUDIO_EXTENSIONS = {"webm", "ogg", "mp4", "m4a", "mp3", "wav"}
 
 
-def skip_turn(db: Database, session_id: str, turn_id: str) -> dict[str, Any]:
-    """Passer: the conversation on this card stops. What was said is still analyzed.
+def transcribe(
+    db: Database, session_id: str, audio: bytes, filename: str
+) -> dict[str, Any]:
+    """The words of the young person's spoken answer. The audio goes to Mistral
+    and is not kept.
+    """
+    if not audio or len(audio) > _MAX_AUDIO_BYTES:
+        raise GameError(400, "audio is required (10 MB at most)")
+    extension = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
+    if extension not in _AUDIO_EXTENSIONS:
+        raise GameError(
+            400, f"Unsupported audio format: {extension or 'none'}"
+        )
+    load_session(db, session_id)
+    return {"text": voice.transcribe(audio, f"answer.{extension}")}
 
-    For the mirror (only when the young person quits during it), the game goes back to the draw:
+
+# ---- Leaving a card, going to the summary -----------------------------------
+
+
+def skip_turn(
+    db: Database,
+    session_id: str,
+    turn_id: str,
+    ended_by: technical.EndedBy = "skipped",
+) -> dict[str, Any]:
+    """Passer: the conversation on this card stops. What was said is still
+    analyzed.
+
+    For the mirror (only when the young person quits during it), the game goes
+    back to the draw:
     the mirror card comes back next time.
     """
     session = load_session(db, session_id)
@@ -288,18 +460,25 @@ def skip_turn(db: Database, session_id: str, turn_id: str) -> dict[str, Any]:
     if card.format == "mirror":
         db.update(SESSIONS, session_id, {"state": "drawing"})
         return {}
-    created = _finish_turn(db, session, card, history_of(turn), distress=False)
+    created = _finish_turn(
+        db, session, card, history_of(turn), distress=False, ended_by=ended_by
+    )
     return {"newEntries": [entry_json(e) for e in created]} if created else {}
 
 
-def finish_game(db: Database, session_id: str, turn_id: str | None) -> dict[str, Any]:
-    """Passer au bilan: ends the card in progress if there is one, then straight to the summary (no mirror)."""
+def finish_game(
+    db: Database, session_id: str, turn_id: str | None
+) -> dict[str, Any]:
+    """Passer au bilan: ends the card in progress if there is one, then
+    straight to the summary (no mirror).
+    """
     result: dict[str, Any] = {}
     if turn_id:
         turn = load_turn(db, session_id, turn_id)
-        # The mirror is a conversation about the game, not a card: nothing to analyze
+        # The mirror is a conversation about the game, not a card: nothing to
+        # analyze
         if get_card(turn["card_id"]).format != "mirror":
-            result = skip_turn(db, session_id, turn_id)
+            result = skip_turn(db, session_id, turn_id, ended_by="to_summary")
         else:
             db.update(TURNS, turn_id, {"ended": True})
     else:
@@ -308,7 +487,7 @@ def finish_game(db: Database, session_id: str, turn_id: str | None) -> dict[str,
     return result
 
 
-# ---- Collection and summary ---------------------------------------------------------------------
+# ---- Collection and summary -------------------------------------------------
 
 
 def get_collection(db: Database, session_id: str) -> list[dict[str, Any]]:
@@ -316,7 +495,9 @@ def get_collection(db: Database, session_id: str) -> list[dict[str, Any]]:
     return [entry_json(e) for e in load_entries(db, session_id)]
 
 
-def update_entry(db: Database, session_id: str, entry_id: str, status: str) -> dict[str, Any]:
+def update_entry(
+    db: Database, session_id: str, entry_id: str, status: str
+) -> dict[str, Any]:
     entry = load_entry(db, session_id, entry_id)
     if status not in _STATUSES:
         raise GameError(400, "status must be proposed, kept or rejected")
@@ -324,11 +505,54 @@ def update_entry(db: Database, session_id: str, entry_id: str, status: str) -> d
     return entry_json({**entry, "status": status})
 
 
-def _summary_material(db: Database, session_id: str) -> tuple[Document, list[Document], list[Message]]:
+def delete_entry(
+    db: Database, session_id: str, entry_id: str
+) -> dict[str, Any]:
+    """The young person does not want to keep this card: it is erased from the
+    base, not just hidden.
+
+    Its quote is erased from the conversation too, where it was said word for
+    word.
+    """
+    entry = load_entry(db, session_id, entry_id)
+    quote = str(entry.get("quote", ""))
+    for turn in db.find(TURNS, {"session_id": session_id}, limit=500):
+        history = history_of(turn)
+        cleaned = [
+            Message(role=m.role, text=guards.erase_quote(m.text, quote))
+            if m.role == "user"
+            else m
+            for m in history
+        ]
+        if cleaned != history:
+            db.update(TURNS, turn["id"], {"history": history_to_doc(cleaned)})
+    db.delete(ENTRIES, entry_id)
+    session = load_session(db, session_id)
+    picked = session.get("mirror_selected_ids", [])
+    if entry_id in picked:
+        db.update(
+            SESSIONS,
+            session_id,
+            {"mirror_selected_ids": [i for i in picked if i != entry_id]},
+        )
+    return {}
+
+
+def _summary_material(
+    db: Database, session_id: str
+) -> tuple[Document, list[Document], list[Message]]:
     """The session, the entries not rejected and the mirror conversation."""
     session = load_session(db, session_id)
-    entries = [e for e in load_entries(db, session_id) if e.get("status") != "rejected"]
-    mirror_turn = db.get(TURNS, session["mirror_turn_id"]) if session.get("mirror_turn_id") else None
+    entries = [
+        e
+        for e in load_entries(db, session_id)
+        if e.get("status") != "rejected"
+    ]
+    mirror_turn = (
+        db.get(TURNS, session["mirror_turn_id"])
+        if session.get("mirror_turn_id")
+        else None
+    )
     mirror_messages = history_of(mirror_turn) if mirror_turn else []
     return session, entries, mirror_messages
 
@@ -336,44 +560,168 @@ def _summary_material(db: Database, session_id: str) -> tuple[Document, list[Doc
 def _everything_said(db: Database, session_id: str) -> list[str]:
     """Every message of the young person in this game, mirror included."""
     turns = db.find(TURNS, {"session_id": session_id}, limit=500)
-    return [text for turn in turns for text in guards.user_texts(history_of(turn))]
+    return [
+        text for turn in turns for text in guards.user_texts(history_of(turn))
+    ]
+
+
+def lead_json(lead: Lead) -> dict[str, str]:
+    return {"title": lead.title, "why": lead.why, "firstStep": lead.first_step}
+
+
+def _technical_sheet(
+    session: Document, entries: list[Document]
+) -> dict[str, Any]:
+    """The technical sheet: kept entries sorted on the ROME, and how each
+    card went. No AI call.
+    """
+    evidence = []
+    for e in entries:
+        card = get_card(e["card_id"])
+        evidence.append(
+            technical.Evidence(
+                quote=e["quote"],
+                fact=e["fact"],
+                card_id=card.id,
+                card_title=card.title,
+                family=card.family,
+                rome_code=e.get("rome_code"),
+            )
+        )
+    log_lines = session.get("turn_log", [])
+    turns = []
+    for line in log_lines:
+        card = get_card(line["card_id"])
+        turns.append(
+            technical.TurnLine(
+                card_title=card.title,
+                family=card.family,
+                answers=int(line.get("answers", 0)),
+                words=int(line.get("words", 0)),
+                engagement=line.get("engagement"),
+                ended_by=line.get("ended_by", "completed"),
+                kept=sum(1 for e in entries if e["card_id"] == card.id),
+            )
+        )
+    topics = [t for line in log_lines for t in line.get("topics", [])]
+    sheet = technical.build_sheet(evidence, turns, topics)
+
+    def evidence_json(item: technical.Evidence) -> dict[str, Any]:
+        return {
+            "quote": item.quote,
+            "fact": item.fact,
+            "cardTitle": item.card_title,
+            "family": item.family,
+        }
+
+    return {
+        "skills": [
+            {
+                "code": s.code,
+                "label": s.label,
+                "category": s.category,
+                "domain": s.domain,
+                "issue": s.issue,
+                "objective": s.objective,
+                "strength": s.strength,
+                "cards": s.cards,
+                "families": s.families,
+                "evidence": [evidence_json(e) for e in s.evidence],
+            }
+            for s in sheet.skills
+        ],
+        "unmapped": [evidence_json(e) for e in sheet.unmapped],
+        "domains": [
+            {"domain": d.domain, "skills": d.skills, "stories": d.stories}
+            for d in sheet.domains
+        ],
+        "turns": [
+            {
+                "cardTitle": t.card_title,
+                "family": t.family,
+                "answers": t.answers,
+                "words": t.words,
+                "engagement": t.engagement,
+                "endedBy": t.ended_by,
+                "kept": t.kept,
+            }
+            for t in sheet.turns
+        ],
+        "topics": sheet.topics,
+    }
 
 
 def get_summary(db: Database, session_id: str) -> dict[str, Any]:
-    # Called once the young person has kept or rejected his entries: only the kept ones count
+    # Called once the young person has kept or rejected his entries: only the
+    # kept ones count
     session, entries, mirror_messages = _summary_material(db, session_id)
     selected_ids = set(session.get("mirror_selected_ids", []))
     selected = [item_of(e) for e in entries if e["id"] in selected_ids]
 
-    result = summarize(context_of(session, entries), kept_items(entries), selected, mirror_messages)
+    result = summarize(
+        context_of(session, entries),
+        kept_items(entries),
+        selected,
+        mirror_messages,
+    )
     # Kept so the speech route can read it aloud (and only this one)
     db.update(SESSIONS, session_id, {"summary_overview": result.overview})
     try:
         mentions = find_sensitive_mentions(_everything_said(db, session_id))
     except LLMError:
-        log.exception("Looking for sensitive mentions failed: the question is not asked")
+        log.exception(
+            "Looking for sensitive mentions failed: the question is not asked"
+        )
         mentions = []
     return {
         "overview": result.overview,
         "collection": [entry_json(e) for e in entries],
         "personalityCards": [
-            {"id": f"p{i}", "title": c.title, "description": c.description, "evidence": c.evidence}
+            {
+                "id": f"p{i}",
+                "title": c.title,
+                "description": c.description,
+                "evidence": c.evidence,
+            }
             for i, c in enumerate(result.personality_cards)
         ],
-        "suggestions": result.suggestions,
-        "crossings": [{"kind": c.kind, "text": c.text} for c in result.crossings],
-        # Asked at the summary: "do you want us to take this into account?" Nothing is stored
+        "suggestions": [lead_json(lead) for lead in result.suggestions],
+        "crossings": [
+            {"kind": c.kind, "text": c.text} for c in result.crossings
+        ],
+        "mirrorWords": result.mirror_words,
+        "advisorQuestions": result.advisor_questions,
+        # Asked at the summary: "do you want us to take this into account?"
+        # Nothing is stored
         "sensitiveMentions": mentions,
+        # For an adviser or a psychologist: sorted on the ROME, computed
+        # without the AI
+        "technical": _technical_sheet(session, entries),
     }
 
 
-def suggestions_with_mentions(db: Database, session_id: str, mentions: list[Any]) -> dict[str, Any]:
-    """The suggestions again, with what the young person agreed to share. Nothing is stored."""
+def suggestions_with_mentions(
+    db: Database, session_id: str, mentions: list[Any]
+) -> dict[str, Any]:
+    """The suggestions again, with what the young person agreed to share.
+    Nothing is stored.
+    """
     said = _everything_said(db, session_id)
     # Only his own words: anything that is not in what he said is ignored
-    wanted = [m for m in (str(x).strip() for x in mentions) if m and guards.is_exact_quote(m, said)]
+    wanted = [
+        m
+        for m in (str(x).strip() for x in mentions)
+        if m and guards.is_exact_quote(m, said)
+    ]
     if not wanted:
-        raise GameError(400, "mentions must be sentences the young person said")
+        raise GameError(
+            400, "mentions must be sentences the young person said"
+        )
     session, entries, mirror_messages = _summary_material(db, session_id)
-    suggestions = suggest_with_mentions(context_of(session, entries), kept_items(entries), mirror_messages, wanted)
-    return {"suggestions": suggestions}
+    suggestions = suggest_with_mentions(
+        context_of(session, entries),
+        kept_items(entries),
+        mirror_messages,
+        wanted,
+    )
+    return {"suggestions": [lead_json(lead) for lead in suggestions]}

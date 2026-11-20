@@ -10,10 +10,8 @@ from dotenv import load_dotenv
 class ServerEnvironment:
     __is_loaded: bool = False
 
-
     class EnvironmentError(Exception):
         pass
-
 
     @classmethod
     def load(cls, dotenv_path: str = ".env"):
@@ -21,15 +19,19 @@ class ServerEnvironment:
             load_dotenv(dotenv_path)
             cls.__is_loaded = True
 
-
     @classmethod
     def get(cls, key: str, default: str | None = None) -> str:
         if not cls.__is_loaded:
-            raise cls.EnvironmentError("Environment variables are not loaded. Call 'load' method first.")
+            raise cls.EnvironmentError(
+                "Environment variables are not loaded. Call 'load' method "
+                "first."
+            )
 
         value = os.getenv(key, default)
         if value is None:
-            raise cls.EnvironmentError(f"Environment variable '{key}' is not set.")
+            raise cls.EnvironmentError(
+                f"Environment variable '{key}' is not set."
+            )
 
         return value
 
@@ -37,12 +39,18 @@ class ServerEnvironment:
 def build_app() -> App:
     ServerEnvironment.load()
 
-    app_builder = AppBuilder(name=ServerEnvironment.get("APP_NAME"))                                    \
-        .addPort(ServerEnvironment.get("PORT"))                                                         \
-        .addHost(ServerEnvironment.get("HOST"))                                                         \
-        .addCORS(origins=ServerEnvironment.get("FRONTEND_URL", "*"))                                    \
-        .addDatabase(ServerEnvironment.get("DB_URI"), ServerEnvironment.get("DB_NAME"), MongoDatabase)  \
+    app_builder = (
+        AppBuilder(name=ServerEnvironment.get("APP_NAME"))
+        .addPort(ServerEnvironment.get("PORT"))
+        .addHost(ServerEnvironment.get("HOST"))
+        .addCORS(origins=ServerEnvironment.get("FRONTEND_URL", "*"))
+        .addDatabase(
+            ServerEnvironment.get("DB_URI"),
+            ServerEnvironment.get("DB_NAME"),
+            MongoDatabase,
+        )
         .addRoute("/", lambda: "Hello World!")
+    )
 
     for route_name, route_func, route_type in Router():
         app_builder.addRoute(f"/api/{route_name}", route_func, [route_type])

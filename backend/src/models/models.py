@@ -1,7 +1,13 @@
 from datetime import datetime, timezone
 from typing import Annotated, Any, Self
 
-from pydantic import AfterValidator, BaseModel, EmailStr, Field, field_validator
+from pydantic import (
+    AfterValidator,
+    BaseModel,
+    EmailStr,
+    Field,
+    field_validator,
+)
 
 
 def utcnow() -> datetime:
@@ -18,12 +24,10 @@ UtcDatetime = Annotated[datetime, AfterValidator(_to_utc)]
 
 
 class DbModel(BaseModel):
-
     id: str | None = None
 
     def to_document(self) -> dict[str, Any]:
         return self.model_dump(exclude={"id"})
-
 
     @classmethod
     def from_document(cls, doc: dict[str, Any]) -> Self:

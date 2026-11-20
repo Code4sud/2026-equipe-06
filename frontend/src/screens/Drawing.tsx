@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { api } from '../api'
 import { GameCard } from '../components/GameCard'
+import { KeyboardHint } from '../components/KeyboardHint'
+import { delay } from '../utils/animation'
 import type { ActiveTurn, Card } from '../types'
 import { moveFocusWithArrows } from '../utils/arrowNavigation'
+import { playSound, playSounds, type Sound } from '../utils/sounds'
 import { prefersReducedMotion } from '../utils/viewTransition'
 import './Drawing.css'
 
@@ -30,6 +33,10 @@ interface DrawingProps {
 }
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
+/** One sound per moving card; without animations (reduced motion), a single sound */
+const playMovingCards = (sound: Sound, count: number, staggerMs: number) =>
+  playSounds(sound, prefersReducedMotion() ? Math.min(count, 1) : count, staggerMs)
 
 /** Front-only 5th card, always last: the backend sends 4 cards and never this one */
 const JOKER_CARD: Card = {
@@ -82,7 +89,11 @@ export function Drawing({
     if (!cards || revealed) return
     const dealTime = prefersReducedMotion() ? 0 : DEAL_DURATION_MS + cards.length * DEAL_STAGGER_MS
     const timer = setTimeout(() => setRevealed(true), dealTime)
-    return () => clearTimeout(timer)
+    const stopSounds = playMovingCards('draw', cards.length, DEAL_STAGGER_MS)
+    return () => {
+      clearTimeout(timer)
+      stopSounds()
+    }
   }, [cards, revealed])
 
   // Select the first card so the keyboard works right away
@@ -93,6 +104,7 @@ export function Drawing({
   async function redraw() {
     setRedrawing(true)
     const count = cards?.length ?? 0
+    playMovingCards('discard', count, DISCARD_STAGGER_MS)
     // Every card leaves, one after the other; the last one starts after (count - 1) delays
     await wait(prefersReducedMotion() ? 0 : DISCARD_DURATION_MS + Math.max(0, count - 1) * DISCARD_STAGGER_MS)
     onRedraw()
@@ -105,6 +117,7 @@ export function Drawing({
     }
     setChosenId(card.id)
     setError(null)
+    playMovingCards('discard', (cards?.length ?? 1) - 1, DISCARD_STAGGER_MS)
     try {
       // The other cards are discarded while the turn starts
       const [{ turnId, message, pickFromCollection }] = await Promise.all([
@@ -136,7 +149,7 @@ export function Drawing({
   return (
     <main className={`drawing${chosenId || redrawing ? ' is-leaving' : ''}`} onKeyDown={moveFocusWithArrows}>
       {menu}
-      <h1 className="pill-title">{!revealed ? 'On pioche…' : isMirror ? 'Dernière carte !' : 'Choisis une carte'}</h1>
+      <h1 className="pill-title pop-in">{!revealed ? 'On pioche…' : isMirror ? 'Dernière carte !' : 'Choisis une carte'}</h1>
 
       {cards && (
         <div className="drawing-cards">
@@ -159,9 +172,23 @@ export function Drawing({
       )}
 
       {revealed && (
-        <button className="btn" onClick={onOpenCollection} disabled={chosenId !== null || redrawing}>
+        <button
+          className="btn rise-in"
+          onClick={() => {
+            playSound('fan')
+            onOpenCollection()
+          }}
+          disabled={chosenId !== null || redrawing}>
           Voir ma collection
         </button>
+      )}
+
+      {revealed && (
+        <KeyboardHint
+          className="rise-in"
+          style={delay(0.3)}
+          items={[{ keys: ['←', '↑', '→', '↓'], label: 'te déplacer' }]}
+        />
       )}
 
       {error && (

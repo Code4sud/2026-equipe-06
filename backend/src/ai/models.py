@@ -1,6 +1,7 @@
 """Data shapes exchanged between the AI module and the rest of the backend.
 
-They carry no e-mail, name or any identifier of the person: only what is said in the game.
+They carry no e-mail, name or any identifier of the person: only what is said
+in the game.
 """
 
 from dataclasses import dataclass, field
@@ -10,7 +11,8 @@ Level = Literal["general", "specific", "personal"]
 Role = Literal["assistant", "user"]
 Safety = Literal["none", "heavy", "distress"]
 Engagement = Literal["open", "neutral", "closed"]
-# How the AI's words are said aloud: enthusiastic only when what the young person said deserves it
+# How the AI's words are said aloud: enthusiastic only when what the young
+# person said deserves it
 Tone = Literal["neutral", "enthusiastic"]
 
 
@@ -26,7 +28,8 @@ class Card:
     intention: str
     # Reference first sentence, which the AI adapts. Stays on the server too
     opener: str
-    # Talents this card can bring out (docs/COMPETENCES.md): where to dig, never said to the young person
+    # Talents this card can bring out (docs/COMPETENCES.md): where to dig,
+    # never said to the young person
     talents: tuple[str, ...] = ()
 
 
@@ -53,7 +56,9 @@ class CollectionItem:
 
 @dataclass(frozen=True)
 class TurnSummary:
-    """What a past turn was about: the memory that lets the AI link turns and resume a session."""
+    """What a past turn was about: the memory that lets the AI link turns and
+    resume a session.
+    """
 
     card_id: str
     card_title: str
@@ -63,7 +68,9 @@ class TurnSummary:
 
 @dataclass(frozen=True)
 class Report:
-    """The "rapport des possibles" of the Centre des possibles, reduced to what the AI needs."""
+    """The "rapport des possibles" of the Centre des possibles, reduced to what
+    the AI needs.
+    """
 
     # RIASEC dimensions in French, from the most to the least marked
     interests: list[str]
@@ -78,20 +85,28 @@ class Report:
     def from_dict(cls, data: dict[str, Any]) -> "Report":
         return cls(
             interests=[str(x) for x in data.get("interests", [])],
-            aptitudes={str(k): int(v) for k, v in data.get("aptitudes", {}).items()},
+            aptitudes={
+                str(k): int(v) for k, v in data.get("aptitudes", {}).items()
+            },
             personality=[str(x) for x in data.get("personality", [])],
-            jobs_by_zone={int(k): [str(j) for j in v] for k, v in data.get("jobs_by_zone", {}).items()},
+            jobs_by_zone={
+                int(k): [str(j) for j in v]
+                for k, v in data.get("jobs_by_zone", {}).items()
+            },
         )
 
 
 @dataclass
 class SessionContext:
-    """Everything the AI knows about the person at a given moment. Rebuilt from the database."""
+    """Everything the AI knows about the person at a given moment. Rebuilt from
+    the database.
+    """
 
     report: Report | None = None
     turn_summaries: list[TurnSummary] = field(default_factory=list)
     collection: list[CollectionItem] = field(default_factory=list)
-    # Things the young person said himself that he wants to avoid or prefer, word for word
+    # Things the young person said himself that he wants to avoid or prefer,
+    # word for word
     declared_constraints: list[str] = field(default_factory=list)
 
 
@@ -135,8 +150,24 @@ class PersonalityCard:
 
 
 @dataclass(frozen=True)
+class Lead:
+    """A path to explore: what it is, why it fits what he told, and a first
+    small step.
+    """
+
+    title: str
+    why: str
+    first_step: str
+
+
+@dataclass(frozen=True)
 class Summary:
     overview: str
     crossings: list[Crossing]
     personality_cards: list[PersonalityCard]
-    suggestions: list[str]
+    suggestions: list[Lead]
+    # What he said himself in the mirror, word for word: his own conclusions
+    # come first
+    mirror_words: list[str] = field(default_factory=list)
+    # Questions he could bring to his adviser at the Centre
+    advisor_questions: list[str] = field(default_factory=list)
