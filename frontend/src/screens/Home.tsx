@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { api } from '../api'
 import { CodeInput } from '../components/CodeInput'
 import { Logo } from '../components/Logo'
+import { PrivacyInfo } from '../components/PrivacyInfo'
 import { Asterisk, Blob, Star, Triangle } from '../components/Shapes'
 import type { Session } from '../types'
 import { moveFocusWithArrows } from '../utils/arrowNavigation'
@@ -17,9 +18,11 @@ const SKIP_CODE = import.meta.env.DEV
 
 interface HomeProps {
   onLogin: (session: Session) => void
+  /** Coming back after Effacer toutes mes données: says that it is done */
+  erased?: boolean
 }
 
-export function Home({ onLogin }: HomeProps) {
+export function Home({ onLogin, erased = false }: HomeProps) {
   const [step, setStep] = useState<Step>('start')
   const [email, setEmail] = useState('')
   const [code, setCode] = useState('')
@@ -31,6 +34,8 @@ export function Home({ onLogin }: HomeProps) {
     if (step !== 'start') return
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key !== 'Enter') return
+      // A link with its own action (Tes données) keeps its Enter
+      if (event.target instanceof HTMLElement && event.target.closest('[data-own-enter]')) return
       event.preventDefault()
       setStep('email')
     }
@@ -89,6 +94,12 @@ export function Home({ onLogin }: HomeProps) {
 
       <div className="home-panel">
         {/* Same start for everyone: no "first time" or "coming back" */}
+        {step === 'start' && erased && (
+          <p className="home-erased" role="status">
+            C’est fait : toutes tes données ont été effacées.
+          </p>
+        )}
+
         {step === 'start' && (
           <button className="home-start" onClick={() => setStep('email')} autoFocus>
             Appuie sur <kbd>Entrée</kbd> pour commencer
@@ -139,6 +150,8 @@ export function Home({ onLogin }: HomeProps) {
           </button>
         )}
       </div>
+
+      <PrivacyInfo />
     </main>
   )
 }

@@ -44,6 +44,10 @@ export const httpApi = {
 
   getSession: (sessionId: string) => request<SessionDetails>(`/sessions/${sessionId}`),
 
+  /** Effacer toutes mes données: the game, the conversation, the collection and the account */
+  eraseData: (sessionId: string) =>
+    request<Record<string, never>>(`/sessions/${sessionId}`, { method: 'DELETE' }),
+
   drawCards: (sessionId: string) => request<Card[]>(`/sessions/${sessionId}/draws`, { method: 'POST' }),
 
   startTurn: (sessionId: string, cardId: string) =>
@@ -73,6 +77,18 @@ export const httpApi = {
     return res.ok ? res.blob() : null
   },
 
+  /** The user's spoken answer turned into text by the backend (Voxtral). The audio is not kept */
+  transcribe: async (sessionId: string, audio: Blob, filename: string): Promise<string> => {
+    const path = `/sessions/${sessionId}/transcriptions`
+    const form = new FormData()
+    form.append('audio', audio, filename)
+    // No Content-Type header: the browser sets the multipart boundary itself
+    const res = await fetch(`${API_BASE}/api${path}`, { method: 'POST', body: form })
+    if (!res.ok) throw new ApiError(res.status, path)
+    const { text } = (await res.json()) as { text: string }
+    return text
+  },
+
   getCollection: (sessionId: string) => request<CollectionEntry[]>(`/sessions/${sessionId}/collection`),
 
   updateEntry: (sessionId: string, entryId: string, update: EntryUpdate) =>
@@ -80,6 +96,10 @@ export const httpApi = {
       method: 'PATCH',
       body: JSON.stringify(update),
     }),
+
+  /** The user does not want to keep this card: it is erased from the database */
+  deleteEntry: (sessionId: string, entryId: string) =>
+    request<Record<string, never>>(`/sessions/${sessionId}/collection/${entryId}`, { method: 'DELETE' }),
 
   getSummary: (sessionId: string) => request<Summary>(`/sessions/${sessionId}/summary`),
 

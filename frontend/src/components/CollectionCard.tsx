@@ -10,6 +10,8 @@ interface CollectionCardProps {
   entry: CollectionEntry
   /** Given in the mirror: the card becomes a toggle button */
   onToggle?: (entry: CollectionEntry) => void
+  /** Given in the collection page: the card becomes a button that opens it in big */
+  onOpen?: (entry: CollectionEntry) => void
   selected?: boolean
   /** Same name on two screens = the card moves from one place to the other (View Transitions) */
   transitionName?: string
@@ -21,6 +23,7 @@ interface CollectionCardProps {
 export function CollectionCard({
   entry,
   onToggle,
+  onOpen,
   selected = false,
   transitionName,
   focusable = true,
@@ -51,14 +54,15 @@ export function CollectionCard({
     </>
   )
 
-  if (onToggle) {
+  if (onToggle || onOpen) {
     return (
       <button
         type="button"
         className={className}
         style={style}
-        aria-pressed={selected}
-        onClick={() => onToggle(entry)}
+        aria-pressed={onToggle ? selected : undefined}
+        aria-haspopup={onOpen ? 'dialog' : undefined}
+        onClick={() => (onToggle ? onToggle(entry) : onOpen?.(entry))}
         ref={tilt.ref}
         onPointerMove={tilt.onPointerMove}
         onPointerLeave={tilt.onPointerLeave}

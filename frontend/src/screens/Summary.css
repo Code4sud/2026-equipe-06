@@ -430,3 +430,116 @@
     transition: none;
   }
 }
+
+/* ---- The technical pages (for an adviser or a psychologist): denser, sober, thin lines ---- */
+
+.summary-tech-list,
+.summary-tech-skills,
+.summary-tech-evidence {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.summary-tech-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+  padding: 0.45em 0;
+  border-top: 1px solid rgb(30 22 51 / 0.12);
+}
+
+.summary-tech-skill {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+  padding: 0.6em 0;
+  border-top: 1px solid rgb(30 22 51 / 0.12);
+}
+
+.summary-tech-skill:last-child,
+.summary-tech-list li:last-child {
+  border-bottom: 1px solid rgb(30 22 51 / 0.12);
+}
+
+.summary-tech-skill-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2em 0.8em;
+}
+
+.summary-tech-soft {
+  opacity: 0.7;
+}
+
+.summary-tech-quote {
+  font-style: italic;
+}
+
+.summary-tech-evidence li {
+  padding-left: 1em;
+  border-left: 3px solid var(--color-pink);
+  margin-top: 0.2em;
+}
+
+.summary-tech-strength {
+  display: inline-block;
+  padding: 0.05em 0.6em;
+  font-weight: 800;
+  border: 2px solid var(--color-purple);
+  border-radius: 999px;
+}
+
+.summary-tech-strength.is-transversal {
+  color: #fff;
+  background: var(--color-purple);
+}
+
+.summary-tech-strength.is-single {
+  border-style: dashed;
+}
+
+.summary-tech-topics {
+  margin: 0;
+  font-weight: 700;
+}
+
+/* On a phone the table scrolls sideways inside its box, not the page */
+.summary-tech-table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.summary-tech-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.summary-tech-table th,
+.summary-tech-table td {
+  padding: 0.4em 0.6em 0.4em 0;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid rgb(30 22 51 / 0.12);
+}
+
+.summary-tech-table th {
+  font-size: 0.85em;
+  opacity: 0.7;
+}
+
+@media (min-width: 64rem) {
+  /* Page 5: the table needs the wide column */
+  .summary-board.is-page-5 {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+
+  .summary-result .summary-tech .summary-tech-list,
+  .summary-result .summary-tech .summary-tech-skills,
+  .summary-result .summary-tech .summary-tech-table,
+  .summary-result .summary-tech .summary-tech-topics {
+    font-size: calc(var(--fit, 1) * clamp(0.75rem, 1.7vh, 1.05rem));
+    line-height: 1.35;
+  }
+}

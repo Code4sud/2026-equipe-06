@@ -113,6 +113,58 @@ export interface Summary {
    * Never kept: the summary asks whether he wants it taken into account for the suggestions.
    */
   sensitiveMentions: string[]
+  /** For an adviser or a psychologist: computed by the server from what is stored, without the AI */
+  technical: TechnicalSheet
+}
+
+/** A kept entry as a proof of a skill: the user's sentence and where it was told */
+export interface SkillEvidence {
+  quote: string
+  fact: string
+  cardTitle: string
+  family: CardFamily
+}
+
+/** single: told once; repeated: in several stories of one theme; transversal: across themes */
+export type SkillStrength = 'single' | 'repeated' | 'transversal'
+
+export interface TechnicalSkill {
+  code: string
+  label: string
+  /** "Savoir-faire" or "Savoir-être" (ROME) */
+  category: string
+  domain: string
+  issue: string
+  objective: string
+  strength: SkillStrength
+  /** Number of different cards and card themes it was told in */
+  cards: number
+  families: number
+  evidence: SkillEvidence[]
+}
+
+export interface TechnicalTurn {
+  cardTitle: string
+  family: CardFamily
+  answers: number
+  words: number
+  /** How much the user opened up, as read by the end-of-turn analysis; null when not analyzed */
+  engagement: 'open' | 'neutral' | 'closed' | null
+  endedBy: 'completed' | 'skipped' | 'to_summary' | 'stopped'
+  /** Entries kept from this card */
+  kept: number
+}
+
+export interface TechnicalSheet {
+  skills: TechnicalSkill[]
+  /** Kept entries that no ROME skill fits */
+  unmapped: SkillEvidence[]
+  /** ROME domains with at least one skill, in ROME order */
+  domains: { domain: string; skills: number; stories: number }[]
+  /** Cards played, in order */
+  turns: TechnicalTurn[]
+  /** Subjects that caught the user's interest, worth another conversation */
+  topics: string[]
 }
 
 /** Passer (a card) or Passer au bilan: entries found in what was said before leaving the card */

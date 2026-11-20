@@ -110,6 +110,16 @@ export const mockApi: Api = {
     return { state: 'drawing', collection: session.collection, turnsCount: session.turns.size }
   },
 
+  async eraseData(sessionId) {
+    await delay()
+    getSessionOrThrow(sessionId)
+    sessions.delete(sessionId)
+    for (const [email, id] of sessionsByEmail) {
+      if (id === sessionId) sessionsByEmail.delete(email)
+    }
+    return {}
+  },
+
   async drawCards(sessionId) {
     await delay()
     const session = getSessionOrThrow(sessionId)
@@ -197,6 +207,12 @@ export const mockApi: Api = {
     return null
   },
 
+  // The recording is ignored: a fixed answer stands for what was said
+  async transcribe() {
+    await delay(500)
+    return 'Le week-end dernier, j’ai réparé le scooter de mon cousin.'
+  },
+
   async getCollection(sessionId) {
     await delay(300)
     return getSessionOrThrow(sessionId).collection
@@ -208,6 +224,15 @@ export const mockApi: Api = {
     if (!entry) throw new ApiError(404, `/sessions/${sessionId}/collection/${entryId}`)
     Object.assign(entry, update)
     return entry
+  },
+
+  async deleteEntry(sessionId, entryId) {
+    await delay(200)
+    const session = getSessionOrThrow(sessionId)
+    const index = session.collection.findIndex((e) => e.id === entryId)
+    if (index < 0) throw new ApiError(404, `/sessions/${sessionId}/collection/${entryId}`)
+    session.collection.splice(index, 1)
+    return {}
   },
 
   async getSummary(sessionId) {
@@ -258,6 +283,55 @@ export const mockApi: Api = {
         'Comment je peux essayer un atelier de réparation pour voir si ça me plaît ?',
       ],
       sensitiveMentions: ['je porte le voile'],
+      technical: {
+        skills: [
+          {
+            code: '1A102',
+            label: 'Assurer l’encadrement de l’enfant ou d’un groupe d’enfants',
+            category: 'Savoir-faire',
+            domain: 'Management, Social, Soin',
+            issue: 'Animation',
+            objective: 'Animer des activités',
+            strength: 'transversal',
+            cards: 2,
+            families: 2,
+            evidence: kept.slice(0, 2).map((e) => ({
+              quote: e.quote,
+              fact: e.skill,
+              cardTitle: e.card.title,
+              family: e.card.family,
+            })),
+          },
+          {
+            code: '6D104',
+            label: 'Faire preuve de sens des responsabilités',
+            category: 'Savoir-être',
+            domain: 'Savoir-être professionnels',
+            issue: 'Savoir-être',
+            objective: 'Avoir le sens des responsabilités',
+            strength: 'single',
+            cards: 1,
+            families: 1,
+            evidence: kept.slice(2, 3).map((e) => ({
+              quote: e.quote,
+              fact: e.skill,
+              cardTitle: e.card.title,
+              family: e.card.family,
+            })),
+          },
+        ],
+        unmapped: [],
+        domains: [
+          { domain: 'Management, Social, Soin', skills: 1, stories: 2 },
+          { domain: 'Savoir-être professionnels', skills: 1, stories: 1 },
+        ],
+        turns: [
+          { cardTitle: 'Ton dernier week-end', family: 'passions', answers: 4, words: 96, engagement: 'open', endedBy: 'completed', kept: 1 },
+          { cardTitle: 'Quelqu’un qui compte sur toi', family: 'relationships', answers: 3, words: 41, engagement: 'neutral', endedBy: 'completed', kept: 1 },
+          { cardTitle: 'Un truc qui te met en colère quand c’est injuste', family: 'values', answers: 1, words: 3, engagement: 'closed', endedBy: 'skipped', kept: 0 },
+        ],
+        topics: ['réparer des vélos', 'monter un PC'],
+      },
     }
   },
 

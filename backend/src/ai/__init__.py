@@ -1,6 +1,8 @@
-"""The AI side of the game: conversation, analysis, summary, card draw and voice (Mistral API).
+"""The AI side of the game: conversation, analysis, summary, card draw and
+voice (Mistral API).
 
-Plain functions with no dependency on Flask or on the database: the caller loads the context,
+Plain functions with no dependency on Flask or on the database: the caller
+loads the context,
 calls the function, then saves the result. See each module for what it does.
 
     from ai import conversation, analysis, summary, drawing, voice, rules

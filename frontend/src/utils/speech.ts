@@ -21,7 +21,17 @@ export interface LoadedSpeech {
   stop: () => void
 }
 
+/**
+ * Mistral renders each sentence on its own and its loudness varies from one to the next. Each
+ * sentence is brought to the same average level (RMS), within limits so a near-silent one is not
+ * blown up, then a compressor evens out what is left.
+ */
+const TARGET_RMS = 0.1
+const MIN_GAIN = 0.4
+const MAX_GAIN = 4
+
 let sharedContext: AudioContext | null = null
+let sharedCompressor: DynamicsCompressorNode | null = null
 
 /**
  * Requests in flight or done, by text: the same text is never asked twice (React runs effects twice
@@ -57,6 +67,39 @@ function audioContext(): AudioContext | null {
   return sharedContext
 }
 
+/** The compressor every sentence goes through before the speakers (one for the whole game). */
+function voiceOutput(context: AudioContext): AudioNode {
+  if (sharedCompressor) return sharedCompressor
+  sharedCompressor = context.createDynamicsCompressor()
+  sharedCompressor.threshold.value = -24
+  sharedCompressor.knee.value = 12
+  sharedCompressor.ratio.value = 4
+  sharedCompressor.attack.value = 0.005
+  sharedCompressor.release.value = 0.2
+  sharedCompressor.connect(context.destination)
+  return sharedCompressor
+}
+
+/** The gain that brings a sentence to the target level, measured on its non-silent parts. */
+function normalizingGain(buffer: AudioBuffer): number {
+  let sum = 0
+  let count = 0
+  for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
+    const samples = buffer.getChannelData(channel)
+    for (let i = 0; i < samples.length; i++) {
+      const sample = samples[i]
+      // Silences between words would lower the average and push the gain too high
+      if (Math.abs(sample) > 0.01) {
+        sum += sample * sample
+        count++
+      }
+    }
+  }
+  if (count === 0) return 1
+  const rms = Math.sqrt(sum / count)
+  return Math.min(MAX_GAIN, Math.max(MIN_GAIN, TARGET_RMS / rms))
+}
+
 /** Fetches and decodes the assistant's voice for a text. null: no voice, the text is shown silently. */
 export async function loadSpeech(sessionId: string, text: string, tone: Tone = 'neutral'): Promise<LoadedSpeech | null> {
   const context = audioContext()
@@ -78,6 +121,7 @@ export async function loadSpeech(sessionId: string, text: string, tone: Tone = '
     return null
   }
 
+  const gain = normalizingGain(buffer)
   let source: AudioBufferSourceNode | null = null
   let finish: () => void = () => {}
   const ended = new Promise<void>((resolve) => {
@@ -93,7 +137,9 @@ export async function loadSpeech(sessionId: string, text: string, tone: Tone = '
         if (context.state !== 'running') throw new Error('audio not allowed')
         source = context.createBufferSource()
         source.buffer = buffer
-        source.connect(context.destination)
+        const level = context.createGain()
+        level.gain.value = gain
+        source.connect(level).connect(voiceOutput(context))
         source.onended = () => finish()
         source.start(context.currentTime + LEAD_IN_S)
       } catch {

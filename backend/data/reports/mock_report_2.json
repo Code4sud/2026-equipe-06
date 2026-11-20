@@ -1,0 +1,58 @@
+{
+  "interests": [
+    "Social",
+    "Réaliste",
+    "Investigateur",
+    "Conventionnel",
+    "Artistique",
+    "Entreprenant"
+  ],
+  "aptitudes": {
+    "Compréhension orale": 5,
+    "Compréhension écrite": 6,
+    "Expression orale": 5,
+    "Expression écrite": 5,
+    "Fluidité des idées": 4,
+    "Originalité": 6,
+    "Sensibilité aux problèmes": 3,
+    "Raisonnement déductif": 4,
+    "Raisonnement inductif": 4
+  },
+  "personality": [
+    "Humilité-honnêteté",
+    "Agréabilité",
+    "Ouverture à l'expérience",
+    "Extraversion",
+    "Caractère consciencieux",
+    "Émotivité"
+  ],
+  "jobs_by_zone": {
+    "1": [
+      "Agent de service en restauration",
+      "Agent d'accueil et d'animation",
+      "Plongeur",
+      "Parqueteur",
+      "Ouvrier de carrière"
+    ],
+    "2": [
+      "Garde d'enfants à domicile",
+      "Conducteur d'ambulance",
+      "Surveillant des espaces de loisirs (Maître-nageur sauveteur / Pisteur-secouriste)",
+      "Bagagiste",
+      "Serveur"
+    ],
+    "3": [
+      "Coach sportif",
+      "Guide touristique",
+      "Thanatopracteur",
+      "Sapeur-pompier",
+      "Barbier"
+    ],
+    "4": [
+      "Guide naturaliste / Médiateur environnement"
+    ],
+    "5": [
+      "Praticien en Activité Physique Adaptée (APA)"
+    ]
+  }
+}

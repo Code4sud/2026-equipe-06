@@ -119,6 +119,15 @@
   isolation: isolate;
 }
 
+/* Grows with the voice: --level (0 to 1) is set while recording */
+.turn-mic.is-listening {
+  scale: calc(1 + var(--level, 0) * 0.25);
+  box-shadow: 0 0 0 calc(var(--level, 0) * 1.25rem) color-mix(in srgb, var(--color-purple) 35%, transparent);
+  transition:
+    scale 0.08s linear,
+    box-shadow 0.08s linear;
+}
+
 .turn-mic svg {
   width: 1.8rem;
   height: 1.8rem;
@@ -277,6 +286,11 @@
   .turn-toast {
     animation: none;
   }
+
+  /* The halo still follows the voice, the mic does not move */
+  .turn-mic.is-listening {
+    scale: none;
+  }
 }
 
 /* Mirror: pick the cards of the collection that look like you */
@@ -346,8 +360,8 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  /* Room for the lifted and tilted cards inside the scrolling area */
-  padding: var(--space-3) var(--space-2);
+  /* Room for the lifted, scaled, tilted and ringed cards inside the scrolling area */
+  padding: var(--space-4) var(--space-2) var(--space-3);
 }
 
 /* Picked cards, kept on screen, smaller */

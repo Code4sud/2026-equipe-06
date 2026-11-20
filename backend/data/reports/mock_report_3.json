@@ -1,0 +1,66 @@
+{
+  "interests": [
+    "Social",
+    "Entreprenant",
+    "Réaliste",
+    "Conventionnel",
+    "Artistique",
+    "Investigateur"
+  ],
+  "aptitudes": {
+    "Compréhension orale": 4,
+    "Compréhension écrite": 4,
+    "Expression orale": 4,
+    "Expression écrite": 5,
+    "Fluidité des idées": 5,
+    "Originalité": 3,
+    "Sensibilité aux problèmes": 7,
+    "Raisonnement déductif": 4,
+    "Raisonnement inductif": 3
+  },
+  "personality": [
+    "Émotivité",
+    "Caractère consciencieux",
+    "Extraversion",
+    "Ouverture à l'expérience",
+    "Humilité-honnêteté",
+    "Agréabilité"
+  ],
+  "jobs_by_zone": {
+    "1": [
+      "Agent d'accueil et d'animation",
+      "Agent de service en restauration",
+      "Barista",
+      "Employé de restauration rapide",
+      "Aide-cuisinier"
+    ],
+    "2": [
+      "Hôte d'accueil en restauration",
+      "Auxiliaire de vie",
+      "Auxiliaire de puériculture",
+      "Serveur",
+      "Agent d'accueil et billetterie"
+    ],
+    "3": [
+      "Guide touristique",
+      "Concierge",
+      "Coach sportif",
+      "Chef d'équipe de surveillants pénitentiaires",
+      "Animateur socioculturel"
+    ],
+    "4": [
+      "Entraîneur sportif",
+      "Coordinateur des programmes de fitness et de bien-être",
+      "Conseiller pénitentiaire d'insertion et de probation",
+      "Assistant de service social",
+      "Directeur de structure d'accueil de la petite enfance"
+    ],
+    "5": [
+      "Praticien en Activité Physique Adaptée (APA)",
+      "Sage-femme",
+      "Psychologue de l'Éducation nationale (Psy-EN) second degré",
+      "Conseiller en prévention des addictions",
+      "Chef d'établissement scolaire"
+    ]
+  }
+}

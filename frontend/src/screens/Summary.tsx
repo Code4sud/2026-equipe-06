@@ -5,6 +5,16 @@ import type { CollectionEntry, Summary as SummaryData } from '../types'
 import { delay } from '../utils/animation'
 import { focusSmoothly, moveFocusWithArrows } from '../utils/arrowNavigation'
 import { loadSpeech } from '../utils/speech'
+import {
+  ENDED_BY_LABELS,
+  ENGAGEMENT_LABELS,
+  FAMILY_LABELS,
+  METHOD_POINTS,
+  STRENGTH_HINTS,
+  STRENGTH_LABELS,
+  plural,
+  wordsPerAnswer,
+} from '../utils/technicalLabels'
 import { withViewTransition } from '../utils/viewTransition'
 import '../styles/cardShine.css'
 import './Summary.css'
@@ -14,8 +24,8 @@ type Step = 'review' | 'loading' | 'ready' | 'error'
 // Only what can be acted on takes the focus: texts and cards on the summary pages are just read
 const FIRST_FOCUS = '.summary-review-grid button, .summary-board input, .summary-next, .summary-download'
 
-/** The three pages of the summary, by title */
-const PAGES = ['Toi', 'Tes talents', 'Et maintenant ?'] as const
+/** The pages of the summary, by title: three for the user, then two technical ones for a professional */
+const PAGES = ['Toi', 'Tes talents', 'Et maintenant ?', 'Fiche technique', 'Déroulé et méthode'] as const
 
 /** How much the summary text may grow (short summary) or shrink (long one) to fill the screen */
 const MAX_FIT = 1.6
@@ -184,10 +194,11 @@ export function Summary({ sessionId, onFinish, menu }: SummaryProps) {
     if (!entries) return
     setStep('loading')
     try {
+      // The cards taken off are erased from the database, not just left out of the summary
       await Promise.all(
-        entries.map((entry) =>
-          api.updateEntry(sessionId, entry.id, { status: keptIds.includes(entry.id) ? 'kept' : 'rejected' }),
-        ),
+        entries
+          .filter((entry) => !keptIds.includes(entry.id))
+          .map((entry) => api.deleteEntry(sessionId, entry.id)),
       )
     } catch {
       setStep('error')
@@ -245,8 +256,8 @@ export function Summary({ sessionId, onFinish, menu }: SummaryProps) {
         {menu}
         <h1 className="pill-title pop-in">Ta collection</h1>
         <p className="summary-intro rise-in" style={delay(0.2)}>
-          Voilà ce que j’ai gardé de ce que tu m’as raconté. Retire ce qui ne te ressemble pas : seules les cartes que tu
-          gardes comptent pour ton bilan.
+          Voilà ce que j’ai gardé de ce que tu m’as raconté. Retire ce que tu ne veux pas garder : les cartes retirées
+          sont effacées pour de bon, et seules celles que tu gardes comptent pour ton bilan.
         </p>
 
         <ul className="summary-review-grid">
@@ -268,7 +279,7 @@ export function Summary({ sessionId, onFinish, menu }: SummaryProps) {
 
         <button className="btn rise-in" style={delay(0.5)} onClick={() => void confirmCollection()}>
           {removed > 0
-            ? `Voir mon bilan (${removed} carte${removed > 1 ? 's' : ''} retirée${removed > 1 ? 's' : ''})`
+            ? `Effacer ${removed} carte${removed > 1 ? 's' : ''} et voir mon bilan`
             : 'Voir mon bilan'}
         </button>
       </main>
@@ -280,9 +291,10 @@ export function Summary({ sessionId, onFinish, menu }: SummaryProps) {
   const gaps = summary.crossings.filter((c) => c.kind === 'gap')
   const showConsent = summary.sensitiveMentions.length > 0 && consent !== 'declined' && consent !== 'accepted'
   const lastPage = PAGES.length - 1
+  const technical = summary.technical
 
   return (
-    // Three short pages, each on one screen on a computer (sizes follow the window, see --fit)
+    // Short pages, each on one screen on a computer (sizes follow the window, see --fit)
     <main className="summary summary-result" onKeyDown={moveFocusWithArrows} ref={mainRef}>
       {menu}
       <header className="summary-result-header">
@@ -465,6 +477,149 @@ export function Summary({ sessionId, onFinish, menu }: SummaryProps) {
                 <p className="summary-note">Rien n’est enregistré : ça sert seulement à écrire tes pistes.</p>
               </section>
             )}
+          </div>
+        </div>
+      )}
+
+      {page === 3 && (
+        <div className="summary-board is-page-4 summary-tech">
+          <div className="summary-column rise-in" style={delay(0.15)}>
+            <p className="summary-note">
+              Cette partie est écrite pour un professionnel (conseiller, psychologue) : elle reprend ce que tu as
+              raconté avec le vocabulaire du référentiel des compétences ROME 4.0.
+            </p>
+            <section className="summary-section" aria-labelledby="summary-domains-title">
+              <h2 id="summary-domains-title">Profil par domaine ROME</h2>
+              {technical.domains.length === 0 ? (
+                <p className="summary-note">Aucune compétence rattachée au ROME sur cette partie.</p>
+              ) : (
+                <ul className="summary-tech-list">
+                  {technical.domains.map((line) => (
+                    <li key={line.domain}>
+                      <strong>{line.domain}</strong>
+                      <span className="summary-tech-soft">
+                        {plural(line.skills, 'compétence')} · {plural(line.stories, 'récit')}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+            {technical.unmapped.length > 0 && (
+              <section className="summary-section" aria-labelledby="summary-unmapped-title">
+                <h2 id="summary-unmapped-title">Sans équivalent ROME</h2>
+                <ul className="summary-tech-list">
+                  {technical.unmapped.map((item, index) => (
+                    <li key={`${item.quote}-${index}`}>
+                      <strong>{item.fact}</strong>
+                      <span className="summary-tech-quote">« {item.quote} »</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+          </div>
+          <div className="summary-column rise-in" style={delay(0.3)}>
+            <section className="summary-section" aria-labelledby="summary-rome-title">
+              <h2 id="summary-rome-title">Compétences repérées</h2>
+              {technical.skills.length === 0 ? (
+                <p className="summary-note">Aucune carte gardée sur cette partie.</p>
+              ) : (
+                <ul className="summary-tech-skills">
+                  {technical.skills.map((skill) => (
+                    <li key={skill.code} className="summary-tech-skill">
+                      <span className="summary-tech-skill-head">
+                        <strong>{skill.label}</strong>
+                        <span className="summary-tech-soft">
+                          {skill.code} · {skill.category}
+                        </span>
+                      </span>
+                      <span className="summary-tech-soft">
+                        {skill.domain} › {skill.issue} › {skill.objective}
+                      </span>
+                      <span>
+                        <span className={`summary-tech-strength is-${skill.strength}`}>
+                          {STRENGTH_LABELS[skill.strength]}
+                        </span>{' '}
+                        {STRENGTH_HINTS[skill.strength]} ({plural(skill.evidence.length, 'récit')},{' '}
+                        {plural(skill.cards, 'carte')}, {plural(skill.families, 'thème')})
+                      </span>
+                      <ul className="summary-tech-evidence">
+                        {skill.evidence.map((item, index) => (
+                          <li key={`${item.quote}-${index}`}>
+                            <span className="summary-tech-quote">« {item.quote} »</span>{' '}
+                            <span className="summary-tech-soft">
+                              {item.cardTitle} ({FAMILY_LABELS[item.family]})
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          </div>
+        </div>
+      )}
+
+      {page === 4 && (
+        <div className="summary-board is-page-5 summary-tech">
+          <div className="summary-column rise-in" style={delay(0.15)}>
+            <section className="summary-section" aria-labelledby="summary-turns-title">
+              <h2 id="summary-turns-title">Déroulé de la partie</h2>
+              {technical.turns.length === 0 ? (
+                <p className="summary-note">Le déroulé n’a pas été enregistré pour cette partie.</p>
+              ) : (
+                <div className="summary-tech-table-wrap">
+                  <table className="summary-tech-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Carte</th>
+                        <th scope="col">Thème</th>
+                        <th scope="col">Réponses</th>
+                        <th scope="col">Mots / réponse</th>
+                        <th scope="col">Échange</th>
+                        <th scope="col">Fin</th>
+                        <th scope="col">Gardées</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {technical.turns.map((turn, index) => (
+                        <tr key={`${turn.cardTitle}-${index}`}>
+                          <td>{turn.cardTitle}</td>
+                          <td>{FAMILY_LABELS[turn.family]}</td>
+                          <td>{turn.answers}</td>
+                          <td>{wordsPerAnswer(turn)}</td>
+                          <td>{turn.engagement ? ENGAGEMENT_LABELS[turn.engagement] : '—'}</td>
+                          <td>{ENDED_BY_LABELS[turn.endedBy]}</td>
+                          <td>{turn.kept}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              <p className="summary-note">
+                « Échange » est lu par l’assistant à la fin de chaque carte : il décrit la conversation, pas la personne.
+              </p>
+            </section>
+            {technical.topics.length > 0 && (
+              <section className="summary-section" aria-labelledby="summary-topics-title">
+                <h2 id="summary-topics-title">Sujets à reprendre en entretien</h2>
+                <p className="summary-tech-topics">{technical.topics.join(' · ')}</p>
+              </section>
+            )}
+          </div>
+          <div className="summary-column rise-in" style={delay(0.3)}>
+            <section className="summary-section" aria-labelledby="summary-method-title">
+              <h2 id="summary-method-title">Méthode et limites</h2>
+              <ul className="summary-questions">
+                {METHOD_POINTS.map((point) => (
+                  <li key={point}>{point}</li>
+                ))}
+              </ul>
+            </section>
           </div>
         </div>
       )}

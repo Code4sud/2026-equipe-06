@@ -1,11 +1,13 @@
 """A game in the database, and its conversion to the models of the AI module.
 
 Three collections:
-- sessions: one per e-mail, with the report, the memory of past turns and the state of the draw;
+- sessions: one per e-mail, with the report, the memory of past turns and the
+  state of the draw;
 - turns: one per card played, with its messages;
 - entries: the collection of the young person (one document per entry).
 
-The AI functions keep no memory: the context is rebuilt from these documents on every request.
+The AI functions keep no memory: the context is rebuilt from these documents on
+every request.
 """
 
 import time
@@ -13,8 +15,15 @@ from dataclasses import asdict
 from typing import Any, cast
 
 from ai import drawing
-from ai.data import get_card, load_report
-from ai.models import CollectionItem, Engagement, Message, Report, SessionContext, TurnSummary
+from ai.data import get_card, load_report, random_report_id, report_ids
+from ai.models import (
+    CollectionItem,
+    Engagement,
+    Message,
+    Report,
+    SessionContext,
+    TurnSummary,
+)
 from db.protocol import Database, Document
 
 SESSIONS = "sessions"
@@ -23,7 +32,9 @@ ENTRIES = "entries"
 
 
 class GameError(Exception):
-    """An error the route turns into an HTTP answer (404 unknown session, 400 bad request…)."""
+    """An error the route turns into an HTTP answer (404 unknown session, 400
+    bad request…).
+    """
 
     def __init__(self, status: int, message: str) -> None:
         super().__init__(message)
@@ -31,24 +42,38 @@ class GameError(Exception):
         self.message = message
 
 
-# ---- Sessions -----------------------------------------------------------------------------------
+# ---- Sessions ---------------------------------------------------------------
 
 
 def _report_to_doc(report: Report) -> Document:
     data = asdict(report)
     # MongoDB keys must be strings: zones 1 to 5 are stored as "1" to "5"
-    data["jobs_by_zone"] = {str(zone): jobs for zone, jobs in report.jobs_by_zone.items()}
+    data["jobs_by_zone"] = {
+        str(zone): jobs for zone, jobs in report.jobs_by_zone.items()
+    }
     return data
 
 
-def new_session(email: str) -> Document:
+def new_session(email: str, report_id: str | None = None) -> Document:
+    """report_id: the mock report already given to this account, kept when a
+    game restarts. A new account gets one at random.
+    """
+    if report_id not in report_ids():
+        report_id = random_report_id()
     return {
         "email": email,
         "created_at": time.time(),
+        # Last login: everything is erased RETENTION_SECONDS after it
+        # (see service.inactive_session_ids)
+        "last_seen": time.time(),
         "state": "drawing",
-        # Real reports will be ingested later: everyone gets the sample one for now
-        "report": _report_to_doc(load_report()),
+        # Mock report (backend/data/reports/), drawn once per account
+        "report_id": report_id,
+        "report": _report_to_doc(load_report(report_id)),
         "turn_summaries": [],
+        # One line per card played, for the technical sheet of the summary (no
+        # quotes in it)
+        "turn_log": [],
         "declared_constraints": [],
         "draw": draw_state_to_doc(drawing.DrawState()),
         "mirror_turn_id": None,
@@ -68,7 +93,7 @@ def find_session_by_email(db: Database, email: str) -> Document | None:
     return found[0] if found else None
 
 
-# ---- Turns --------------------------------------------------------------------------------------
+# ---- Turns ------------------------------------------------------------------
 
 
 def load_turn(db: Database, session_id: str, turn_id: str) -> Document:
@@ -79,14 +104,17 @@ def load_turn(db: Database, session_id: str, turn_id: str) -> Document:
 
 
 def history_of(turn: Document) -> list[Message]:
-    return [Message(role=m["role"], text=m["text"]) for m in turn.get("history", [])]
+    return [
+        Message(role=m["role"], text=m["text"])
+        for m in turn.get("history", [])
+    ]
 
 
 def history_to_doc(history: list[Message]) -> list[Document]:
     return [{"role": m.role, "text": m.text} for m in history]
 
 
-# ---- Entries ------------------------------------------------------------------------------------
+# ---- Entries ----------------------------------------------------------------
 
 
 def load_entries(db: Database, session_id: str) -> list[Document]:
@@ -116,7 +144,7 @@ def kept_items(entries: list[Document]) -> list[CollectionItem]:
     return [item_of(e) for e in entries if e.get("status") != "rejected"]
 
 
-# ---- Context for the AI -------------------------------------------------------------------------
+# ---- Context for the AI -----------------------------------------------------
 
 
 def context_of(session: Document, entries: list[Document]) -> SessionContext:
