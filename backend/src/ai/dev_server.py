@@ -25,7 +25,9 @@ from typing import NoReturn
 # SDK)
 from flask import Flask  # type: ignore[import-not-found]
 
+from ai.data import use_card_source
 from db.protocol import Document
+from game.cards import card_source, sync_cards
 from router.router import Router
 
 log = logging.getLogger("ai.dev_server")
@@ -89,7 +91,11 @@ def create_app() -> Flask:
     # development too)
     os.environ.setdefault("AUTH_SKIP_CODE", "1")
     app = Flask(__name__)
-    app.extensions["db"] = MemoryDatabase()
+    db = MemoryDatabase()
+    app.extensions["db"] = db
+    # Cards copied from data/cards.json, as on the real server
+    sync_cards(db)
+    use_card_source(card_source(db))
     for path, view, method in Router():
         app.add_url_rule(f"/api/{path}", view_func=view, methods=[method])
     return app

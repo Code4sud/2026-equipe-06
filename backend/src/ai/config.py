@@ -57,7 +57,8 @@ class AIConfig:
     # hesitations and drawn-out vowels
     tts_expressiveness_neutral: float
     tts_expressiveness_enthusiastic: float
-    # Where cards.json, rome.json and the sample report live
+    # Where cards.json (copied into the database at startup), rome.json and the
+    # mock reports live
     data_dir: Path
 
 

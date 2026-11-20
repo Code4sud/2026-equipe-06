@@ -1,17 +1,17 @@
 {
   "version": 3,
-  "source": "docs/CARTES.md (cartes validées)",
+  "source": "Ce fichier fait référence pour les cartes.",
   "notes": [
-    "Généré à partir de docs/CARTES.md, qui fait référence : en cas d'écart, CARTES.md prévaut.",
+    "Copié dans la base (collection cards) au démarrage du serveur si la collection est vide ou si version a changé : pour modifier les cartes en production, modifier ce fichier, incrémenter version et redéployer. Le code lit les cartes dans la base, jamais dans ce fichier.",
     "Le front reçoit seulement id, family, format et title. Les champs number, level, intention et opener restent côté serveur, pour l'IA.",
     "title : le thème affiché sur la carte. Ce n'est pas une question.",
     "opener : amorce de référence. L'IA l'adapte toujours au jeune et ne la répète jamais mot pour mot d'une carte à l'autre. Jamais de question fermée.",
     "intention : où se cachent les talents sur cette carte. L'IA s'en sert pour orienter ses relances et ne la dit jamais.",
     "level : sert au tirage (RULES_V2.md). general = léger, toujours possible, la première carte est toujours légère ; specific = moyen, seulement après une carte où le jeune s'est investi ; personal = profond, seulement si le jeune choisit la carte parmi plusieurs, jamais au hasard.",
     "La profondeur de l'échange vient d'abord de la conversation : une carte légère peut mener loin si le jeune s'ouvre.",
-    "number : numéro de la carte dans CARTES.md et COMPETENCES.md.",
+    "number : numéro de la carte dans COMPETENCES.md.",
     "Le joker (repiocher) est ajouté par le front : il n'est pas dans ce fichier.",
-    "La carte miroir (mirror) est ajoutée ici, côté serveur : elle n'est pas dans docs/CARTES.json."
+    "La carte miroir (mirror) est ajoutée ici, côté serveur."
   ],
   "families": {
     "passions": {

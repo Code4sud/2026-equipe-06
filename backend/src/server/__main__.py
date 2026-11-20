@@ -4,6 +4,8 @@ import sys
 from app.app_builder import AppBuilder, AppException, App
 from router.router import Router, RouterException
 from db.mongo import MongoDatabase
+from ai.data import use_card_source
+from game.cards import card_source, sync_cards
 from dotenv import load_dotenv
 
 
@@ -55,7 +57,11 @@ def build_app() -> App:
     for route_name, route_func, route_type in Router():
         app_builder.addRoute(f"/api/{route_name}", route_func, [route_type])
 
-    return app_builder.build()
+    app = app_builder.build()
+    # The deck lives in the database: copied from data/cards.json when needed
+    sync_cards(app.db)
+    use_card_source(card_source(app.db))
+    return app
 
 
 def main():

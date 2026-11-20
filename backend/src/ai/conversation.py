@@ -304,7 +304,7 @@ def reply(
             bool(data.get("wants_new_card")) or guards.asks_new_card(user_text)
         )
     )
-    # Safety net for closed questions (docs/CARTES.md, RULES_V2.md): one
+    # Safety net for closed questions (RULES_V2.md): one
     # rewrite, then it goes as it is.
     # Not on a transition or a heavy subject, where a yes/no question is the
     # right one
