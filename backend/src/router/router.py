@@ -2,6 +2,9 @@ import inspect
 import logging
 import os
 import secrets
+import hashlib
+import hmac
+
 from datetime import timedelta
 from typing import Any, Callable, Dict, Iterator, Literal, Tuple, cast
 
@@ -37,6 +40,13 @@ def _skip_code() -> bool:
     ai/dev_server.py).
     """
     return os.environ.get("AUTH_SKIP_CODE", "").lower() in ("1", "true", "yes")
+
+
+def _hash_code(email: str, code: str) -> str:
+    """Hash the code with the email, so that it is not stored in cleartext in the database."""
+    secret = os.environ["AUTH_CODE_SECRET"].encode()
+    return hmac.new(secret, f"{email}:{code}".encode(), hashlib.sha256).hexdigest()
+
 
 
 # Routes can take URL parameters (<session_id>…), hence Callable[..., Any]
@@ -119,10 +129,8 @@ def _check_code(email: str, code: str) -> Any | None:
         db.delete(AUTH_CODES, auth_code.id)
         return jsonify(error="Too many attempts, request a new code."), 429
 
-    if not auth_code.code_hash == code:
-        db.update(
-            AUTH_CODES, auth_code.id, {"attempts": auth_code.attempts + 1}
-        )
+    if not hmac.compare_digest(auth_code.code_hash, _hash_code(email, code)):
+        db.update(AUTH_CODES, auth_code.id, {"attempts": auth_code.attempts + 1})
         return jsonify(error="Invalid code."), 401
 
     db.delete(AUTH_CODES, auth_code.id)
@@ -187,6 +195,7 @@ class Router:
             db.delete(AUTH_CODES, old.id)
 
         code = f"{secrets.randbelow(10**CODE_LENGTH):0{CODE_LENGTH}d}"
+        code = _hash_code(payload.email, code)
         code_id = db.insert(
             AUTH_CODES,
             AuthCode(
