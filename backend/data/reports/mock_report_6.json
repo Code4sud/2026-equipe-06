@@ -1,0 +1,60 @@
+{
+  "interests": [
+    "Social",
+    "Artistique",
+    "Investigateur",
+    "Réaliste",
+    "Entreprenant",
+    "Conventionnel"
+  ],
+  "aptitudes": {
+    "Compréhension orale": 7,
+    "Compréhension écrite": 6,
+    "Expression orale": 6,
+    "Expression écrite": 4,
+    "Fluidité des idées": 6,
+    "Originalité": 5,
+    "Sensibilité aux problèmes": 7,
+    "Raisonnement déductif": 6,
+    "Raisonnement inductif": 6
+  },
+  "personality": [
+    "Humilité-honnêteté",
+    "Extraversion",
+    "Ouverture à l'expérience",
+    "Émotivité",
+    "Caractère consciencieux",
+    "Agréabilité"
+  ],
+  "jobs_by_zone": {
+    "1": [],
+    "2": [
+      "Garde d'enfants à domicile",
+      "Acteur",
+      "Auxiliaire de puériculture",
+      "Auxiliaire de vie",
+      "Accompagnateur de voyages"
+    ],
+    "3": [
+      "Animateur socioculturel",
+      "Guide touristique",
+      "Aide médico-psychologique",
+      "Coach sportif",
+      "Concierge"
+    ],
+    "4": [
+      "Musicothérapeute",
+      "Professeur des écoles",
+      "Enseignant spécialisé (collège - ULIS/SEGPA)",
+      "Guide naturaliste / Médiateur environnement",
+      "Professeur du secondaire"
+    ],
+    "5": [
+      "Enseignant en arts, théâtre et musique dans l'enseignement supérieur",
+      "Art-thérapeute",
+      "Professeur d'architecture (enseignement supérieur)",
+      "Conseiller conjugal et familial",
+      "Enseignant-chercheur en philosophie et en sciences des religions"
+    ]
+  }
+}

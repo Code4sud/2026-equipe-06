@@ -34,16 +34,22 @@ def send_auth_code(to: str, code: str, ttl_minutes: int) -> None:
     if not sender_email:
         raise MailError("MAIL_FROM is not set.")
 
-    body = json.dumps({
-        "sender": {"name": os.environ.get("MAIL_FROM_NAME", "Connexion"), "email": sender_email},
-        "to": [{"email": to}],
-        "subject": "Votre code de connexion",
-        "textContent": (
-            f"Votre code de connexion est : {code}\n\n"
-            f"Il expire dans {ttl_minutes} minutes. "
-            "Si vous n'êtes pas à l'origine de cette demande, ignorez ce message."
-        ),
-    }).encode()
+    body = json.dumps(
+        {
+            "sender": {
+                "name": os.environ.get("MAIL_FROM_NAME", "Connexion"),
+                "email": sender_email,
+            },
+            "to": [{"email": to}],
+            "subject": "Votre code de connexion",
+            "textContent": (
+                f"Votre code de connexion est : {code}\n\n"
+                f"Il expire dans {ttl_minutes} minutes. "
+                "Si vous n'êtes pas à l'origine de cette demande, ignorez ce "
+                "message."
+            ),
+        }
+    ).encode()
 
     req = urllib.request.Request(
         BREVO_URL,

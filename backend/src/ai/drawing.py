@@ -1,11 +1,16 @@
 """Chooses the four cards of a draw (the front adds the joker as the fifth).
 
-The deck is fixed; what changes is which cards are allowed (docs/RULES.md and docs/TON.md):
+The deck is fixed; what changes is which cards are allowed (docs/RULES.md and
+docs/TON.md):
 - the first card is always light;
-- medium (specific) cards only after a turn where the young person got involved (an open turn);
-- after a neutral or closed turn, only light cards, to get back on solid ground;
-- personal cards only come after an open turn, and never alone: always next to lighter ones;
-- after an open turn, some cards "dig" the same subject, the others change the air.
+- medium (specific) cards only after a turn where the young person got involved
+  (an open turn);
+- after a neutral or closed turn, only light cards, to get back on solid
+  ground;
+- personal cards only come after an open turn, and never alone: always next to
+  lighter ones;
+- after an open turn, some cards "dig" the same subject, the others change the
+  air.
 """
 
 import random
@@ -17,7 +22,8 @@ from .models import Card, Engagement
 
 DRAW_SIZE = 4
 
-# A personal card is offered only after this many turns, and at most once per draw
+# A personal card is offered only after this many turns, and at most once per
+# draw
 _PERSONAL_AFTER_TURNS = 2
 _MAX_PERSONAL = 1
 # After an open turn, how many cards dig what just came up
@@ -43,7 +49,9 @@ def _words(text: str) -> set[str]:
 
 
 def _relevance(card: Card, topic_words: set[str]) -> int:
-    """How many topic words appear in the card: a rough way to find the cards that dig a subject."""
+    """How many topic words appear in the card: a rough way to find the cards
+    that dig a subject.
+    """
     return len(topic_words & _words(f"{card.title} {card.intention}"))
 
 
@@ -53,40 +61,65 @@ def _allowed(card: Card, state: DrawState) -> bool:
     if state.turns_played == 0 or state.last_engagement != "open":
         return card.level == "general"
     if card.level == "personal":
-        return state.last_engagement == "open" and state.turns_played >= _PERSONAL_AFTER_TURNS
+        return (
+            state.last_engagement == "open"
+            and state.turns_played >= _PERSONAL_AFTER_TURNS
+        )
     return True
 
 
-def draw_cards(state: DrawState, *, rng: random.Random | None = None, count: int = DRAW_SIZE) -> list[Card]:
-    """Four cards to offer. Never the same card twice in a game, as long as the deck lasts."""
+def draw_cards(
+    state: DrawState,
+    *,
+    rng: random.Random | None = None,
+    count: int = DRAW_SIZE,
+) -> list[Card]:
+    """Four cards to offer. Never the same card twice in a game, as long as the
+    deck lasts.
+    """
     rng = rng or random.Random()
     pool = [c for c in load_cards().values() if _allowed(c, state)]
     if len(pool) < count:
-        # Deck running low: let the already played light cards come back rather than showing fewer cards
+        # Deck running low: let the already played light cards come back rather
+        # than showing fewer cards
         pool = [c for c in load_cards().values() if c.level == "general"]
     rng.shuffle(pool)
 
     chosen: list[Card] = []
 
     def take(card: Card) -> None:
-        """Adds a card if there is room, it is not already there, and the personal limit holds.
+        """Adds a card if there is room, it is not already there, and the
+        personal limit holds.
 
-        With at most one personal card among four, a personal card is never alone.
+        With at most one personal card among four, a personal card is never
+        alone.
         """
         if card in chosen or len(chosen) >= count:
             return
-        if card.level == "personal" and sum(c.level == "personal" for c in chosen) >= _MAX_PERSONAL:
+        if (
+            card.level == "personal"
+            and sum(c.level == "personal" for c in chosen) >= _MAX_PERSONAL
+        ):
             return
         chosen.append(card)
 
     # 1. Dig what just came up, only after an open turn
     if state.last_engagement == "open" and state.turns_played > 0:
         topic_words = _words(" ".join(state.topics_to_explore))
-        ranked = sorted(pool, key=lambda c: (-_relevance(c, topic_words), c.family != state.last_family))
+        ranked = sorted(
+            pool,
+            key=lambda c: (
+                -_relevance(c, topic_words),
+                c.family != state.last_family,
+            ),
+        )
         for card in ranked:
             if len(chosen) >= _DIG_COUNT:
                 break
-            if _relevance(card, topic_words) > 0 or card.family == state.last_family:
+            if (
+                _relevance(card, topic_words) > 0
+                or card.family == state.last_family
+            ):
                 take(card)
 
     # 2. Change the air: one card per family not shown yet

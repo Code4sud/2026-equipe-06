@@ -46,6 +46,93 @@
   border-radius: var(--radius-card);
 }
 
+/* ---- A card opened in big, in the middle of a darkened screen ---- */
+.collection-viewer {
+  display: none;
+  max-width: 100vw;
+  max-height: 100vh;
+  padding: var(--space-3);
+  overflow: visible;
+  background: none;
+  border: none;
+}
+
+.collection-viewer[open] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.collection-viewer::backdrop {
+  background: rgb(30 22 51 / 0.6);
+  animation: viewer-fade 0.3s ease;
+}
+
+/* As big as the screen allows, still 5:7 */
+.collection-viewer .collection-card {
+  width: min(26rem, 80vw, calc((100vh - 12rem) * 5 / 7));
+  padding: 2rem 1.75rem 1.5rem;
+  gap: var(--space-2);
+  transform: none;
+  box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.5);
+  /* Texts follow the card's size (cqi = 1% of its width) */
+  container-type: inline-size;
+}
+
+.collection-viewer .collection-card-theme {
+  font-size: 8cqi;
+}
+
+.collection-viewer .collection-card-quote {
+  font-size: 7cqi;
+}
+
+.collection-viewer .collection-card-skill {
+  font-size: 5.5cqi;
+}
+
+.collection-viewer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  max-width: 34rem;
+}
+
+.collection-viewer-message {
+  flex-basis: 100%;
+  margin: 0;
+  font-weight: 700;
+  text-align: center;
+  color: #fff;
+}
+
+/* With View Transitions the card flies from its place; without, it pops in */
+@supports not (view-transition-name: none) {
+  .collection-viewer[open] .collection-card {
+    animation: pop-in 0.45s cubic-bezier(0.3, 1.3, 0.5, 1) backwards;
+  }
+}
+
+.collection-viewer[open] .collection-viewer-actions {
+  animation: rise-in 0.4s ease 0.15s backwards;
+}
+
+@keyframes viewer-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collection-viewer::backdrop,
+  .collection-viewer[open] .collection-card,
+  .collection-viewer[open] .collection-viewer-actions {
+    animation: none;
+  }
+}
+
 @media (max-width: 40rem) {
   .collection-page-header {
     grid-template-columns: 1fr;

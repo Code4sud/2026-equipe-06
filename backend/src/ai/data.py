@@ -1,6 +1,9 @@
-"""Loads the static data: the deck of cards and the ROME skills (both in backend/data/)."""
+"""Loads the static data: the deck of cards and the ROME skills (both in
+backend/data/).
+"""
 
 import json
+import random
 from dataclasses import dataclass
 from functools import lru_cache
 from typing import Any, cast
@@ -32,13 +35,16 @@ def _to_card(raw: dict[str, Any]) -> Card:
 
 @lru_cache(maxsize=1)
 def _card_talents() -> dict[str, list[str]]:
-    """Card id -> talents it can bring out, generated from docs/COMPETENCES.md."""
+    """Card id -> talents it can bring out, generated from docs/COMPETENCES.md.
+    """
     return dict(_read_json("card_talents.json")["talents"])
 
 
 @lru_cache(maxsize=1)
 def load_cards() -> dict[str, Card]:
-    """The 50 cards of the deck, by id. The mirror card is not in it (see mirror_card)."""
+    """The 50 cards of the deck, by id. The mirror card is not in it (see
+    mirror_card).
+    """
     return {c["id"]: _to_card(c) for c in _read_json("cards.json")["cards"]}
 
 
@@ -62,6 +68,8 @@ class RomeSkill:
     label: str
     category: str
     domain: str
+    issue: str
+    objective: str
     riasec_major: str | None
     riasec_minor: str | None
 
@@ -79,6 +87,8 @@ def load_rome() -> dict[str, RomeSkill]:
                         label=m["label"],
                         category=m["category"],
                         domain=domain["name"],
+                        issue=issue["name"],
+                        objective=objective["name"],
                         riasec_major=m.get("riasec_major"),
                         riasec_minor=m.get("riasec_minor"),
                     )
@@ -87,10 +97,13 @@ def load_rome() -> dict[str, RomeSkill]:
 
 @lru_cache(maxsize=1)
 def rome_prompt_list() -> str:
-    """The ROME skills for the analysis prompt, grouped under their domain, issue and objective.
+    """The ROME skills for the analysis prompt, grouped under their domain,
+    issue and objective.
 
-    The headings give each label its context: without them the model mixes up close labels
-    (e.g. "Développer un logiciel" for someone who reinstalls Windows, instead of "Paramétrer").
+    The headings give each label its context: without them the model mixes up
+    close labels
+    (e.g. "Développer un logiciel" for someone who reinstalls Windows, instead
+    of "Paramétrer").
     """
     lines: list[str] = []
     for domain in _read_json("rome.json")["domains"]:
@@ -98,10 +111,28 @@ def rome_prompt_list() -> str:
         for issue in domain["issues"]:
             for objective in issue["objectives"]:
                 lines.append(f"### {issue['name']} › {objective['name']}")
-                lines.extend(f"{m['code']} {m['label']}" for m in objective["macro_skills"])
+                lines.extend(
+                    f"{m['code']} {m['label']}"
+                    for m in objective["macro_skills"]
+                )
     return "\n".join(lines)
 
 
-def load_report(name: str = "sample_report.json") -> Report:
-    """Loads a report from backend/data/. Real reports will be ingested later."""
-    return Report.from_dict(_read_json(name))
+# Mock reports only: real reports may not be stored in the repository
+_REPORTS_DIR = "reports"
+
+
+def report_ids() -> list[str]:
+    """Ids of the mock reports in backend/data/reports/ (file name without
+    .json).
+    """
+    return sorted(p.stem for p in (data_dir() / _REPORTS_DIR).glob("*.json"))
+
+
+def random_report_id() -> str:
+    return random.choice(report_ids())
+
+
+def load_report(report_id: str) -> Report:
+    """Loads a mock report from backend/data/reports/."""
+    return Report.from_dict(_read_json(f"{_REPORTS_DIR}/{report_id}.json"))

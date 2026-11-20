@@ -1,0 +1,64 @@
+{
+  "interests": [
+    "Réaliste",
+    "Artistique",
+    "Social",
+    "Conventionnel",
+    "Investigateur",
+    "Entreprenant"
+  ],
+  "aptitudes": {
+    "Compréhension orale": 4,
+    "Compréhension écrite": 3,
+    "Expression orale": 5,
+    "Expression écrite": 5,
+    "Fluidité des idées": 4,
+    "Originalité": 4,
+    "Sensibilité aux problèmes": 6,
+    "Raisonnement déductif": 3,
+    "Raisonnement inductif": 4
+  },
+  "personality": [
+    "Humilité-honnêteté",
+    "Agréabilité",
+    "Caractère consciencieux",
+    "Ouverture à l'expérience",
+    "Extraversion",
+    "Émotivité"
+  ],
+  "jobs_by_zone": {
+    "1": [
+      "Technicien d'assainissement",
+      "Employé de restauration rapide",
+      "Agent d'accueil et d'animation"
+    ],
+    "2": [
+      "Éducateur d'animaux",
+      "Agent de manœuvre ferroviaire",
+      "Conducteur de manœuvre ferroviaire",
+      "Signaleur",
+      "Conducteur de bus / car"
+    ],
+    "3": [
+      "Dessinateur-projeteur mécanique",
+      "Dessinateur-projeteur en bâtiment et génie civil",
+      "Dessinateur-projeteur électronique",
+      "Opérateur de station d'épuration",
+      "Technicien géomètre-topographe"
+    ],
+    "4": [
+      "Architecte d'intérieur",
+      "Interprète - Traducteur",
+      "Graphiste",
+      "Architecte paysagiste",
+      "Enseignant spécialisé (collège - ULIS/SEGPA)"
+    ],
+    "5": [
+      "Architecte",
+      "Enseignant-chercheur en ingénierie",
+      "Professeur d'architecture (enseignement supérieur)",
+      "Orthodontiste",
+      "Enseignant-chercheur en sciences de la Terre, de l'atmosphère, des océans et de l'espace"
+    ]
+  }
+}

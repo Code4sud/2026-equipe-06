@@ -99,3 +99,10 @@
     animation: none;
   }
 }
+
+/* Under the two main buttons: possible from every screen, but not the first thing offered */
+.game-menu-erase {
+  display: block;
+  margin: var(--space-3) auto 0;
+  font-size: 0.95rem;
+}

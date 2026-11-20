@@ -316,11 +316,104 @@
   }
 }
 
-/* Mirror: the final card, imposed by the backend. Distinct look. TEMPORARY until a mockup exists */
+/*
+ * Mirror: the final card, imposed by the backend. Holographic look:
+ * a very shiny rainbow metallic border, and an iridescent veil over the whole front and back
+ * that slides with the pointer (--glare-x / --glare-y, from useCardTilt).
+ */
 .game-card-mirror {
   --card-color: var(--color-text);
   --card-face: #fff;
   --card-back: var(--color-yellow);
+  /* Iridescent bands, pastel versions of the brand colors */
+  --holo: linear-gradient(
+    115deg,
+    color-mix(in srgb, var(--color-pink) 20%, white) 0%,
+    color-mix(in srgb, var(--color-orange) 20%, white) 12%,
+    color-mix(in srgb, var(--color-yellow) 28%, white) 24%,
+    color-mix(in srgb, var(--color-green) 18%, white) 36%,
+    color-mix(in srgb, var(--card-blue) 20%, white) 48%,
+    color-mix(in srgb, var(--color-purple) 20%, white) 60%,
+    color-mix(in srgb, var(--color-pink) 20%, white) 72%,
+    color-mix(in srgb, var(--color-orange) 20%, white) 84%,
+    color-mix(in srgb, var(--color-yellow) 28%, white) 100%
+  );
+}
+
+/*
+ * Border: rainbow bands (a bit softened) with white highlights in between, turning with the pointer.
+ * Only on the drawn card itself: the turn screen also carries game-card-mirror, and the collection
+ * cards shown there keep the color of their family.
+ */
+.game-card.game-card-mirror .card-shine {
+  --holo-mix: 70%;
+  --metal-bands: conic-gradient(
+    from var(--shine-angle, 35deg),
+    color-mix(in srgb, var(--color-pink) var(--holo-mix), white) 0%,
+    #fff 5%,
+    color-mix(in srgb, var(--color-orange) var(--holo-mix), white) 11%,
+    color-mix(in srgb, var(--color-yellow) var(--holo-mix), white) 19%,
+    #fff 25%,
+    color-mix(in srgb, var(--color-green) var(--holo-mix), white) 32%,
+    color-mix(in srgb, var(--card-blue) var(--holo-mix), white) 42%,
+    #fff 48%,
+    color-mix(in srgb, var(--color-purple) var(--holo-mix), white) 55%,
+    color-mix(in srgb, var(--color-pink) var(--holo-mix), white) 64%,
+    #fff 70%,
+    color-mix(in srgb, var(--color-orange) var(--holo-mix), white) 77%,
+    color-mix(in srgb, var(--color-yellow) var(--holo-mix), white) 84%,
+    #fff 90%,
+    color-mix(in srgb, var(--color-pink) var(--holo-mix), white) 100%
+  );
+}
+
+/* Front: the veil covers the whole face, under the text (and keeps the pointer's reflection on top of it) */
+.game-card-mirror .game-card-front::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  /* Registered as not inherited (cardShine.css): take the face's value, transition included */
+  --glare-strength: inherit;
+  background:
+    radial-gradient(
+      circle at var(--glare-pos),
+      rgb(255 255 255 / calc(0.6 * var(--glare-strength))),
+      transparent 55%
+    ),
+    var(--holo);
+  background-size: 100% 100%, 300% 300%;
+  background-position: 0 0, var(--glare-x, 30%) var(--glare-y, 18%);
+  opacity: 0.6;
+}
+
+.game-card-mirror .game-card-front > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Back: the same veil, shimmering slowly on its own (the back is only seen during the deal) */
+.game-card-mirror .game-card-back {
+  background: var(--holo);
+  background-size: 300% 300%;
+  animation: holo-shimmer 3s ease-in-out infinite alternate;
+}
+
+@keyframes holo-shimmer {
+  from {
+    background-position: 0% 20%;
+  }
+  to {
+    background-position: 100% 80%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-card-mirror .game-card-back {
+    animation: none;
+    background-position: 30% 18%;
+  }
 }
 
 /* Cards already drawn (back from the collection): no deal-in, no flip */
